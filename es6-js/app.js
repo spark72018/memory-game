@@ -75,28 +75,31 @@
 
     setSecondsElapsed(num) {
         this.state.secondsElapsed = num;
-        return this.state.secondsElapsed;
     }
 
     setStarRating(num) {
         this.state.starRating = num;
-        return this.starRating;
     }
 
     setMovesMade(num) {
         this.state.numMovesMade = num;
-        return this.state.numMovesMade;
     }
 
     setSuccessMatches(num) {
         this.state.numSuccessMatches = num;
-        return this.state.numSuccessMatches;
     }
 
     setFailedMatches(num) {
         this.state.numFailedMatches = num;
-        return this.state.numFailedMatches;
     }
+    /*
+    Getters for:
+    - secondsElapsed
+    - starRating
+    - movesMade
+    - successMatches
+    - failedMatches
+    */
   }
 
   class Card {

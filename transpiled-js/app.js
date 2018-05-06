@@ -100,32 +100,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'setSecondsElapsed',
       value: function setSecondsElapsed(num) {
         this.state.secondsElapsed = num;
-        return this.state.secondsElapsed;
       }
     }, {
       key: 'setStarRating',
       value: function setStarRating(num) {
         this.state.starRating = num;
-        return this.starRating;
       }
     }, {
       key: 'setMovesMade',
       value: function setMovesMade(num) {
         this.state.numMovesMade = num;
-        return this.state.numMovesMade;
       }
     }, {
       key: 'setSuccessMatches',
       value: function setSuccessMatches(num) {
         this.state.numSuccessMatches = num;
-        return this.state.numSuccessMatches;
       }
     }, {
       key: 'setFailedMatches',
       value: function setFailedMatches(num) {
         this.state.numFailedMatches = num;
-        return this.state.numFailedMatches;
       }
+      /*
+      Getters for:
+      - secondsElapsed
+      - starRating
+      - movesMade
+      - successMatches
+      - failedMatches
+      */
+
     }]);
 
     return Game;
