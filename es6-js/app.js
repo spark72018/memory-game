@@ -65,41 +65,54 @@
 
   class Game {
     constructor(state = new GameState()) {
-        this.state = state;
+      this.state = state;
+      this.handleClick.bind(this);
     }
 
     handleClick(e) {
-        e.preventDefault();
-        console.log('handleClick called');
+      e.preventDefault();
+      console.log('handleClick called');
     }
 
     setSecondsElapsed(num) {
-        this.state.secondsElapsed = num;
+      this.state.secondsElapsed = num;
     }
 
     setStarRating(num) {
-        this.state.starRating = num;
+      this.state.starRating = num;
     }
 
     setMovesMade(num) {
-        this.state.numMovesMade = num;
+      this.state.numMovesMade = num;
     }
 
     setSuccessMatches(num) {
-        this.state.numSuccessMatches = num;
+      this.state.numSuccessMatches = num;
     }
 
     setFailedMatches(num) {
-        this.state.numFailedMatches = num;
+      this.state.numFailedMatches = num;
     }
-    /*
-    Getters for:
-    - secondsElapsed
-    - starRating
-    - movesMade
-    - successMatches
-    - failedMatches
-    */
+
+    getSecondsElapsed() {
+      return this.state.secondsElapsed;
+    }
+
+    getStarRating() {
+      return this.state.starRating;
+    }
+
+    getNumMovesMade() {
+      return this.state.numMovesMade;
+    }
+
+    getNumSuccessMatches() {
+      return this.state.numSuccessMatches;
+    }
+
+    getNumFailedMatches() {
+      return this.state.numFailedMatches;
+    }
   }
 
   class Card {

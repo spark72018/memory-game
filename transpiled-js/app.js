@@ -88,6 +88,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, Game);
 
       this.state = state;
+      this.handleClick.bind(this);
     }
 
     _createClass(Game, [{
@@ -121,15 +122,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function setFailedMatches(num) {
         this.state.numFailedMatches = num;
       }
-      /*
-      Getters for:
-      - secondsElapsed
-      - starRating
-      - movesMade
-      - successMatches
-      - failedMatches
-      */
-
+    }, {
+      key: 'getSecondsElapsed',
+      value: function getSecondsElapsed() {
+        return this.state.secondsElapsed;
+      }
+    }, {
+      key: 'getStarRating',
+      value: function getStarRating() {
+        return this.state.starRating;
+      }
+    }, {
+      key: 'getNumMovesMade',
+      value: function getNumMovesMade() {
+        return this.state.numMovesMade;
+      }
+    }, {
+      key: 'getNumSuccessMatches',
+      value: function getNumSuccessMatches() {
+        return this.state.numSuccessMatches;
+      }
+    }, {
+      key: 'getNumFailedMatches',
+      value: function getNumFailedMatches() {
+        return this.state.numFailedMatches;
+      }
     }]);
 
     return Game;
