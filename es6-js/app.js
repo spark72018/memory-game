@@ -62,7 +62,7 @@
       this.numFailedMatches = numFailedMatches;
     }
   }
-/*
+
   class Game {
     constructor(state = new GameState()) {
         this.state = state;
@@ -88,7 +88,6 @@
         return this.state.numMovesMade;
     }
   }
-  */
 
   class Card {
     constructor() {}
