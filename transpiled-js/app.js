@@ -114,6 +114,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.state.numMovesMade = num;
         return this.state.numMovesMade;
       }
+    }, {
+      key: 'setSuccessMatches',
+      value: function setSuccessMatches(num) {
+        this.state.numSuccessMatches = num;
+        return this.state.numSuccessMatches;
+      }
+    }, {
+      key: 'setFailedMatches',
+      value: function setFailedMatches(num) {
+        this.state.numFailedMatches = num;
+        return this.state.numFailedMatches;
+      }
     }]);
 
     return Game;

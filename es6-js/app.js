@@ -87,6 +87,16 @@
         this.state.numMovesMade = num;
         return this.state.numMovesMade;
     }
+
+    setSuccessMatches(num) {
+        this.state.numSuccessMatches = num;
+        return this.state.numSuccessMatches;
+    }
+
+    setFailedMatches(num) {
+        this.state.numFailedMatches = num;
+        return this.state.numFailedMatches;
+    }
   }
 
   class Card {
