@@ -39,6 +39,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   // 16 cards, 8 matches needed to win game
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
+  var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
 
   var domElementCheck = function domElementCheck(o) {
     return o instanceof Element;
@@ -56,10 +57,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return domElWithAttributes;
   };
 
+  var Card = function Card() {
+    _classCallCheck(this, Card);
+  };
+
+  var FlippableCard = function (_Card) {
+    _inherits(FlippableCard, _Card);
+
+    function FlippableCard() {
+      _classCallCheck(this, FlippableCard);
+
+      return _possibleConstructorReturn(this, (FlippableCard.__proto__ || Object.getPrototypeOf(FlippableCard)).call(this));
+    }
+
+    return FlippableCard;
+  }(Card);
+
   var GameState = function GameState() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         _ref$numFlippableCard = _ref.numFlippableCards,
-        numFlippableCards = _ref$numFlippableCard === undefined ? 0 : _ref$numFlippableCard,
+        numFlippableCards = _ref$numFlippableCard === undefined ? 16 : _ref$numFlippableCard,
         _ref$secondsElapsed = _ref.secondsElapsed,
         secondsElapsed = _ref$secondsElapsed === undefined ? 0 : _ref$secondsElapsed,
         _ref$starRating = _ref.starRating,
@@ -151,20 +168,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Game;
   }();
-
-  var Card = function Card() {
-    _classCallCheck(this, Card);
-  };
-
-  var FlippableCard = function (_Card) {
-    _inherits(FlippableCard, _Card);
-
-    function FlippableCard() {
-      _classCallCheck(this, FlippableCard);
-
-      return _possibleConstructorReturn(this, (FlippableCard.__proto__ || Object.getPrototypeOf(FlippableCard)).call(this));
-    }
-
-    return FlippableCard;
-  }(Card);
 })();

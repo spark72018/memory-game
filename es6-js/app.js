@@ -29,6 +29,16 @@
 
   // 16 cards, 8 matches needed to win game
   const SUCCESSFUL_MATCHES_TO_WIN = 8;
+  const CARD_ICONS = [
+    'fa fa-diamond',
+    'fa fa-paper-plane-o',
+    'fa fa-anchor',
+    'fa fa-bolt',
+    'fa fa-cube',
+    'fa fa-leaf',
+    'fa fa-bicycle',
+    'fa fa-bomb'
+  ];
 
   const domElementCheck = o => o instanceof Element;
 
@@ -45,9 +55,19 @@
     return domElWithAttributes;
   };
 
+  class Card {
+    constructor() {}
+  }
+
+  class FlippableCard extends Card {
+    constructor() {
+      super();
+    }
+  }
+
   class GameState {
     constructor({
-      numFlippableCards = 0,
+      numFlippableCards = 16,
       secondsElapsed = 0,
       starRating = 3,
       numMovesMade = 0,
@@ -112,16 +132,6 @@
 
     getNumFailedMatches() {
       return this.state.numFailedMatches;
-    }
-  }
-
-  class Card {
-    constructor() {}
-  }
-
-  class FlippableCard extends Card {
-    constructor() {
-      super();
     }
   }
 })();
