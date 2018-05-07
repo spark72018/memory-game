@@ -2,10 +2,6 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
@@ -47,7 +43,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var handler = function handler(e) {
     console.log(e.target);
     var isCard = e.target.classList.contains('back') || e.target.classList.contains('front');
-    var isMatched = e.target.parentNode.classList.contains('match');
+    var matched = e.target.parentNode.classList.contains('match');
     if (isCard && !isMatched) {
       console.log('card!');
       var parent = e.target.parentNode;
@@ -79,28 +75,58 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   /*
     <li class="card">
-        <div class="back"></div>
         <div class="front">
             <i class="fa fa-diamond"></i>
         </div>
+        <div class="back"></div>
     </li>
   */
 
-  var Card = function Card() {
-    _classCallCheck(this, Card);
-  };
+  var Card = function () {
+    function Card(iconClass) {
+      _classCallCheck(this, Card);
 
-  var FlippableCard = function (_Card) {
-    _inherits(FlippableCard, _Card);
-
-    function FlippableCard() {
-      _classCallCheck(this, FlippableCard);
-
-      return _possibleConstructorReturn(this, (FlippableCard.__proto__ || Object.getPrototypeOf(FlippableCard)).call(this));
+      this.iconClass = iconClass;
+      this.icon = document.createElement('I');
+      this.frontFace = document.createElement('div');
+      this.backFace = document.createElement('div');
+      this.card = document.createElement('LI');
     }
 
-    return FlippableCard;
-  }(Card);
+    _createClass(Card, [{
+      key: 'completeIcon',
+      value: function completeIcon() {
+        this.icon.setAttribute('class', this.iconClass);
+      }
+    }, {
+      key: 'completeFrontFace',
+      value: function completeFrontFace(str) {
+        this.completeIcon();
+        this.frontFace.appendChild(this.icon);
+        this.frontFace.setAttribute('class', str);
+      }
+    }, {
+      key: 'completeBackFace',
+      value: function completeBackFace(str) {
+        this.backFace.setAttribute('class', 'back');
+      }
+    }, {
+      key: 'makeCard',
+      value: function makeCard() {
+        this.completeFrontFace('front');
+        this.completeBackFace('back');
+
+        this.card.appendChild(this.frontFace);
+        this.card.appendChild(this.backFace);
+
+        this.card.setAttribute('class', 'card');
+
+        return this.card;
+      }
+    }]);
+
+    return Card;
+  }();
 
   var GameState = function GameState() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},

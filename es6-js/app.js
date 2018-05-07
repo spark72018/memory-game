@@ -48,7 +48,7 @@
     const isCard =
       e.target.classList.contains('back') ||
       e.target.classList.contains('front');
-    const isMatched = e.target.parentNode.classList.contains('match');
+    const matched = e.target.parentNode.classList.contains('match');
     if (isCard && !isMatched) {
       console.log('card!');
       const parent = e.target.parentNode;
@@ -61,7 +61,7 @@
   };
 
   documentBody.addEventListener('click', handler, true);
-  
+
   const domElementCheck = o => o instanceof Element;
 
   const addAttributes = (domElement, attributeObj) => {
@@ -79,20 +79,45 @@
 
   /*
     <li class="card">
-        <div class="back"></div>
         <div class="front">
             <i class="fa fa-diamond"></i>
         </div>
+        <div class="back"></div>
     </li>
   */
 
   class Card {
-    constructor() {}
-  }
+    constructor(iconClass) {
+      this.iconClass = iconClass;
+      this.icon = document.createElement('I');
+      this.frontFace = document.createElement('div');
+      this.backFace = document.createElement('div');
+      this.card = document.createElement('LI');
+    }
+    completeIcon() {
+      this.icon.setAttribute('class', this.iconClass);
+    }
 
-  class FlippableCard extends Card {
-    constructor() {
-      super();
+    completeFrontFace(str) {
+      this.completeIcon();
+      this.frontFace.appendChild(this.icon);
+      this.frontFace.setAttribute('class', str);
+    }
+
+    completeBackFace(str) {
+      this.backFace.setAttribute('class', 'back');
+    }
+
+    makeCard() {
+      this.completeFrontFace('front');
+      this.completeBackFace('back');
+
+      this.card.appendChild(this.frontFace);
+      this.card.appendChild(this.backFace);
+
+      this.card.setAttribute('class', 'card');
+      
+      return this.card;
     }
   }
 
