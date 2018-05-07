@@ -19,6 +19,7 @@ gulp.task('browserSync', function() {
 
 gulp.task('watch', ['browserSync'], function() {
   gulp.watch('es6-js/*.js', ['transpileJS']);
+  gulp.watch('es6-js/*.js', browserSync.reload);
   gulp.watch('css/*.css', browserSync.reload);
   gulp.watch('*.html', browserSync.reload);
 });

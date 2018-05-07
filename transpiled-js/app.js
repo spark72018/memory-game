@@ -41,6 +41,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
 
+  var deck = document.getElementsByClassName('deck')[0];
+  var documentBody = document.body;
+
+  var handler = function handler(e) {
+    console.log(e.target);
+    var isCard = e.target.classList.contains('back') || e.target.classList.contains('front');
+    var isMatched = e.target.parentNode.classList.contains('match');
+    if (isCard && !isMatched) {
+      console.log('card!');
+      var parent = e.target.parentNode;
+      parent.classList.toggle('open');
+      parent.classList.toggle('show');
+      console.log(e.target);
+    } else {
+      console.log('something else');
+    }
+  };
+
+  documentBody.addEventListener('click', handler, true);
+
   var domElementCheck = function domElementCheck(o) {
     return o instanceof Element;
   };
@@ -56,6 +76,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return domElWithAttributes;
   };
+
+  /*
+    <li class="card">
+        <div class="back"></div>
+        <div class="front">
+            <i class="fa fa-diamond"></i>
+        </div>
+    </li>
+  */
 
   var Card = function Card() {
     _classCallCheck(this, Card);

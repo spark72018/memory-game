@@ -40,6 +40,28 @@
     'fa fa-bomb'
   ];
 
+  const deck = document.getElementsByClassName('deck')[0];
+  const documentBody = document.body;
+
+  const handler = e => {
+    console.log(e.target);
+    const isCard =
+      e.target.classList.contains('back') ||
+      e.target.classList.contains('front');
+    const isMatched = e.target.parentNode.classList.contains('match');
+    if (isCard && !isMatched) {
+      console.log('card!');
+      const parent = e.target.parentNode;
+      parent.classList.toggle('open');
+      parent.classList.toggle('show');
+      console.log(e.target);
+    } else {
+      console.log('something else');
+    }
+  };
+
+  documentBody.addEventListener('click', handler, true);
+  
   const domElementCheck = o => o instanceof Element;
 
   const addAttributes = (domElement, attributeObj) => {
@@ -54,6 +76,15 @@
 
     return domElWithAttributes;
   };
+
+  /*
+    <li class="card">
+        <div class="back"></div>
+        <div class="front">
+            <i class="fa fa-diamond"></i>
+        </div>
+    </li>
+  */
 
   class Card {
     constructor() {}
