@@ -48,19 +48,6 @@
 
   const domElementCheck = o => o instanceof Element;
 
-  const addAttributes = (domElement, attributeObj) => {
-    if (!domElementCheck(domElement))
-      throw new Error('First argument must be a DOM element!');
-
-    const attributes = Object.getOwnPropertyNames(attributeObj);
-    const domElWithAttributes = attributes.reduce((acc, attribute) => {
-      acc.setAttribute(attribute, attributeObj[attribute]);
-      return acc;
-    }, domElement);
-
-    return domElWithAttributes;
-  };
-
   class Card {
     constructor(iconClass) {
       this.iconClass = iconClass;
