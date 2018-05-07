@@ -191,15 +191,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(Game, [{
-      key: 'appendDeck',
-      value: function appendDeck() {
+      key: 'makeDeckDocFrag',
+      value: function makeDeckDocFrag() {
         var deck = new Deck(CARD_ICONS).makeDeck();
         var docFrag = deck.reduce(function (acc, card) {
           acc.appendChild(card);
           return acc;
         }, document.createDocumentFragment());
 
+        return docFrag;
+      }
+    }, {
+      key: 'appendDeck',
+      value: function appendDeck() {
+        var docFrag = this.makeDeckDocFrag();
         var deckTag = document.getElementsByClassName('deck')[0];
+
         deckTag.appendChild(docFrag);
       }
     }, {
@@ -264,6 +271,5 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }();
 
   var game = new Game();
-  console.log(game);
   game.appendDeck();
 })();

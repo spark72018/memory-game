@@ -167,14 +167,20 @@
       this.handleClick.bind(this);
     }
 
-    appendDeck() {
+    makeDeckDocFrag() {
         const deck = new Deck(CARD_ICONS).makeDeck();
         const docFrag = deck.reduce((acc, card) => {
             acc.appendChild(card);
             return acc;
         }, document.createDocumentFragment());
 
+        return docFrag;
+    }
+
+    appendDeck() {
+        const docFrag = this.makeDeckDocFrag();
         const deckTag = document.getElementsByClassName('deck')[0];
+        
         deckTag.appendChild(docFrag);
     }
 
@@ -225,6 +231,5 @@
   }
 
   const game = new Game();
-  console.log(game);
   game.appendDeck();
 })();
