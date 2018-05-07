@@ -41,8 +41,8 @@
   ];
 
   const deck = document.getElementsByClassName('deck')[0];
-  const documentBody = document.body;
 
+  // TODO
   const handler = e => {
     console.log(e.target);
     const isCard =
@@ -59,7 +59,8 @@
       console.log('something else');
     }
   };
-
+  
+  const documentBody = document.body;
   documentBody.addEventListener('click', handler, true);
 
   const domElementCheck = o => o instanceof Element;
@@ -77,48 +78,65 @@
     return domElWithAttributes;
   };
 
-  /*
-    <li class="card">
-        <div class="front">
-            <i class="fa fa-diamond"></i>
-        </div>
-        <div class="back"></div>
-    </li>
-  */
-
   class Card {
     constructor(iconClass) {
       this.iconClass = iconClass;
-      this.icon = document.createElement('I');
-      this.frontFace = document.createElement('div');
-      this.backFace = document.createElement('div');
-      this.card = document.createElement('LI');
-    }
-    completeIcon() {
-      this.icon.setAttribute('class', this.iconClass);
     }
 
-    completeFrontFace(str) {
-      this.completeIcon();
-      this.frontFace.appendChild(this.icon);
-      this.frontFace.setAttribute('class', str);
+    makeIcon() {
+      const icon = document.createElement('I');
+      icon.setAttribute('class', this.iconClass);
+
+      return icon;
     }
 
-    completeBackFace(str) {
-      this.backFace.setAttribute('class', 'back');
+    makeFrontFace(str) {
+      const icon = this.makeIcon();
+      const frontFace = document.createElement('div');
+
+      frontFace.appendChild(icon);
+      frontFace.setAttribute('class', str);
+
+      return frontFace;
+    }
+
+    makeBackFace(str) {
+      const backFace = document.createElement('div');
+        
+      backFace.setAttribute('class', str);
+
+      return backFace;
     }
 
     makeCard() {
-      this.completeFrontFace('front');
-      this.completeBackFace('back');
-
-      this.card.appendChild(this.frontFace);
-      this.card.appendChild(this.backFace);
-
-      this.card.setAttribute('class', 'card');
+      const frontFace = this.makeFrontFace('front');
+      const backFace = this.makeBackFace('back');
+      const card = document.createElement('LI');
       
-      return this.card;
+
+      card.appendChild(frontFace);
+      card.appendChild(backFace);
+
+      card.setAttribute('class', 'card');
+
+      return card;
     }
+  }
+
+  class Deck {
+      constructor(arrOfIconValues) {
+          this.arrOfIconValues = arrOfIconValues;
+      }
+
+      makeDeck() {
+          const deck = this.arrOfIconValues.reduce((acc, iconClass) => {
+            const cardWithIcon = new Card(iconClass).makeCard();  
+            acc.push(cardWithIcon);
+            return acc;
+          }, []);
+
+          return deck;
+      }
   }
 
   class GameState {

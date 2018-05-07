@@ -38,8 +38,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
 
   var deck = document.getElementsByClassName('deck')[0];
-  var documentBody = document.body;
 
+  // TODO
   var handler = function handler(e) {
     console.log(e.target);
     var isCard = e.target.classList.contains('back') || e.target.classList.contains('front');
@@ -55,6 +55,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   };
 
+  var documentBody = document.body;
   documentBody.addEventListener('click', handler, true);
 
   var domElementCheck = function domElementCheck(o) {
@@ -73,59 +74,81 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return domElWithAttributes;
   };
 
-  /*
-    <li class="card">
-        <div class="front">
-            <i class="fa fa-diamond"></i>
-        </div>
-        <div class="back"></div>
-    </li>
-  */
-
   var Card = function () {
     function Card(iconClass) {
       _classCallCheck(this, Card);
 
       this.iconClass = iconClass;
-      this.icon = document.createElement('I');
-      this.frontFace = document.createElement('div');
-      this.backFace = document.createElement('div');
-      this.card = document.createElement('LI');
     }
 
     _createClass(Card, [{
-      key: 'completeIcon',
-      value: function completeIcon() {
-        this.icon.setAttribute('class', this.iconClass);
+      key: 'makeIcon',
+      value: function makeIcon() {
+        var icon = document.createElement('I');
+        icon.setAttribute('class', this.iconClass);
+
+        return icon;
       }
     }, {
-      key: 'completeFrontFace',
-      value: function completeFrontFace(str) {
-        this.completeIcon();
-        this.frontFace.appendChild(this.icon);
-        this.frontFace.setAttribute('class', str);
+      key: 'makeFrontFace',
+      value: function makeFrontFace(str) {
+        var icon = this.makeIcon();
+        var frontFace = document.createElement('div');
+
+        frontFace.appendChild(icon);
+        frontFace.setAttribute('class', str);
+
+        return frontFace;
       }
     }, {
-      key: 'completeBackFace',
-      value: function completeBackFace(str) {
-        this.backFace.setAttribute('class', 'back');
+      key: 'makeBackFace',
+      value: function makeBackFace(str) {
+        var backFace = document.createElement('div');
+
+        backFace.setAttribute('class', str);
+
+        return backFace;
       }
     }, {
       key: 'makeCard',
       value: function makeCard() {
-        this.completeFrontFace('front');
-        this.completeBackFace('back');
+        var frontFace = this.makeFrontFace('front');
+        var backFace = this.makeBackFace('back');
+        var card = document.createElement('LI');
 
-        this.card.appendChild(this.frontFace);
-        this.card.appendChild(this.backFace);
+        card.appendChild(frontFace);
+        card.appendChild(backFace);
 
-        this.card.setAttribute('class', 'card');
+        card.setAttribute('class', 'card');
 
-        return this.card;
+        return card;
       }
     }]);
 
     return Card;
+  }();
+
+  var Deck = function () {
+    function Deck(arrOfIconValues) {
+      _classCallCheck(this, Deck);
+
+      this.arrOfIconValues = arrOfIconValues;
+    }
+
+    _createClass(Deck, [{
+      key: 'makeDeck',
+      value: function makeDeck() {
+        var deck = this.arrOfIconValues.reduce(function (acc, iconClass) {
+          var cardWithIcon = new Card(iconClass).makeCard();
+          acc.push(cardWithIcon);
+          return acc;
+        }, []);
+
+        return deck;
+      }
+    }]);
+
+    return Deck;
   }();
 
   var GameState = function GameState() {
