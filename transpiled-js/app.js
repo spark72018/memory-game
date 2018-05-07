@@ -44,7 +44,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     console.log(e.target);
     var isCard = e.target.classList.contains('back') || e.target.classList.contains('front');
     var matched = e.target.parentNode.classList.contains('match');
-    if (isCard && !isMatched) {
+    if (isCard && !matched) {
       console.log('card!');
       var parent = e.target.parentNode;
       parent.classList.toggle('open');
@@ -139,12 +139,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeDeck',
       value: function makeDeck() {
         var deck = this.arrOfIconValues.reduce(function (acc, iconClass) {
-          var cardWithIcon = new Card(iconClass).makeCard();
-          acc.push(cardWithIcon);
+          var firstCard = new Card(iconClass).makeCard();
+          var secondCard = new Card(iconClass).makeCard();
+
+          acc.push(firstCard);
+          acc.push(secondCard);
+
           return acc;
         }, []);
-
-        return deck;
+        var shuffledDeck = shuffle(deck);
+        return shuffledDeck;
       }
     }]);
 
@@ -187,6 +191,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(Game, [{
+      key: 'appendDeck',
+      value: function appendDeck() {
+        var deck = new Deck(CARD_ICONS).makeDeck();
+        var docFrag = deck.reduce(function (acc, card) {
+          acc.appendChild(card);
+          return acc;
+        }, document.createDocumentFragment());
+
+        var deckTag = document.getElementsByClassName('deck')[0];
+        deckTag.appendChild(docFrag);
+      }
+    }, {
       key: 'handleClick',
       value: function handleClick(e) {
         e.preventDefault();
@@ -246,4 +262,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Game;
   }();
+
+  var game = new Game();
+  console.log(game);
+  game.appendDeck();
 })();

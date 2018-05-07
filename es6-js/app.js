@@ -49,7 +49,7 @@
       e.target.classList.contains('back') ||
       e.target.classList.contains('front');
     const matched = e.target.parentNode.classList.contains('match');
-    if (isCard && !isMatched) {
+    if (isCard && !matched) {
       console.log('card!');
       const parent = e.target.parentNode;
       parent.classList.toggle('open');
@@ -130,12 +130,16 @@
 
       makeDeck() {
           const deck = this.arrOfIconValues.reduce((acc, iconClass) => {
-            const cardWithIcon = new Card(iconClass).makeCard();  
-            acc.push(cardWithIcon);
+            const firstCard = new Card(iconClass).makeCard();
+            const secondCard = new Card(iconClass).makeCard();
+
+            acc.push(firstCard);
+            acc.push(secondCard);
+
             return acc;
           }, []);
-
-          return deck;
+          const shuffledDeck = shuffle(deck);
+          return shuffledDeck;
       }
   }
 
@@ -161,6 +165,17 @@
     constructor(state = new GameState()) {
       this.state = state;
       this.handleClick.bind(this);
+    }
+
+    appendDeck() {
+        const deck = new Deck(CARD_ICONS).makeDeck();
+        const docFrag = deck.reduce((acc, card) => {
+            acc.appendChild(card);
+            return acc;
+        }, document.createDocumentFragment());
+
+        const deckTag = document.getElementsByClassName('deck')[0];
+        deckTag.appendChild(docFrag);
     }
 
     handleClick(e) {
@@ -208,4 +223,8 @@
       return this.state.numFailedMatches;
     }
   }
+
+  const game = new Game();
+  console.log(game);
+  game.appendDeck();
 })();
