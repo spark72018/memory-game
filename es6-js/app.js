@@ -10,23 +10,6 @@
  */
 
 (function() {
-  // Shuffle function from http://stackoverflow.com/a/2450976
-  function shuffle(array) {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-  }
-
   // 16 cards, 8 matches needed to win game
   const SUCCESSFUL_MATCHES_TO_WIN = 8;
   const CARD_ICONS = [
@@ -59,7 +42,7 @@
       console.log('something else');
     }
   };
-  
+
   const documentBody = document.body;
   documentBody.addEventListener('click', handler, true);
 
@@ -102,7 +85,7 @@
 
     makeBackFace(str) {
       const backFace = document.createElement('div');
-        
+
       backFace.setAttribute('class', str);
 
       return backFace;
@@ -112,7 +95,6 @@
       const frontFace = this.makeFrontFace('front');
       const backFace = this.makeBackFace('back');
       const card = document.createElement('LI');
-      
 
       card.appendChild(frontFace);
       card.appendChild(backFace);
@@ -124,23 +106,40 @@
   }
 
   class Deck {
-      constructor(arrOfIconValues) {
-          this.arrOfIconValues = arrOfIconValues;
+    constructor(arrOfIconValues) {
+      this.arrOfIconValues = arrOfIconValues;
+    }
+
+    shuffleDeck(deckArray) {
+      // Shuffle function from http://stackoverflow.com/a/2450976
+      var currentIndex = deckArray.length,
+        temporaryValue,
+        randomIndex;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = deckArray[currentIndex];
+        deckArray[currentIndex] = deckArray[randomIndex];
+        deckArray[randomIndex] = temporaryValue;
       }
 
-      makeDeck() {
-          const deck = this.arrOfIconValues.reduce((acc, iconClass) => {
-            const firstCard = new Card(iconClass).makeCard();
-            const secondCard = new Card(iconClass).makeCard();
+      return deckArray;
+    }
 
-            acc.push(firstCard);
-            acc.push(secondCard);
+    makeDeck() {
+      const deck = this.arrOfIconValues.reduce((acc, iconClass) => {
+        const firstCard = new Card(iconClass).makeCard();
+        const secondCard = new Card(iconClass).makeCard();
 
-            return acc;
-          }, []);
-          const shuffledDeck = shuffle(deck);
-          return shuffledDeck;
-      }
+        acc.push(firstCard);
+        acc.push(secondCard);
+
+        return acc;
+      }, []);
+      const shuffledDeck = this.shuffleDeck(deck);
+      return shuffledDeck;
+    }
   }
 
   class GameState {
@@ -168,20 +167,20 @@
     }
 
     makeDeckDocFrag() {
-        const deck = new Deck(CARD_ICONS).makeDeck();
-        const docFrag = deck.reduce((acc, card) => {
-            acc.appendChild(card);
-            return acc;
-        }, document.createDocumentFragment());
+      const deck = new Deck(CARD_ICONS).makeDeck();
+      const docFrag = deck.reduce((acc, card) => {
+        acc.appendChild(card);
+        return acc;
+      }, document.createDocumentFragment());
 
-        return docFrag;
+      return docFrag;
     }
 
     appendDeck() {
-        const docFrag = this.makeDeckDocFrag();
-        const deckTag = document.getElementsByClassName('deck')[0];
-        
-        deckTag.appendChild(docFrag);
+      const docFrag = this.makeDeckDocFrag();
+      const deckTag = document.getElementsByClassName('deck')[0];
+
+      deckTag.appendChild(docFrag);
     }
 
     handleClick(e) {

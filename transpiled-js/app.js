@@ -16,23 +16,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 (function () {
-  // Shuffle function from http://stackoverflow.com/a/2450976
-  function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue,
-        randomIndex;
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-  }
-
   // 16 cards, 8 matches needed to win game
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
@@ -136,6 +119,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(Deck, [{
+      key: 'shuffleDeck',
+      value: function shuffleDeck(deckArray) {
+        // Shuffle function from http://stackoverflow.com/a/2450976
+        var currentIndex = deckArray.length,
+            temporaryValue,
+            randomIndex;
+
+        while (currentIndex !== 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = deckArray[currentIndex];
+          deckArray[currentIndex] = deckArray[randomIndex];
+          deckArray[randomIndex] = temporaryValue;
+        }
+
+        return deckArray;
+      }
+    }, {
       key: 'makeDeck',
       value: function makeDeck() {
         var deck = this.arrOfIconValues.reduce(function (acc, iconClass) {
@@ -147,7 +148,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           return acc;
         }, []);
-        var shuffledDeck = shuffle(deck);
+        var shuffledDeck = this.shuffleDeck(deck);
         return shuffledDeck;
       }
     }]);
