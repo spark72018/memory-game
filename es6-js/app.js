@@ -82,11 +82,10 @@
       const frontFace = this.makeFrontFace('front');
       const backFace = this.makeBackFace('back');
       const card = document.createElement('LI');
+      card.setAttribute('class', 'card');
 
       card.appendChild(frontFace);
       card.appendChild(backFace);
-
-      card.setAttribute('class', 'card');
 
       return card;
     }
@@ -163,11 +162,9 @@
       return docFrag;
     }
 
-    appendDeck() {
+    appendDeckTo(domElement) {
       const docFrag = this.makeDeckDocFrag();
-      const deckTag = document.getElementsByClassName('deck')[0];
-
-      deckTag.appendChild(docFrag);
+      domElement.appendChild(docFrag);
     }
 
     handleClick(e) {
@@ -216,6 +213,7 @@
     }
   }
 
+  const deckTag = document.getElementsByClassName('deck')[0];
   const game = new Game();
-  game.appendDeck();
+  game.appendDeckTo(deckTag);
 })();
