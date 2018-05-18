@@ -19,22 +19,84 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // 16 cards, 8 matches needed to win game
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
+  // utility functions
 
-  var deck = document.getElementsByClassName('deck')[0];
+  // used to mixin behavior into classes rather than
+  // "extend"ing since multiple inheritance isn't supported
+  var FunctionalMixin = function FunctionalMixin(behavior) {
+    return function (target) {
+      return Object.assign(target, behavior);
+    };
+  };
+
+  // mixin makeIcon method into a class
+  var canMakeIcons = FunctionalMixin({
+    makeIcon: function makeIcon(classString) {
+      var icon = document.createElement('I');
+      icon.setAttribute('class', classString);
+
+      return icon;
+    }
+  });
+
+  /*
+    <section class="score-panel">
+        <ul class="stars">
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+        </ul>
+         <span class="moves">3</span> Moves
+         <div class="restart">
+            <i class="fa fa-repeat"></i>
+        </div>
+    </section>
+  */
+
+  // class ScorePanel {
+  //   constructor(numberOfStars = 3) {
+  //     this.numberOfStars = numberOfStars;
+  //   }
+
+  //   makeListItem(...children) {
+  //     const listItem = document.createElement('LI');
+  //     const listItemWithChildren = children.reduce((acc, child) => {
+  //       acc.push(child);
+  //       return acc;
+  //     }, listItem);
+
+  //     return listItemWithChildren;
+  //   }
+
+  //   makePanel() {
+  //     const container = document.createElement('ul');
+  //     for (let i = 0; i < this.numberOfStars; i++) {
+  //       const iconWithCssClass = this.makeIcon('fa fa-star');
+  //     }
+  //   }
+  // }
+
+  canMakeIcons(ScorePanel.prototype);
 
   // TODO
   var handler = function handler(e) {
-    console.log(e.target);
-    var isCard = e.target.classList.contains('back') || e.target.classList.contains('front');
+    console.log('top level', e.target);
+    var cssClasses = e.target.classList;
+    var isCard = cssClasses.contains('back') || cssClasses.contains('front');
     var matched = e.target.parentNode.classList.contains('match');
     if (isCard && !matched) {
-      console.log('card!');
+      console.log('isCard and !matched e.target', e.target);
       var parent = e.target.parentNode;
       parent.classList.toggle('open');
       parent.classList.toggle('show');
-      console.log(e.target);
     } else {
-      console.log('something else');
+      console.log('not isCard or is matched');
     }
   };
 
@@ -45,18 +107,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return o instanceof Element;
   };
 
-  var addAttributes = function addAttributes(domElement, attributeObj) {
-    if (!domElementCheck(domElement)) throw new Error('First argument must be a DOM element!');
-
-    var attributes = Object.getOwnPropertyNames(attributeObj);
-    var domElWithAttributes = attributes.reduce(function (acc, attribute) {
-      acc.setAttribute(attribute, attributeObj[attribute]);
-      return acc;
-    }, domElement);
-
-    return domElWithAttributes;
-  };
-
   var Card = function () {
     function Card(iconClass) {
       _classCallCheck(this, Card);
@@ -64,18 +114,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.iconClass = iconClass;
     }
 
-    _createClass(Card, [{
-      key: 'makeIcon',
-      value: function makeIcon() {
-        var icon = document.createElement('I');
-        icon.setAttribute('class', this.iconClass);
+    // makeIcon(classString) {
+    //   const icon = document.createElement('I');
+    //   icon.setAttribute('class', classString);
 
-        return icon;
-      }
-    }, {
+    //   return icon;
+    // }
+
+    _createClass(Card, [{
       key: 'makeFrontFace',
       value: function makeFrontFace(str) {
-        var icon = this.makeIcon();
+        var icon = this.makeIcon(this.iconClass);
         var frontFace = document.createElement('div');
 
         frontFace.appendChild(icon);
@@ -98,11 +147,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var frontFace = this.makeFrontFace('front');
         var backFace = this.makeBackFace('back');
         var card = document.createElement('LI');
+        card.setAttribute('class', 'card');
 
         card.appendChild(frontFace);
         card.appendChild(backFace);
-
-        card.setAttribute('class', 'card');
 
         return card;
       }
@@ -110,6 +158,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Card;
   }();
+
+  canMakeIcons(Card.prototype);
 
   var Deck = function () {
     function Deck(arrOfIconValues) {
@@ -203,12 +253,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return docFrag;
       }
     }, {
-      key: 'appendDeck',
-      value: function appendDeck() {
-        var docFrag = this.makeDeckDocFrag();
-        var deckTag = document.getElementsByClassName('deck')[0];
-
-        deckTag.appendChild(docFrag);
+      key: 'appendDeckTo',
+      value: function appendDeckTo(domElement) {
+        try {
+          var docFrag = this.makeDeckDocFrag();
+          domElement.appendChild(docFrag);
+          return true;
+        } catch (e) {
+          throw new Error('error with appendDeckTo method', e);
+        }
       }
     }, {
       key: 'handleClick',
@@ -271,6 +324,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Game;
   }();
 
+  var deckTag = document.getElementsByClassName('deck')[0];
   var game = new Game();
-  game.appendDeck();
+  game.appendDeckTo(deckTag);
+  var moves = document.getElementsByClassName('moves')[0];
+  moves.innerText = 1000;
+  console.log('moves.innerTest is', moves.innerText);
 })();

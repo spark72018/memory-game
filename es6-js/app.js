@@ -22,24 +22,82 @@
     'fa fa-bicycle',
     'fa fa-bomb'
   ];
+  // utility functions
 
-  const deck = document.getElementsByClassName('deck')[0];
+  // used to mixin behavior into classes rather than
+  // "extend"ing since multiple inheritance isn't supported
+  const FunctionalMixin = behavior => target => Object.assign(target, behavior);
+
+  // mixin makeIcon method into a class
+  const canMakeIcons = FunctionalMixin({
+    makeIcon(classString) {
+      const icon = document.createElement('I');
+      icon.setAttribute('class', classString);
+
+      return icon;
+    }
+  });
+
+  /*
+    <section class="score-panel">
+        <ul class="stars">
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+            <li>
+                <i class="fa fa-star"></i>
+            </li>
+        </ul>
+
+        <span class="moves">3</span> Moves
+
+        <div class="restart">
+            <i class="fa fa-repeat"></i>
+        </div>
+    </section>
+  */
+
+  // class ScorePanel {
+  //   constructor(numberOfStars = 3) {
+  //     this.numberOfStars = numberOfStars;
+  //   }
+
+  //   makeListItem(...children) {
+  //     const listItem = document.createElement('LI');
+  //     const listItemWithChildren = children.reduce((acc, child) => {
+  //       acc.push(child);
+  //       return acc;
+  //     }, listItem);
+
+  //     return listItemWithChildren;
+  //   }
+
+  //   makePanel() {
+  //     const container = document.createElement('ul');
+  //     for (let i = 0; i < this.numberOfStars; i++) {
+  //       const iconWithCssClass = this.makeIcon('fa fa-star');
+  //     }
+  //   }
+  // }
+
+  canMakeIcons(ScorePanel.prototype);
 
   // TODO
   const handler = e => {
-    console.log(e.target);
-    const isCard =
-      e.target.classList.contains('back') ||
-      e.target.classList.contains('front');
+    console.log('top level', e.target);
+    const cssClasses = e.target.classList;
+    const isCard = cssClasses.contains('back') || cssClasses.contains('front');
     const matched = e.target.parentNode.classList.contains('match');
     if (isCard && !matched) {
-      console.log('card!');
+      console.log('isCard and !matched e.target', e.target);
       const parent = e.target.parentNode;
       parent.classList.toggle('open');
       parent.classList.toggle('show');
-      console.log(e.target);
     } else {
-      console.log('something else');
+      console.log('not isCard or is matched');
     }
   };
 
@@ -53,15 +111,15 @@
       this.iconClass = iconClass;
     }
 
-    makeIcon() {
-      const icon = document.createElement('I');
-      icon.setAttribute('class', this.iconClass);
+    // makeIcon(classString) {
+    //   const icon = document.createElement('I');
+    //   icon.setAttribute('class', classString);
 
-      return icon;
-    }
+    //   return icon;
+    // }
 
     makeFrontFace(str) {
-      const icon = this.makeIcon();
+      const icon = this.makeIcon(this.iconClass);
       const frontFace = document.createElement('div');
 
       frontFace.appendChild(icon);
@@ -90,6 +148,8 @@
       return card;
     }
   }
+
+  canMakeIcons(Card.prototype);
 
   class Deck {
     constructor(arrOfIconValues) {
@@ -163,8 +223,13 @@
     }
 
     appendDeckTo(domElement) {
-      const docFrag = this.makeDeckDocFrag();
-      domElement.appendChild(docFrag);
+      try {
+        const docFrag = this.makeDeckDocFrag();
+        domElement.appendChild(docFrag);
+        return true;
+      } catch (e) {
+        throw new Error('error with appendDeckTo method', e);
+      }
     }
 
     handleClick(e) {
@@ -216,4 +281,7 @@
   const deckTag = document.getElementsByClassName('deck')[0];
   const game = new Game();
   game.appendDeckTo(deckTag);
+  const moves = document.getElementsByClassName('moves')[0];
+  moves.innerText = 1000;
+  console.log('moves.innerTest is', moves.innerText);
 })();
