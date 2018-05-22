@@ -217,6 +217,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Deck;
   }();
 
+  var Timer = function () {
+    function Timer() {
+      var startingSeconds = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+      _classCallCheck(this, Timer);
+
+      this.startingSeconds = startingSeconds;
+      this.timerId = null;
+
+      // this.increaseSeconds = this.increaseSeconds.bind(this);
+    }
+
+    _createClass(Timer, [{
+      key: 'increaseSeconds',
+      value: function increaseSeconds(amount) {
+        this.startingSeconds += amount;
+        console.log('new time', this.startingSeconds);
+      }
+    }, {
+      key: 'resetSeconds',
+      value: function resetSeconds() {
+        this.pauseTimer();
+        this.startingSeconds = 0;
+        this.timerId = null;
+        console.log(this.startingSeconds, this.timerId);
+      }
+    }, {
+      key: 'startTimer',
+      value: function startTimer() {
+        var _this = this;
+
+        this.timerId = setInterval(function () {
+          return _this.increaseSeconds(1);
+        }, 1000);
+      }
+    }, {
+      key: 'pauseTimer',
+      value: function pauseTimer() {
+        if (this.timerId !== null) {
+          clearInterval(this.timerId);
+          this.timerId = null;
+        }
+      }
+    }]);
+
+    return Timer;
+  }();
+
   var GameState = function GameState() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         _ref$numFlippableCard = _ref.numFlippableCards,
@@ -336,11 +384,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Game;
   }();
 
+  var timer = new Timer();
+  timer.startTimer();
+  console.log(timer.timerId);
+  setTimeout(function () {
+    return timer.resetSeconds();
+  }, 5000);
   var deckTag = document.getElementsByClassName('deck')[0];
   var game = new Game();
-  console.log('game scorePanel is', game.scorePanel);
   game.appendDeckTo(deckTag);
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
-  console.log('moves.innerTest is', moves.innerText);
 })();

@@ -180,6 +180,38 @@
     }
   }
 
+  class Timer {
+    constructor(startingSeconds = 0) {
+      this.startingSeconds = startingSeconds;
+      this.timerId = null;
+
+      // this.increaseSeconds = this.increaseSeconds.bind(this);
+    }
+
+    increaseSeconds(amount) {
+      this.startingSeconds += amount;
+      console.log('new time', this.startingSeconds);
+    }
+
+    resetSeconds() {
+      this.pauseTimer();
+      this.startingSeconds = 0;
+      this.timerId = null;
+      console.log(this.startingSeconds, this.timerId);
+    }
+
+    startTimer() {
+      this.timerId = setInterval(() => this.increaseSeconds(1), 1000);
+    }
+
+    pauseTimer() {
+      if(this.timerId !== null) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+    }
+  }
+
   class GameState {
     constructor({
       numFlippableCards = 16,
@@ -271,11 +303,14 @@
     }
   }
 
+  
+  const timer = new Timer();
+  timer.startTimer();
+  console.log(timer.timerId);
+  setTimeout(() => timer.resetSeconds(), 5000);
   const deckTag = document.getElementsByClassName('deck')[0];
   const game = new Game();
-  console.log('game scorePanel is', game.scorePanel);
   game.appendDeckTo(deckTag);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
-  console.log('moves.innerTest is', moves.innerText);
 })();
