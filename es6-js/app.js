@@ -60,28 +60,49 @@
     </section>
   */
 
-  // class ScorePanel {
-  //   constructor(numberOfStars = 3) {
-  //     this.numberOfStars = numberOfStars;
-  //   }
+  // TODO
+  // add method to change # of stars
+  class ScorePanel {
+    constructor(numberOfStars = 3) {
+      this.numberOfStars = numberOfStars;
+    }
 
-  //   makeListItem(...children) {
-  //     const listItem = document.createElement('LI');
-  //     const listItemWithChildren = children.reduce((acc, child) => {
-  //       acc.push(child);
-  //       return acc;
-  //     }, listItem);
+    makeRestartButton() {
+      const aDiv = document.createElement('div');
+      const repeatIcon = this.makeIcon('fa fa-repeat');
+      aDiv.appendChild(repeatIcon);
 
-  //     return listItemWithChildren;
-  //   }
+      return aDiv;
+    }
 
-  //   makePanel() {
-  //     const container = document.createElement('ul');
-  //     for (let i = 0; i < this.numberOfStars; i++) {
-  //       const iconWithCssClass = this.makeIcon('fa fa-star');
-  //     }
-  //   }
-  // }
+    makeListItem(...children) {
+      const listItem = document.createElement('LI');
+      const listItemWithChildren = children.reduce((acc, child) => {
+        acc.appendChild(child);
+        return acc;
+      }, listItem);
+
+      return listItemWithChildren;
+    }
+
+    makePanel(classString) {
+      const restartButton = this.makeRestartButton();
+      const section = document.createElement('SECTION');
+      const unorderedList = document.createElement('ul');
+
+      for (let i = 0; i < this.numberOfStars; i++) {
+        const iconWithCssClass = this.makeIcon('fa fa-star');
+        const listItem = this.makeListItem(iconWithCssClass);
+        unorderedList.appendChild(listItem);
+      }
+
+      section.appendChild(unorderedList);
+      section.appendChild(restartButton);
+      section.setAttribute('class', classString);
+
+      return section;
+    }
+  }
 
   canMakeIcons(ScorePanel.prototype);
 
@@ -210,6 +231,7 @@
     constructor(state = new GameState()) {
       this.state = state;
       this.handleClick.bind(this);
+      this.scorePanel = new ScorePanel().makePanel('score-panel');
     }
 
     makeDeckDocFrag() {
@@ -280,6 +302,7 @@
 
   const deckTag = document.getElementsByClassName('deck')[0];
   const game = new Game();
+  console.log('game scorePanel is', game.scorePanel);
   game.appendDeckTo(deckTag);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;

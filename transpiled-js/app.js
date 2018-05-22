@@ -59,28 +59,66 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     </section>
   */
 
-  // class ScorePanel {
-  //   constructor(numberOfStars = 3) {
-  //     this.numberOfStars = numberOfStars;
-  //   }
+  // TODO
+  // add method to change # of stars
 
-  //   makeListItem(...children) {
-  //     const listItem = document.createElement('LI');
-  //     const listItemWithChildren = children.reduce((acc, child) => {
-  //       acc.push(child);
-  //       return acc;
-  //     }, listItem);
+  var ScorePanel = function () {
+    function ScorePanel() {
+      var numberOfStars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
 
-  //     return listItemWithChildren;
-  //   }
+      _classCallCheck(this, ScorePanel);
 
-  //   makePanel() {
-  //     const container = document.createElement('ul');
-  //     for (let i = 0; i < this.numberOfStars; i++) {
-  //       const iconWithCssClass = this.makeIcon('fa fa-star');
-  //     }
-  //   }
-  // }
+      this.numberOfStars = numberOfStars;
+    }
+
+    _createClass(ScorePanel, [{
+      key: 'makeRestartButton',
+      value: function makeRestartButton() {
+        var aDiv = document.createElement('div');
+        var repeatIcon = this.makeIcon('fa fa-repeat');
+        aDiv.appendChild(repeatIcon);
+
+        return aDiv;
+      }
+    }, {
+      key: 'makeListItem',
+      value: function makeListItem() {
+        var listItem = document.createElement('LI');
+
+        for (var _len = arguments.length, children = Array(_len), _key = 0; _key < _len; _key++) {
+          children[_key] = arguments[_key];
+        }
+
+        var listItemWithChildren = children.reduce(function (acc, child) {
+          acc.appendChild(child);
+          return acc;
+        }, listItem);
+
+        return listItemWithChildren;
+      }
+    }, {
+      key: 'makePanel',
+      value: function makePanel(classString) {
+        var restartButton = this.makeRestartButton();
+        var section = document.createElement('SECTION');
+        var unorderedList = document.createElement('ul');
+
+        for (var i = 0; i < this.numberOfStars; i++) {
+          var iconWithCssClass = this.makeIcon('fa fa-star');
+          var listItem = this.makeListItem(iconWithCssClass);
+          unorderedList.appendChild(listItem);
+        }
+
+        section.appendChild(unorderedList);
+        section.appendChild(restartButton);
+        section.setAttribute('class', classString);
+
+        return section;
+      }
+    }]);
+
+    return ScorePanel;
+  }();
 
   canMakeIcons(ScorePanel.prototype);
 
@@ -239,6 +277,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.state = state;
       this.handleClick.bind(this);
+      this.scorePanel = new ScorePanel().makePanel('score-panel');
     }
 
     _createClass(Game, [{
@@ -326,6 +365,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var deckTag = document.getElementsByClassName('deck')[0];
   var game = new Game();
+  console.log('game scorePanel is', game.scorePanel);
   game.appendDeckTo(deckTag);
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
