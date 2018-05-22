@@ -39,26 +39,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   });
 
-  /*
-    <section class="score-panel">
-        <ul class="stars">
-            <li>
-                <i class="fa fa-star"></i>
-            </li>
-            <li>
-                <i class="fa fa-star"></i>
-            </li>
-            <li>
-                <i class="fa fa-star"></i>
-            </li>
-        </ul>
-         <span class="moves">3</span> Moves
-         <div class="restart">
-            <i class="fa fa-repeat"></i>
-        </div>
-    </section>
-  */
-
   // TODO
   // add method to change # of stars
 
@@ -151,13 +131,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.iconClass = iconClass;
     }
-
-    // makeIcon(classString) {
-    //   const icon = document.createElement('I');
-    //   icon.setAttribute('class', classString);
-
-    //   return icon;
-    // }
 
     _createClass(Card, [{
       key: 'makeFrontFace',
