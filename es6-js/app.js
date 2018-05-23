@@ -214,6 +214,7 @@
 
   class GameState {
     constructor({
+      gameStarted = false,
       numFlippableCards = 16,
       secondsElapsed = 0,
       starRating = 3,
@@ -221,6 +222,7 @@
       numSuccessMatches = 0,
       numFailedMatches = 0
     } = {}) {
+      this.gameStarted = gameStarted;
       this.numFlippableCards = numFlippableCards;
       this.secondsElapsed = secondsElapsed;
       this.starRating = starRating;

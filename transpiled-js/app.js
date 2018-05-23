@@ -267,6 +267,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var GameState = function GameState() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$gameStarted = _ref.gameStarted,
+        gameStarted = _ref$gameStarted === undefined ? false : _ref$gameStarted,
         _ref$numFlippableCard = _ref.numFlippableCards,
         numFlippableCards = _ref$numFlippableCard === undefined ? 16 : _ref$numFlippableCard,
         _ref$secondsElapsed = _ref.secondsElapsed,
@@ -282,6 +284,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _classCallCheck(this, GameState);
 
+    this.gameStarted = gameStarted;
     this.numFlippableCards = numFlippableCards;
     this.secondsElapsed = secondsElapsed;
     this.starRating = starRating;
