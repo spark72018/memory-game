@@ -297,22 +297,22 @@
     }
   }
 
-  // class GameView {
-  //   append(child) {
-  //     return {
-  //       to: function(parent) {
-  //         if (parent instanceof Node) {
-  //           parent.appendChild(child);
-  //           return true;
-  //         } else {
-  //           throw new Error(
-  //             `argument for "to" method of GameView class must be an instance of Node!`
-  //           );
-  //         }
-  //       }
-  //     };
-  //   }
-  // }
+  class GameView {
+    append(child) {
+      return {
+        to: function(parent) {
+          if (parent instanceof Node) {
+            parent.appendChild(child);
+            return true;
+          } else {
+            throw new Error(
+              `argument for "to" method of GameView class must be an instance of Node!`
+            );
+          }
+        }
+      };
+    }
+  }
 
   const timer = new Timer();
   timer.startTimer();
@@ -320,13 +320,12 @@
   setTimeout(() => timer.resetSeconds(), 5000);
   const deckTag = document.getElementsByClassName('deck')[0];
   const gameController = new GameController();
-  // const gameView = new GameView();
+  const gameView = new GameView();
   const deckDocFrag = gameController.makeDeckDocFrag();
   const scorePanel = new ScorePanel().makePanel('score-panel');
 
   // gameView.append(scorePanel).to();
-  // gameView.append(deckDocFrag).to(deckTag);
-  // gameController.appendDeckTo(deckTag);
+  gameView.append(deckDocFrag).to(deckTag);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();

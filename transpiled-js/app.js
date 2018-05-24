@@ -377,22 +377,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return GameController;
   }();
 
-  // class GameView {
-  //   append(child) {
-  //     return {
-  //       to: function(parent) {
-  //         if (parent instanceof Node) {
-  //           parent.appendChild(child);
-  //           return true;
-  //         } else {
-  //           throw new Error(
-  //             `argument for "to" method of GameView class must be an instance of Node!`
-  //           );
-  //         }
-  //       }
-  //     };
-  //   }
-  // }
+  var GameView = function () {
+    function GameView() {
+      _classCallCheck(this, GameView);
+    }
+
+    _createClass(GameView, [{
+      key: 'append',
+      value: function append(child) {
+        return {
+          to: function to(parent) {
+            if (parent instanceof Node) {
+              parent.appendChild(child);
+              return true;
+            } else {
+              throw new Error('argument for "to" method of GameView class must be an instance of Node!');
+            }
+          }
+        };
+      }
+    }]);
+
+    return GameView;
+  }();
 
   var timer = new Timer();
   timer.startTimer();
@@ -402,13 +409,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }, 5000);
   var deckTag = document.getElementsByClassName('deck')[0];
   var gameController = new GameController();
-  // const gameView = new GameView();
+  var gameView = new GameView();
   var deckDocFrag = gameController.makeDeckDocFrag();
   var scorePanel = new ScorePanel().makePanel('score-panel');
 
   // gameView.append(scorePanel).to();
-  // gameView.append(deckDocFrag).to(deckTag);
-  // gameController.appendDeckTo(deckTag);
+  gameView.append(deckDocFrag).to(deckTag);
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();
