@@ -243,7 +243,7 @@
       return new ScorePanel().makePanel('score-panel');
     }
 
-    makeDeckDocFrag() {
+    makeDeck() {
       const deck = new Deck(CARD_ICONS).makeDeck();
       const docFrag = deck.reduce((acc, card) => {
         acc.appendChild(card);
@@ -324,9 +324,9 @@
   const deckTag = document.getElementsByClassName('deck')[0];
   const gameController = new GameController();
   const gameView = new GameView();
-  const deckDocFrag = gameController.makeDeckDocFrag();
-  const scorePanel = new ScorePanel().makePanel('score-panel');
-
+  const deckDocFrag = gameController.makeDeck();
+  const scorePanel = gameController.makeScorePanel();
+  console.log('scorePanel is', scorePanel);
   // gameView.append(scorePanel).to();
   gameView.append(deckDocFrag).to(deckTag);
   const moves = document.getElementsByClassName('moves')[0];

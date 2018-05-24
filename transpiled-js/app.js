@@ -311,8 +311,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return new ScorePanel().makePanel('score-panel');
       }
     }, {
-      key: 'makeDeckDocFrag',
-      value: function makeDeckDocFrag() {
+      key: 'makeDeck',
+      value: function makeDeck() {
         var deck = new Deck(CARD_ICONS).makeDeck();
         var docFrag = deck.reduce(function (acc, card) {
           acc.appendChild(card);
@@ -415,9 +415,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var deckTag = document.getElementsByClassName('deck')[0];
   var gameController = new GameController();
   var gameView = new GameView();
-  var deckDocFrag = gameController.makeDeckDocFrag();
-  var scorePanel = new ScorePanel().makePanel('score-panel');
-
+  var deckDocFrag = gameController.makeDeck();
+  var scorePanel = gameController.makeScorePanel();
+  console.log('scorePanel is', scorePanel);
   // gameView.append(scorePanel).to();
   gameView.append(deckDocFrag).to(deckTag);
   var moves = document.getElementsByClassName('moves')[0];
