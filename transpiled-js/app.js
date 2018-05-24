@@ -39,8 +39,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   });
 
+  var GameState = function GameState() {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$gameStarted = _ref.gameStarted,
+        gameStarted = _ref$gameStarted === undefined ? false : _ref$gameStarted,
+        _ref$numFlippableCard = _ref.numFlippableCards,
+        numFlippableCards = _ref$numFlippableCard === undefined ? 16 : _ref$numFlippableCard,
+        _ref$secondsElapsed = _ref.secondsElapsed,
+        secondsElapsed = _ref$secondsElapsed === undefined ? 0 : _ref$secondsElapsed,
+        _ref$starRating = _ref.starRating,
+        starRating = _ref$starRating === undefined ? 3 : _ref$starRating,
+        _ref$numMovesMade = _ref.numMovesMade,
+        numMovesMade = _ref$numMovesMade === undefined ? 0 : _ref$numMovesMade,
+        _ref$numSuccessMatche = _ref.numSuccessMatches,
+        numSuccessMatches = _ref$numSuccessMatche === undefined ? 0 : _ref$numSuccessMatche,
+        _ref$numFailedMatches = _ref.numFailedMatches,
+        numFailedMatches = _ref$numFailedMatches === undefined ? 0 : _ref$numFailedMatches;
+
+    _classCallCheck(this, GameState);
+
+    this.gameStarted = gameStarted;
+    this.numFlippableCards = numFlippableCards;
+    this.secondsElapsed = secondsElapsed;
+    this.starRating = starRating;
+    this.numMovesMade = numMovesMade;
+    this.numSuccessMatches = numSuccessMatches;
+    this.numFailedMatches = numFailedMatches;
+  };
+
   // TODO
   // add method to change # of stars
+
 
   var ScorePanel = function () {
     function ScorePanel() {
@@ -265,34 +294,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Timer;
   }();
-
-  var GameState = function GameState() {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref$gameStarted = _ref.gameStarted,
-        gameStarted = _ref$gameStarted === undefined ? false : _ref$gameStarted,
-        _ref$numFlippableCard = _ref.numFlippableCards,
-        numFlippableCards = _ref$numFlippableCard === undefined ? 16 : _ref$numFlippableCard,
-        _ref$secondsElapsed = _ref.secondsElapsed,
-        secondsElapsed = _ref$secondsElapsed === undefined ? 0 : _ref$secondsElapsed,
-        _ref$starRating = _ref.starRating,
-        starRating = _ref$starRating === undefined ? 3 : _ref$starRating,
-        _ref$numMovesMade = _ref.numMovesMade,
-        numMovesMade = _ref$numMovesMade === undefined ? 0 : _ref$numMovesMade,
-        _ref$numSuccessMatche = _ref.numSuccessMatches,
-        numSuccessMatches = _ref$numSuccessMatche === undefined ? 0 : _ref$numSuccessMatche,
-        _ref$numFailedMatches = _ref.numFailedMatches,
-        numFailedMatches = _ref$numFailedMatches === undefined ? 0 : _ref$numFailedMatches;
-
-    _classCallCheck(this, GameState);
-
-    this.gameStarted = gameStarted;
-    this.numFlippableCards = numFlippableCards;
-    this.secondsElapsed = secondsElapsed;
-    this.starRating = starRating;
-    this.numMovesMade = numMovesMade;
-    this.numSuccessMatches = numSuccessMatches;
-    this.numFailedMatches = numFailedMatches;
-  };
 
   var GameController = function () {
     function GameController() {

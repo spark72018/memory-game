@@ -38,6 +38,26 @@
     }
   });
 
+  class GameState {
+    constructor({
+      gameStarted = false,
+      numFlippableCards = 16,
+      secondsElapsed = 0,
+      starRating = 3,
+      numMovesMade = 0,
+      numSuccessMatches = 0,
+      numFailedMatches = 0
+    } = {}) {
+      this.gameStarted = gameStarted;
+      this.numFlippableCards = numFlippableCards;
+      this.secondsElapsed = secondsElapsed;
+      this.starRating = starRating;
+      this.numMovesMade = numMovesMade;
+      this.numSuccessMatches = numSuccessMatches;
+      this.numFailedMatches = numFailedMatches;
+    }
+  }
+
   // TODO
   // add method to change # of stars
   class ScorePanel {
@@ -210,26 +230,6 @@
         clearInterval(this.timerId);
         this.timerId = null;
       }
-    }
-  }
-
-  class GameState {
-    constructor({
-      gameStarted = false,
-      numFlippableCards = 16,
-      secondsElapsed = 0,
-      starRating = 3,
-      numMovesMade = 0,
-      numSuccessMatches = 0,
-      numFailedMatches = 0
-    } = {}) {
-      this.gameStarted = gameStarted;
-      this.numFlippableCards = numFlippableCards;
-      this.secondsElapsed = secondsElapsed;
-      this.starRating = starRating;
-      this.numMovesMade = numMovesMade;
-      this.numSuccessMatches = numSuccessMatches;
-      this.numFailedMatches = numFailedMatches;
     }
   }
 
