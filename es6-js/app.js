@@ -49,6 +49,7 @@
       const aDiv = document.createElement('div');
       const repeatIcon = this.makeIcon('fa fa-repeat');
       aDiv.appendChild(repeatIcon);
+      aDiv.setAttribute('class', 'restart');
 
       return aDiv;
     }
@@ -232,7 +233,7 @@
     }
   }
 
-  class Game {
+  class GameController {
     constructor(state = new GameState()) {
       this.state = state;
       this.handleClick.bind(this);
@@ -247,6 +248,14 @@
       }, document.createDocumentFragment());
 
       return docFrag;
+    }
+
+    appendScorePanelTo(domElement) {
+      try {
+
+      }catch (e) {
+
+      }
     }
 
     appendDeckTo(domElement) {
@@ -311,7 +320,7 @@
   console.log(timer.timerId);
   setTimeout(() => timer.resetSeconds(), 5000);
   const deckTag = document.getElementsByClassName('deck')[0];
-  const game = new Game();
+  const gameController = new GameController();
   game.appendDeckTo(deckTag);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;

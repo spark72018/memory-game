@@ -57,6 +57,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var aDiv = document.createElement('div');
         var repeatIcon = this.makeIcon('fa fa-repeat');
         aDiv.appendChild(repeatIcon);
+        aDiv.setAttribute('class', 'restart');
 
         return aDiv;
       }
