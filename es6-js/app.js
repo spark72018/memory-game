@@ -46,7 +46,8 @@
       starRating = 3,
       numMovesMade = 0,
       numSuccessMatches = 0,
-      numFailedMatches = 0
+      numFailedMatches = 0,
+      arrOfIconStrings = CARD_ICONS
     } = {}) {
       this.gameStarted = gameStarted;
       this.numFlippableCards = numFlippableCards;
@@ -55,6 +56,7 @@
       this.numMovesMade = numMovesMade;
       this.numSuccessMatches = numSuccessMatches;
       this.numFailedMatches = numFailedMatches;
+      this.arrOfIconStrings = arrOfIconStrings;
     }
   }
 
@@ -165,9 +167,6 @@
   canMakeIcons(Card.prototype);
 
   class Deck {
-    constructor(arrOfIconValues) {
-      this.arrOfIconValues = arrOfIconValues;
-    }
 
     shuffleDeck(deckArray) {
       // Shuffle function from http://stackoverflow.com/a/2450976
@@ -186,8 +185,8 @@
       return deckArray;
     }
 
-    makeDeck() {
-      const deckOfCards = this.arrOfIconValues.reduce((acc, iconClass) => {
+    makeDeckOfCards(arrOfIconStrings) {
+      const arrOfCards = arrOfIconStrings.reduce((acc, iconClass) => {
         const firstCard = new Card(iconClass).makeCard();
         const secondCard = new Card(iconClass).makeCard();
 
@@ -196,9 +195,22 @@
 
         return acc;
       }, []);
-      const shuffledDeck = this.shuffleDeck(deckOfCards);
+      const shuffledDeck = this.shuffleDeck(arrOfCards);
       return shuffledDeck;
     }
+
+    // makeDeck(arrOfIconStrings) {
+    //   const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+
+    //   const deck = shuffledCards.reduce((acc, card) => {
+    //     acc.appendChild(card);
+    //     return acc;
+    //   }, document.createElement('ul'));
+
+    //   deck.setAttribute('class', 'deck');
+      
+    //   return deck;
+    // }
   }
 
   class Timer {
@@ -241,16 +253,6 @@
 
     makeScorePanel() {
       return new ScorePanel().makePanel('score-panel');
-    }
-
-    makeDeck() {
-      const deck = new Deck(CARD_ICONS).makeDeck();
-      const docFrag = deck.reduce((acc, card) => {
-        acc.appendChild(card);
-        return acc;
-      }, document.createDocumentFragment());
-
-      return docFrag;
     }
 
 
@@ -324,7 +326,7 @@
   const deckTag = document.getElementsByClassName('deck')[0];
   const gameController = new GameController();
   const gameView = new GameView();
-  const deckDocFrag = gameController.makeDeck();
+  const deckDocFrag = gameController.makeDeckOfCards();
   const scorePanel = gameController.makeScorePanel();
   console.log('scorePanel is', scorePanel);
   // gameView.append(scorePanel).to();

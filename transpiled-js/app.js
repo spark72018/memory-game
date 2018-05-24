@@ -54,7 +54,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _ref$numSuccessMatche = _ref.numSuccessMatches,
         numSuccessMatches = _ref$numSuccessMatche === undefined ? 0 : _ref$numSuccessMatche,
         _ref$numFailedMatches = _ref.numFailedMatches,
-        numFailedMatches = _ref$numFailedMatches === undefined ? 0 : _ref$numFailedMatches;
+        numFailedMatches = _ref$numFailedMatches === undefined ? 0 : _ref$numFailedMatches,
+        _ref$arrOfIconStrings = _ref.arrOfIconStrings,
+        arrOfIconStrings = _ref$arrOfIconStrings === undefined ? CARD_ICONS : _ref$arrOfIconStrings;
 
     _classCallCheck(this, GameState);
 
@@ -65,6 +67,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numMovesMade = numMovesMade;
     this.numSuccessMatches = numSuccessMatches;
     this.numFailedMatches = numFailedMatches;
+    this.arrOfIconStrings = arrOfIconStrings;
   };
 
   // TODO
@@ -203,10 +206,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   canMakeIcons(Card.prototype);
 
   var Deck = function () {
-    function Deck(arrOfIconValues) {
+    function Deck() {
       _classCallCheck(this, Deck);
-
-      this.arrOfIconValues = arrOfIconValues;
     }
 
     _createClass(Deck, [{
@@ -228,9 +229,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return deckArray;
       }
     }, {
-      key: 'makeDeck',
-      value: function makeDeck() {
-        var deckOfCards = this.arrOfIconValues.reduce(function (acc, iconClass) {
+      key: 'makeDeckOfCards',
+      value: function makeDeckOfCards(arrOfIconStrings) {
+        var arrOfCards = arrOfIconStrings.reduce(function (acc, iconClass) {
           var firstCard = new Card(iconClass).makeCard();
           var secondCard = new Card(iconClass).makeCard();
 
@@ -239,9 +240,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           return acc;
         }, []);
-        var shuffledDeck = this.shuffleDeck(deckOfCards);
+        var shuffledDeck = this.shuffleDeck(arrOfCards);
         return shuffledDeck;
       }
+
+      // makeDeck(arrOfIconStrings) {
+      //   const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+
+      //   const deck = shuffledCards.reduce((acc, card) => {
+      //     acc.appendChild(card);
+      //     return acc;
+      //   }, document.createElement('ul'));
+
+      //   deck.setAttribute('class', 'deck');
+
+      //   return deck;
+      // }
+
     }]);
 
     return Deck;
@@ -309,17 +324,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeScorePanel',
       value: function makeScorePanel() {
         return new ScorePanel().makePanel('score-panel');
-      }
-    }, {
-      key: 'makeDeck',
-      value: function makeDeck() {
-        var deck = new Deck(CARD_ICONS).makeDeck();
-        var docFrag = deck.reduce(function (acc, card) {
-          acc.appendChild(card);
-          return acc;
-        }, document.createDocumentFragment());
-
-        return docFrag;
       }
     }, {
       key: 'handleClick',
@@ -415,7 +419,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var deckTag = document.getElementsByClassName('deck')[0];
   var gameController = new GameController();
   var gameView = new GameView();
-  var deckDocFrag = gameController.makeDeck();
+  var deckDocFrag = gameController.makeDeckOfCards();
   var scorePanel = gameController.makeScorePanel();
   console.log('scorePanel is', scorePanel);
   // gameView.append(scorePanel).to();
