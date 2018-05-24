@@ -243,20 +243,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var shuffledDeck = this.shuffleDeck(arrOfCards);
         return shuffledDeck;
       }
+    }, {
+      key: 'makeDeck',
+      value: function makeDeck(arrOfIconStrings) {
+        var shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
 
-      // makeDeck(arrOfIconStrings) {
-      //   const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+        var deck = shuffledCards.reduce(function (acc, card) {
+          acc.appendChild(card);
+          return acc;
+        }, document.createElement('ul'));
 
-      //   const deck = shuffledCards.reduce((acc, card) => {
-      //     acc.appendChild(card);
-      //     return acc;
-      //   }, document.createElement('ul'));
+        deck.setAttribute('class', 'deck');
 
-      //   deck.setAttribute('class', 'deck');
-
-      //   return deck;
-      // }
-
+        return deck;
+      }
     }]);
 
     return Deck;

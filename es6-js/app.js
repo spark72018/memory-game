@@ -199,18 +199,18 @@
       return shuffledDeck;
     }
 
-    // makeDeck(arrOfIconStrings) {
-    //   const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+    makeDeck(arrOfIconStrings) {
+      const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
 
-    //   const deck = shuffledCards.reduce((acc, card) => {
-    //     acc.appendChild(card);
-    //     return acc;
-    //   }, document.createElement('ul'));
+      const deck = shuffledCards.reduce((acc, card) => {
+        acc.appendChild(card);
+        return acc;
+      }, document.createElement('ul'));
 
-    //   deck.setAttribute('class', 'deck');
+      deck.setAttribute('class', 'deck');
       
-    //   return deck;
-    // }
+      return deck;
+    }
   }
 
   class Timer {
