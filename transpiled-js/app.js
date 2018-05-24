@@ -303,10 +303,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       this.state = state;
       this.handleClick.bind(this);
-      this.scorePanel = new ScorePanel().makePanel('score-panel');
     }
 
     _createClass(GameController, [{
+      key: 'makeScorePanel',
+      value: function makeScorePanel() {
+        return new ScorePanel().makePanel('score-panel');
+      }
+    }, {
       key: 'makeDeckDocFrag',
       value: function makeDeckDocFrag() {
         var deck = new Deck(CARD_ICONS).makeDeck();

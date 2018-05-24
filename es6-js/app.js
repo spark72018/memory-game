@@ -237,7 +237,10 @@
     constructor(state = new GameState()) {
       this.state = state;
       this.handleClick.bind(this);
-      this.scorePanel = new ScorePanel().makePanel('score-panel');
+    }
+
+    makeScorePanel() {
+      return new ScorePanel().makePanel('score-panel');
     }
 
     makeDeckDocFrag() {
