@@ -312,12 +312,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var GameController = function () {
     function GameController() {
-      var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new GameState();
-
       _classCallCheck(this, GameController);
-
-      this.state = state;
-      this.handleClick.bind(this);
     }
 
     _createClass(GameController, [{

@@ -247,11 +247,6 @@
   }
 
   class GameController {
-    constructor(state = new GameState()) {
-      this.state = state;
-      this.handleClick.bind(this);
-    }
-
 
     handleClick(e) {
       e.preventDefault();
