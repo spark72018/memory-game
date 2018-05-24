@@ -1,13 +1,3 @@
-/*
- * Create a list that holds all of your cards
- */
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 (function() {
   // 16 cards, 8 matches needed to win game
@@ -63,9 +53,6 @@
   // TODO
   // add method to change # of stars
   class ScorePanel {
-    constructor(numberOfStars = 3) {
-      this.numberOfStars = numberOfStars;
-    }
 
     makeRestartButton() {
       const aDiv = document.createElement('div');
@@ -74,6 +61,15 @@
       aDiv.setAttribute('class', 'restart');
 
       return aDiv;
+    }
+
+    makeMovesTag(numOfMoves) {
+      const spanTag = document.createElement('span');
+
+      spanTag.innerText = numOfMoves;
+      spanTag.setAttribute('class', 'moves');
+
+      return spanTag;
     }
 
     makeListItem(...children) {
@@ -86,19 +82,24 @@
       return listItemWithChildren;
     }
 
-    makePanel(classString) {
+    makePanel(numberOfStars, classString) {
       const restartButton = this.makeRestartButton();
       const section = document.createElement('SECTION');
       const unorderedList = document.createElement('ul');
+      const movesTag = this.makeMovesTag();
 
-      for (let i = 0; i < this.numberOfStars; i++) {
+      for (let i = 0; i < numberOfStars; i++) {
         const iconWithCssClass = this.makeIcon('fa fa-star');
         const listItem = this.makeListItem(iconWithCssClass);
         unorderedList.appendChild(listItem);
       }
 
+      unorderedList.setAttribute('class', 'stars');
+
       section.appendChild(unorderedList);
+      section.appendChild(movesTag);
       section.appendChild(restartButton);
+
       section.setAttribute('class', classString);
 
       return section;
@@ -251,10 +252,6 @@
       this.handleClick.bind(this);
     }
 
-    makeScorePanel() {
-      return new ScorePanel().makePanel('score-panel');
-    }
-
 
     handleClick(e) {
       e.preventDefault();
@@ -321,16 +318,19 @@
 
   const timer = new Timer();
   timer.startTimer();
-  console.log(timer.timerId);
+
   setTimeout(() => timer.resetSeconds(), 5000);
-  const deckTag = document.getElementsByClassName('deck')[0];
+  const gameContainer = document.getElementsByClassName('container')[0];
+
+  const gameState = new GameState();
   const gameController = new GameController();
   const gameView = new GameView();
-  const deckDocFrag = gameController.makeDeckOfCards();
-  const scorePanel = gameController.makeScorePanel();
-  console.log('scorePanel is', scorePanel);
-  // gameView.append(scorePanel).to();
-  gameView.append(deckDocFrag).to(deckTag);
+
+  const deck = new Deck().makeDeck(gameState.arrOfIconStrings);
+  const scorePanel = new ScorePanel().makePanel(0, 'score-panel');
+
+  gameView.append(scorePanel).to(gameContainer);
+  gameView.append(deck).to(gameContainer);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();

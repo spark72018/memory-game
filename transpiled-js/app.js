@@ -4,17 +4,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/*
- * Create a list that holds all of your cards
- */
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
-
 (function () {
   // 16 cards, 8 matches needed to win game
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
@@ -76,11 +65,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var ScorePanel = function () {
     function ScorePanel() {
-      var numberOfStars = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
-
       _classCallCheck(this, ScorePanel);
-
-      this.numberOfStars = numberOfStars;
     }
 
     _createClass(ScorePanel, [{
@@ -92,6 +77,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         aDiv.setAttribute('class', 'restart');
 
         return aDiv;
+      }
+    }, {
+      key: 'makeMovesTag',
+      value: function makeMovesTag(numOfMoves) {
+        var spanTag = document.createElement('span');
+
+        spanTag.innerText = numOfMoves;
+        spanTag.setAttribute('class', 'moves');
+
+        return spanTag;
       }
     }, {
       key: 'makeListItem',
@@ -111,19 +106,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'makePanel',
-      value: function makePanel(classString) {
+      value: function makePanel(numberOfStars, classString) {
         var restartButton = this.makeRestartButton();
         var section = document.createElement('SECTION');
         var unorderedList = document.createElement('ul');
+        var movesTag = this.makeMovesTag();
 
-        for (var i = 0; i < this.numberOfStars; i++) {
+        for (var i = 0; i < numberOfStars; i++) {
           var iconWithCssClass = this.makeIcon('fa fa-star');
           var listItem = this.makeListItem(iconWithCssClass);
           unorderedList.appendChild(listItem);
         }
 
+        unorderedList.setAttribute('class', 'stars');
+
         section.appendChild(unorderedList);
+        section.appendChild(movesTag);
         section.appendChild(restartButton);
+
         section.setAttribute('class', classString);
 
         return section;
@@ -321,11 +321,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(GameController, [{
-      key: 'makeScorePanel',
-      value: function makeScorePanel() {
-        return new ScorePanel().makePanel('score-panel');
-      }
-    }, {
       key: 'handleClick',
       value: function handleClick(e) {
         e.preventDefault();
@@ -412,18 +407,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var timer = new Timer();
   timer.startTimer();
-  console.log(timer.timerId);
+
   setTimeout(function () {
     return timer.resetSeconds();
   }, 5000);
-  var deckTag = document.getElementsByClassName('deck')[0];
+  var gameContainer = document.getElementsByClassName('container')[0];
+
+  var gameState = new GameState();
   var gameController = new GameController();
   var gameView = new GameView();
-  var deckDocFrag = gameController.makeDeckOfCards();
-  var scorePanel = gameController.makeScorePanel();
-  console.log('scorePanel is', scorePanel);
-  // gameView.append(scorePanel).to();
-  gameView.append(deckDocFrag).to(deckTag);
+
+  var deck = new Deck().makeDeck(gameState.arrOfIconStrings);
+  var scorePanel = new ScorePanel().makePanel(0, 'score-panel');
+
+  gameView.append(scorePanel).to(gameContainer);
+  gameView.append(deck).to(gameContainer);
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();
