@@ -167,7 +167,7 @@
     }
 
     makeDeck() {
-      const deck = this.arrOfIconValues.reduce((acc, iconClass) => {
+      const deckOfCards = this.arrOfIconValues.reduce((acc, iconClass) => {
         const firstCard = new Card(iconClass).makeCard();
         const secondCard = new Card(iconClass).makeCard();
 
@@ -176,7 +176,7 @@
 
         return acc;
       }, []);
-      const shuffledDeck = this.shuffleDeck(deck);
+      const shuffledDeck = this.shuffleDeck(deckOfCards);
       return shuffledDeck;
     }
   }
@@ -206,7 +206,7 @@
     }
 
     pauseTimer() {
-      if(this.timerId !== null) {
+      if (this.timerId !== null) {
         clearInterval(this.timerId);
         this.timerId = null;
       }
@@ -250,23 +250,6 @@
       return docFrag;
     }
 
-    appendScorePanelTo(domElement) {
-      try {
-
-      }catch (e) {
-
-      }
-    }
-
-    appendDeckTo(domElement) {
-      try {
-        const docFrag = this.makeDeckDocFrag();
-        domElement.appendChild(docFrag);
-        return true;
-      } catch (e) {
-        throw new Error('error with appendDeckTo method', e);
-      }
-    }
 
     handleClick(e) {
       e.preventDefault();
@@ -314,14 +297,36 @@
     }
   }
 
-  
+  // class GameView {
+  //   append(child) {
+  //     return {
+  //       to: function(parent) {
+  //         if (parent instanceof Node) {
+  //           parent.appendChild(child);
+  //           return true;
+  //         } else {
+  //           throw new Error(
+  //             `argument for "to" method of GameView class must be an instance of Node!`
+  //           );
+  //         }
+  //       }
+  //     };
+  //   }
+  // }
+
   const timer = new Timer();
   timer.startTimer();
   console.log(timer.timerId);
   setTimeout(() => timer.resetSeconds(), 5000);
   const deckTag = document.getElementsByClassName('deck')[0];
   const gameController = new GameController();
-  game.appendDeckTo(deckTag);
+  // const gameView = new GameView();
+  const deckDocFrag = gameController.makeDeckDocFrag();
+  const scorePanel = new ScorePanel().makePanel('score-panel');
+
+  // gameView.append(scorePanel).to();
+  // gameView.append(deckDocFrag).to(deckTag);
+  // gameController.appendDeckTo(deckTag);
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();
