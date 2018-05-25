@@ -27,30 +27,7 @@
     }
   });
 
-  class GameState {
-    constructor({
-      gameStarted = false,
-      numFlippableCards = 16,
-      secondsElapsed = 0,
-      starRating = 3,
-      numMovesMade = 0,
-      numSuccessMatches = 0,
-      numFailedMatches = 0,
-      arrOfIconStrings = CARD_ICONS
-    } = {}) {
-      this.gameStarted = gameStarted;
-      this.numFlippableCards = numFlippableCards;
-      this.secondsElapsed = secondsElapsed;
-      this.starRating = starRating;
-      this.numMovesMade = numMovesMade;
-      this.numSuccessMatches = numSuccessMatches;
-      this.numFailedMatches = numFailedMatches;
-      this.arrOfIconStrings = arrOfIconStrings;
-    }
-  }
 
-  // TODO
-  // add method to change # of stars
   class ScorePanel {
     makeRestartButton() {
       const aDiv = document.createElement('div');
@@ -292,6 +269,28 @@
       arrOfGameElements.forEach(gameElement =>
         container.appendChild(gameElement)
       );
+    }
+  }
+
+  class GameState {
+    constructor({
+      gameStarted = false,
+      numFlippableCards = 16,
+      secondsElapsed = 0,
+      starRating = 3,
+      numMovesMade = 0,
+      numSuccessMatches = 0,
+      numFailedMatches = 0,
+      arrOfIconStrings = CARD_ICONS
+    } = {}) {
+      this.gameStarted = gameStarted;
+      this.numFlippableCards = numFlippableCards;
+      this.secondsElapsed = secondsElapsed;
+      this.starRating = starRating;
+      this.numMovesMade = numMovesMade;
+      this.numSuccessMatches = numSuccessMatches;
+      this.numFailedMatches = numFailedMatches;
+      this.arrOfIconStrings = arrOfIconStrings;
     }
   }
 

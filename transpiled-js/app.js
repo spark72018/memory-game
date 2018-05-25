@@ -28,41 +28,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   });
 
-  var GameState = function GameState() {
-    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref$gameStarted = _ref.gameStarted,
-        gameStarted = _ref$gameStarted === undefined ? false : _ref$gameStarted,
-        _ref$numFlippableCard = _ref.numFlippableCards,
-        numFlippableCards = _ref$numFlippableCard === undefined ? 16 : _ref$numFlippableCard,
-        _ref$secondsElapsed = _ref.secondsElapsed,
-        secondsElapsed = _ref$secondsElapsed === undefined ? 0 : _ref$secondsElapsed,
-        _ref$starRating = _ref.starRating,
-        starRating = _ref$starRating === undefined ? 3 : _ref$starRating,
-        _ref$numMovesMade = _ref.numMovesMade,
-        numMovesMade = _ref$numMovesMade === undefined ? 0 : _ref$numMovesMade,
-        _ref$numSuccessMatche = _ref.numSuccessMatches,
-        numSuccessMatches = _ref$numSuccessMatche === undefined ? 0 : _ref$numSuccessMatche,
-        _ref$numFailedMatches = _ref.numFailedMatches,
-        numFailedMatches = _ref$numFailedMatches === undefined ? 0 : _ref$numFailedMatches,
-        _ref$arrOfIconStrings = _ref.arrOfIconStrings,
-        arrOfIconStrings = _ref$arrOfIconStrings === undefined ? CARD_ICONS : _ref$arrOfIconStrings;
-
-    _classCallCheck(this, GameState);
-
-    this.gameStarted = gameStarted;
-    this.numFlippableCards = numFlippableCards;
-    this.secondsElapsed = secondsElapsed;
-    this.starRating = starRating;
-    this.numMovesMade = numMovesMade;
-    this.numSuccessMatches = numSuccessMatches;
-    this.numFailedMatches = numFailedMatches;
-    this.arrOfIconStrings = arrOfIconStrings;
-  };
-
-  // TODO
-  // add method to change # of stars
-
-
   var ScorePanel = function () {
     function ScorePanel() {
       _classCallCheck(this, ScorePanel);
@@ -345,36 +310,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'getSecondsElapsed',
-      value: function getSecondsElapsed(_ref2) {
-        var secondsElapsed = _ref2.secondsElapsed;
+      value: function getSecondsElapsed(_ref) {
+        var secondsElapsed = _ref.secondsElapsed;
 
         return secondsElapsed;
       }
     }, {
       key: 'getStarRating',
-      value: function getStarRating(_ref3) {
-        var starRating = _ref3.starRating;
+      value: function getStarRating(_ref2) {
+        var starRating = _ref2.starRating;
 
         return starRating;
       }
     }, {
       key: 'getNumMovesMade',
-      value: function getNumMovesMade(_ref4) {
-        var numMovesMade = _ref4.numMovesMade;
+      value: function getNumMovesMade(_ref3) {
+        var numMovesMade = _ref3.numMovesMade;
 
         return numMovesMade;
       }
     }, {
       key: 'getNumSuccessMatches',
-      value: function getNumSuccessMatches(_ref5) {
-        var numSuccessMatches = _ref5.numSuccessMatches;
+      value: function getNumSuccessMatches(_ref4) {
+        var numSuccessMatches = _ref4.numSuccessMatches;
 
         return numSuccessMatches;
       }
     }, {
       key: 'getNumFailedMatches',
-      value: function getNumFailedMatches(_ref6) {
-        var numFailedMatches = _ref6.numFailedMatches;
+      value: function getNumFailedMatches(_ref5) {
+        var numFailedMatches = _ref5.numFailedMatches;
 
         return numFailedMatches;
       }
@@ -390,9 +355,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _createClass(GameView, [{
       key: 'renderGame',
-      value: function renderGame(_ref7) {
-        var container = _ref7.container,
-            arrOfGameElements = _ref7.arrOfGameElements;
+      value: function renderGame(_ref6) {
+        var container = _ref6.container,
+            arrOfGameElements = _ref6.arrOfGameElements;
 
         arrOfGameElements.forEach(function (gameElement) {
           return container.appendChild(gameElement);
@@ -402,6 +367,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return GameView;
   }();
+
+  var GameState = function GameState() {
+    var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref7$gameStarted = _ref7.gameStarted,
+        gameStarted = _ref7$gameStarted === undefined ? false : _ref7$gameStarted,
+        _ref7$numFlippableCar = _ref7.numFlippableCards,
+        numFlippableCards = _ref7$numFlippableCar === undefined ? 16 : _ref7$numFlippableCar,
+        _ref7$secondsElapsed = _ref7.secondsElapsed,
+        secondsElapsed = _ref7$secondsElapsed === undefined ? 0 : _ref7$secondsElapsed,
+        _ref7$starRating = _ref7.starRating,
+        starRating = _ref7$starRating === undefined ? 3 : _ref7$starRating,
+        _ref7$numMovesMade = _ref7.numMovesMade,
+        numMovesMade = _ref7$numMovesMade === undefined ? 0 : _ref7$numMovesMade,
+        _ref7$numSuccessMatch = _ref7.numSuccessMatches,
+        numSuccessMatches = _ref7$numSuccessMatch === undefined ? 0 : _ref7$numSuccessMatch,
+        _ref7$numFailedMatche = _ref7.numFailedMatches,
+        numFailedMatches = _ref7$numFailedMatche === undefined ? 0 : _ref7$numFailedMatche,
+        _ref7$arrOfIconString = _ref7.arrOfIconStrings,
+        arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString;
+
+    _classCallCheck(this, GameState);
+
+    this.gameStarted = gameStarted;
+    this.numFlippableCards = numFlippableCards;
+    this.secondsElapsed = secondsElapsed;
+    this.starRating = starRating;
+    this.numMovesMade = numMovesMade;
+    this.numSuccessMatches = numSuccessMatches;
+    this.numFailedMatches = numFailedMatches;
+    this.arrOfIconStrings = arrOfIconStrings;
+  };
 
   var gameContainer = document.getElementsByClassName('container')[0];
   var gameState = new GameState();
