@@ -435,6 +435,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }
         };
       }
+    }, {
+      key: 'renderGame',
+      value: function renderGame(_ref7) {
+        var container = _ref7.container,
+            arrOfGameElements = _ref7.arrOfGameElements;
+
+        arrOfGameElements.forEach(function (gameElement) {
+          return container.appendChild(gameElement);
+        });
+      }
     }]);
 
     return GameView;
@@ -453,10 +463,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var gameView = new GameView();
 
   var deck = new Deck().makeDeck(gameState.arrOfIconStrings);
-  var scorePanel = new ScorePanel().makePanel(0, 'score-panel');
+  var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
-  gameView.append(scorePanel).to(gameContainer);
-  gameView.append(deck).to(gameContainer);
+  gameView.renderGame({
+    container: gameContainer,
+    arrOfGameElements: [scorePanel, deck]
+  });
+
+  // const renderGame = () => {
+  //   gameView.append(scorePanel).to(gameContainer);
+  //   gameView.append(deck).to(gameContainer);
+  // };
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();

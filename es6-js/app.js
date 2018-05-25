@@ -334,6 +334,11 @@
         }
       };
     }
+
+    renderGame({container, arrOfGameElements}) {
+      arrOfGameElements.forEach(gameElement => container.appendChild(gameElement));
+    }
+
   }
 
   const timer = new Timer();
@@ -347,10 +352,17 @@
   const gameView = new GameView();
 
   const deck = new Deck().makeDeck(gameState.arrOfIconStrings);
-  const scorePanel = new ScorePanel().makePanel(0, 'score-panel');
+  const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
-  gameView.append(scorePanel).to(gameContainer);
-  gameView.append(deck).to(gameContainer);
+  gameView.renderGame({
+    container: gameContainer,
+    arrOfGameElements: [scorePanel, deck]
+  });
+
+  // const renderGame = () => {
+  //   gameView.append(scorePanel).to(gameContainer);
+  //   gameView.append(deck).to(gameContainer);
+  // };
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();
