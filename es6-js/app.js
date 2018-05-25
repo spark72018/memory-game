@@ -1,4 +1,3 @@
-
 (function() {
   // 16 cards, 8 matches needed to win game
   const SUCCESSFUL_MATCHES_TO_WIN = 8;
@@ -53,7 +52,6 @@
   // TODO
   // add method to change # of stars
   class ScorePanel {
-
     makeRestartButton() {
       const aDiv = document.createElement('div');
       const repeatIcon = this.makeIcon('fa fa-repeat');
@@ -168,7 +166,6 @@
   canMakeIcons(Card.prototype);
 
   class Deck {
-
     shuffleDeck(deckArray) {
       // Shuffle function from http://stackoverflow.com/a/2450976
       var currentIndex = deckArray.length,
@@ -209,7 +206,7 @@
       }, document.createElement('ul'));
 
       deck.setAttribute('class', 'deck');
-      
+
       return deck;
     }
   }
@@ -301,24 +298,24 @@
       return stateObj;
     }
 
-    getSecondsElapsed() {
-      return this.state.secondsElapsed;
+    getSecondsElapsed({ secondsElapsed }) {
+      return secondsElapsed;
     }
 
-    getStarRating() {
-      return this.state.starRating;
+    getStarRating({ starRating }) {
+      return starRating;
     }
 
-    getNumMovesMade() {
-      return this.state.numMovesMade;
+    getNumMovesMade({ numMovesMade }) {
+      return numMovesMade;
     }
 
-    getNumSuccessMatches() {
-      return this.state.numSuccessMatches;
+    getNumSuccessMatches({ numSuccessMatches }) {
+      return numSuccessMatches;
     }
 
-    getNumFailedMatches() {
-      return this.state.numFailedMatches;
+    getNumFailedMatches({ numFailedMatches }) {
+      return numFailedMatches;
     }
   }
 

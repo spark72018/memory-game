@@ -378,28 +378,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'getSecondsElapsed',
-      value: function getSecondsElapsed() {
-        return this.state.secondsElapsed;
+      value: function getSecondsElapsed(_ref2) {
+        var secondsElapsed = _ref2.secondsElapsed;
+
+        return secondsElapsed;
       }
     }, {
       key: 'getStarRating',
-      value: function getStarRating() {
-        return this.state.starRating;
+      value: function getStarRating(_ref3) {
+        var starRating = _ref3.starRating;
+
+        return starRating;
       }
     }, {
       key: 'getNumMovesMade',
-      value: function getNumMovesMade() {
-        return this.state.numMovesMade;
+      value: function getNumMovesMade(_ref4) {
+        var numMovesMade = _ref4.numMovesMade;
+
+        return numMovesMade;
       }
     }, {
       key: 'getNumSuccessMatches',
-      value: function getNumSuccessMatches() {
-        return this.state.numSuccessMatches;
+      value: function getNumSuccessMatches(_ref5) {
+        var numSuccessMatches = _ref5.numSuccessMatches;
+
+        return numSuccessMatches;
       }
     }, {
       key: 'getNumFailedMatches',
-      value: function getNumFailedMatches() {
-        return this.state.numFailedMatches;
+      value: function getNumFailedMatches(_ref6) {
+        var numFailedMatches = _ref6.numFailedMatches;
+
+        return numFailedMatches;
       }
     }]);
 
