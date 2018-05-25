@@ -321,30 +321,60 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         e.preventDefault();
         console.log('handleClick called');
       }
+
+      /*
+      class GameState {
+      constructor({
+        gameStarted = false,
+        numFlippableCards = 16,
+        secondsElapsed = 0,
+        starRating = 3,
+        numMovesMade = 0,
+        numSuccessMatches = 0,
+        numFailedMatches = 0,
+        arrOfIconStrings = CARD_ICONS
+      } = {}) {
+        this.gameStarted = gameStarted;
+        this.numFlippableCards = numFlippableCards;
+        this.secondsElapsed = secondsElapsed;
+        this.starRating = starRating;
+        this.numMovesMade = numMovesMade;
+        this.numSuccessMatches = numSuccessMatches;
+        this.numFailedMatches = numFailedMatches;
+        this.arrOfIconStrings = arrOfIconStrings;
+      }
+      }
+      */
+
     }, {
       key: 'setSecondsElapsed',
-      value: function setSecondsElapsed(num) {
-        this.state.secondsElapsed = num;
+      value: function setSecondsElapsed(stateObj, secondsElapsed) {
+        stateObj.secondsElapsed = secondsElapsed;
+        return stateObj;
       }
     }, {
       key: 'setStarRating',
-      value: function setStarRating(num) {
-        this.state.starRating = num;
+      value: function setStarRating(stateObj, numberOfStars) {
+        stateObj.starRating = numberOfStars;
+        return stateObj;
       }
     }, {
       key: 'setMovesMade',
-      value: function setMovesMade(num) {
-        this.state.numMovesMade = num;
+      value: function setMovesMade(stateObj, numberOfMoves) {
+        stateObj.numMovesMade = numberOfMoves;
+        return stateObj;
       }
     }, {
       key: 'setSuccessMatches',
-      value: function setSuccessMatches(num) {
-        this.state.numSuccessMatches = num;
+      value: function setSuccessMatches(stateObj, numberOfSuccessMatches) {
+        stateObj.numSuccessMatches = numberOfSuccessMatches;
+        return stateObj;
       }
     }, {
       key: 'setFailedMatches',
-      value: function setFailedMatches(num) {
-        this.state.numFailedMatches = num;
+      value: function setFailedMatches(stateObj, numberOfFailedMatches) {
+        stateObj.numFailedMatches = numberOfFailedMatches;
+        return stateObj;
       }
     }, {
       key: 'getSecondsElapsed',

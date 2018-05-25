@@ -247,30 +247,58 @@
   }
 
   class GameController {
-
     handleClick(e) {
       e.preventDefault();
       console.log('handleClick called');
     }
 
-    setSecondsElapsed(num) {
-      this.state.secondsElapsed = num;
+    /*
+  class GameState {
+    constructor({
+      gameStarted = false,
+      numFlippableCards = 16,
+      secondsElapsed = 0,
+      starRating = 3,
+      numMovesMade = 0,
+      numSuccessMatches = 0,
+      numFailedMatches = 0,
+      arrOfIconStrings = CARD_ICONS
+    } = {}) {
+      this.gameStarted = gameStarted;
+      this.numFlippableCards = numFlippableCards;
+      this.secondsElapsed = secondsElapsed;
+      this.starRating = starRating;
+      this.numMovesMade = numMovesMade;
+      this.numSuccessMatches = numSuccessMatches;
+      this.numFailedMatches = numFailedMatches;
+      this.arrOfIconStrings = arrOfIconStrings;
+    }
+  }
+    */
+
+    setSecondsElapsed(stateObj, secondsElapsed) {
+      stateObj.secondsElapsed = secondsElapsed;
+      return stateObj;
     }
 
-    setStarRating(num) {
-      this.state.starRating = num;
+    setStarRating(stateObj, numberOfStars) {
+      stateObj.starRating = numberOfStars;
+      return stateObj;
     }
 
-    setMovesMade(num) {
-      this.state.numMovesMade = num;
+    setMovesMade(stateObj, numberOfMoves) {
+      stateObj.numMovesMade = numberOfMoves;
+      return stateObj;
     }
 
-    setSuccessMatches(num) {
-      this.state.numSuccessMatches = num;
+    setSuccessMatches(stateObj, numberOfSuccessMatches) {
+      stateObj.numSuccessMatches = numberOfSuccessMatches;
+      return stateObj;
     }
 
-    setFailedMatches(num) {
-      this.state.numFailedMatches = num;
+    setFailedMatches(stateObj, numberOfFailedMatches) {
+      stateObj.numFailedMatches = numberOfFailedMatches;
+      return stateObj;
     }
 
     getSecondsElapsed() {
