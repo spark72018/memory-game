@@ -135,25 +135,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   canMakeIcons(ScorePanel.prototype);
 
-  // TODO
-  var handler = function handler(e) {
-    console.log('top level', e.target);
-    var cssClasses = e.target.classList;
-    var isCard = cssClasses.contains('back') || cssClasses.contains('front');
-    var matched = e.target.parentNode.classList.contains('match');
-    if (isCard && !matched) {
-      console.log('isCard and !matched e.target', e.target);
-      var parent = e.target.parentNode;
-      parent.classList.toggle('open');
-      parent.classList.toggle('show');
-    } else {
-      console.log('not isCard or is matched');
-    }
-  };
-
-  var documentBody = document.body;
-  documentBody.addEventListener('click', handler, true);
-
   var domElementCheck = function domElementCheck(o) {
     return o instanceof Element;
   };
@@ -310,6 +291,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Timer;
   }();
 
+  // function clickHandler(e) {
+  //   console.log('top level', e.target);
+  //   const cssClasses = e.target.classList;
+  //   const isCard = cssClasses.contains('back') || cssClasses.contains('front');
+  //   const matched = e.target.parentNode.classList.contains('match');
+  //   if (isCard && !matched) {
+  //     console.log('isCard and !matched e.target', e.target);
+  //     const parent = e.target.parentNode;
+  //     parent.classList.toggle('open');
+  //     parent.classList.toggle('show');
+  //   } else {
+  //     console.log('not isCard or is matched');
+  //   }
+  // };
+
   var GameController = function () {
     function GameController() {
       _classCallCheck(this, GameController);
@@ -318,34 +314,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(GameController, [{
       key: 'handleClick',
       value: function handleClick(e) {
-        e.preventDefault();
-        console.log('handleClick called');
+        // e.preventDefault();
+        console.log('top level', e.target);
+        var cssClasses = e.target.classList;
+        var isCard = cssClasses.contains('back') || cssClasses.contains('front');
+        var matched = e.target.parentNode.classList.contains('match');
+        if (isCard && !matched) {
+          console.log('isCard and !matched e.target', e.target);
+          var parent = e.target.parentNode;
+          parent.classList.toggle('open');
+          parent.classList.toggle('show');
+        } else {
+          console.log('not isCard or is matched');
+        }
       }
-
-      /*
-      class GameState {
-      constructor({
-        gameStarted = false,
-        numFlippableCards = 16,
-        secondsElapsed = 0,
-        starRating = 3,
-        numMovesMade = 0,
-        numSuccessMatches = 0,
-        numFailedMatches = 0,
-        arrOfIconStrings = CARD_ICONS
-      } = {}) {
-        this.gameStarted = gameStarted;
-        this.numFlippableCards = numFlippableCards;
-        this.secondsElapsed = secondsElapsed;
-        this.starRating = starRating;
-        this.numMovesMade = numMovesMade;
-        this.numSuccessMatches = numSuccessMatches;
-        this.numFailedMatches = numFailedMatches;
-        this.arrOfIconStrings = arrOfIconStrings;
-      }
-      }
-      */
-
     }, {
       key: 'setSecondsElapsed',
       value: function setSecondsElapsed(stateObj, secondsElapsed) {
@@ -450,14 +432,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return GameView;
   }();
 
-  var timer = new Timer();
-  timer.startTimer();
-
-  setTimeout(function () {
-    return timer.resetSeconds();
-  }, 5000);
   var gameContainer = document.getElementsByClassName('container')[0];
-
   var gameState = new GameState();
   var gameController = new GameController();
   var gameView = new GameView();
@@ -470,10 +445,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     arrOfGameElements: [scorePanel, deck]
   });
 
-  // const renderGame = () => {
-  //   gameView.append(scorePanel).to(gameContainer);
-  //   gameView.append(deck).to(gameContainer);
-  // };
+  var documentBody = document.body;
+  documentBody.addEventListener('click', gameController.handleClick, true);
+
   var moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();

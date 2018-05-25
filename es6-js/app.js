@@ -106,25 +106,6 @@
 
   canMakeIcons(ScorePanel.prototype);
 
-  // TODO
-  const handler = e => {
-    console.log('top level', e.target);
-    const cssClasses = e.target.classList;
-    const isCard = cssClasses.contains('back') || cssClasses.contains('front');
-    const matched = e.target.parentNode.classList.contains('match');
-    if (isCard && !matched) {
-      console.log('isCard and !matched e.target', e.target);
-      const parent = e.target.parentNode;
-      parent.classList.toggle('open');
-      parent.classList.toggle('show');
-    } else {
-      console.log('not isCard or is matched');
-    }
-  };
-
-  const documentBody = document.body;
-  documentBody.addEventListener('click', handler, true);
-
   const domElementCheck = o => o instanceof Element;
 
   class Card {
@@ -243,35 +224,37 @@
     }
   }
 
+  // function clickHandler(e) {
+  //   console.log('top level', e.target);
+  //   const cssClasses = e.target.classList;
+  //   const isCard = cssClasses.contains('back') || cssClasses.contains('front');
+  //   const matched = e.target.parentNode.classList.contains('match');
+  //   if (isCard && !matched) {
+  //     console.log('isCard and !matched e.target', e.target);
+  //     const parent = e.target.parentNode;
+  //     parent.classList.toggle('open');
+  //     parent.classList.toggle('show');
+  //   } else {
+  //     console.log('not isCard or is matched');
+  //   }
+  // };
+
   class GameController {
     handleClick(e) {
-      e.preventDefault();
-      console.log('handleClick called');
+      // e.preventDefault();
+      console.log('top level', e.target);
+      const cssClasses = e.target.classList;
+      const isCard = cssClasses.contains('back') || cssClasses.contains('front');
+      const matched = e.target.parentNode.classList.contains('match');
+      if (isCard && !matched) {
+        console.log('isCard and !matched e.target', e.target);
+        const parent = e.target.parentNode;
+        parent.classList.toggle('open');
+        parent.classList.toggle('show');
+      } else {
+        console.log('not isCard or is matched');
+      }
     }
-
-    /*
-  class GameState {
-    constructor({
-      gameStarted = false,
-      numFlippableCards = 16,
-      secondsElapsed = 0,
-      starRating = 3,
-      numMovesMade = 0,
-      numSuccessMatches = 0,
-      numFailedMatches = 0,
-      arrOfIconStrings = CARD_ICONS
-    } = {}) {
-      this.gameStarted = gameStarted;
-      this.numFlippableCards = numFlippableCards;
-      this.secondsElapsed = secondsElapsed;
-      this.starRating = starRating;
-      this.numMovesMade = numMovesMade;
-      this.numSuccessMatches = numSuccessMatches;
-      this.numFailedMatches = numFailedMatches;
-      this.arrOfIconStrings = arrOfIconStrings;
-    }
-  }
-    */
 
     setSecondsElapsed(stateObj, secondsElapsed) {
       stateObj.secondsElapsed = secondsElapsed;
@@ -335,18 +318,14 @@
       };
     }
 
-    renderGame({container, arrOfGameElements}) {
-      arrOfGameElements.forEach(gameElement => container.appendChild(gameElement));
+    renderGame({ container, arrOfGameElements }) {
+      arrOfGameElements.forEach(gameElement =>
+        container.appendChild(gameElement)
+      );
     }
-
   }
 
-  const timer = new Timer();
-  timer.startTimer();
-
-  setTimeout(() => timer.resetSeconds(), 5000);
   const gameContainer = document.getElementsByClassName('container')[0];
-
   const gameState = new GameState();
   const gameController = new GameController();
   const gameView = new GameView();
@@ -359,10 +338,10 @@
     arrOfGameElements: [scorePanel, deck]
   });
 
-  // const renderGame = () => {
-  //   gameView.append(scorePanel).to(gameContainer);
-  //   gameView.append(deck).to(gameContainer);
-  // };
+
+  const documentBody = document.body;
+  documentBody.addEventListener('click', gameController.handleClick, true);
+
   const moves = document.getElementsByClassName('moves')[0];
   moves.innerText = 1000;
 })();
