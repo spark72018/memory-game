@@ -291,21 +291,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Timer;
   }();
 
-  // function clickHandler(e) {
-  //   console.log('top level', e.target);
-  //   const cssClasses = e.target.classList;
-  //   const isCard = cssClasses.contains('back') || cssClasses.contains('front');
-  //   const matched = e.target.parentNode.classList.contains('match');
-  //   if (isCard && !matched) {
-  //     console.log('isCard and !matched e.target', e.target);
-  //     const parent = e.target.parentNode;
-  //     parent.classList.toggle('open');
-  //     parent.classList.toggle('show');
-  //   } else {
-  //     console.log('not isCard or is matched');
-  //   }
-  // };
-
   var GameController = function () {
     function GameController() {
       _classCallCheck(this, GameController);
@@ -404,20 +389,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(GameView, [{
-      key: 'append',
-      value: function append(child) {
-        return {
-          to: function to(parent) {
-            if (parent instanceof Node) {
-              parent.appendChild(child);
-              return true;
-            } else {
-              throw new Error('argument for "to" method of GameView class must be an instance of Node!');
-            }
-          }
-        };
-      }
-    }, {
       key: 'renderGame',
       value: function renderGame(_ref7) {
         var container = _ref7.container,
