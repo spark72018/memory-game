@@ -312,8 +312,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         console.log('stateObj after togggle is', stateObj);
       }
     }, {
-      key: 'handleClick',
-      value: function handleClick(e, stateObj) {
+      key: 'handleDeckClick',
+      value: function handleDeckClick(e, stateObj) {
         console.log('top level', e.target);
         var cssClasses = e.target.classList;
         var isCard = cssClasses.contains('back') || cssClasses.contains('front');
@@ -476,7 +476,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return gameController.handleStartClick(e, gameState);
   }, false);
   deck.addEventListener('click', function (e) {
-    return gameController.handleClick(e, gameState);
+    return gameController.handleDeckClick(e, gameState);
   }, false);
 
   var moves = document.getElementsByClassName('moves')[0];

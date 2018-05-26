@@ -249,7 +249,7 @@
       console.log('stateObj after togggle is', stateObj);
     }
 
-    handleClick(e, stateObj) {
+    handleDeckClick(e, stateObj) {
       console.log('top level', e.target);
       const cssClasses = e.target.classList;
       const isCard =
@@ -370,7 +370,7 @@
   );
   deck.addEventListener(
     'click',
-    e => gameController.handleClick(e, gameState),
+    e => gameController.handleDeckClick(e, gameState),
     false
   );
 
