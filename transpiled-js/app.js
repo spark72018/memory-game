@@ -222,11 +222,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var Timer = function () {
     function Timer() {
-      var startingSeconds = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
       _classCallCheck(this, Timer);
 
-      this.startingSeconds = startingSeconds;
       this.timerId = null;
 
       // this.increaseSeconds = this.increaseSeconds.bind(this);

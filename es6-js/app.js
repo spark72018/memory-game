@@ -181,8 +181,7 @@
   }
 
   class Timer {
-    constructor(startingSeconds = 0) {
-      this.startingSeconds = startingSeconds;
+    constructor() {
       this.timerId = null;
 
       // this.increaseSeconds = this.increaseSeconds.bind(this);
