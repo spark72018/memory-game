@@ -29,6 +29,13 @@
 
 
   class ScorePanel {
+    makeStartButton() {
+      const startButton = document.createElement('div');
+      startButton.setAttribute('class', 'start');
+
+      return startButton;
+    }
+
     makeRestartButton() {
       const aDiv = document.createElement('div');
       const repeatIcon = this.makeIcon('fa fa-repeat');
@@ -344,5 +351,4 @@
 
   const moves = document.getElementsByClassName('moves')[0];
 
-  // gameView.renderNumMovesMade(18, moves);
 })();

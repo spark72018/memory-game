@@ -34,6 +34,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(ScorePanel, [{
+      key: 'makeStartButton',
+      value: function makeStartButton() {
+        var startButton = document.createElement('div');
+        startButton.setAttribute('class', 'start');
+
+        return startButton;
+      }
+    }, {
       key: 'makeRestartButton',
       value: function makeRestartButton() {
         var aDiv = document.createElement('div');
@@ -452,6 +460,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   documentBody.addEventListener('click', gameController.handleClick, true);
 
   var moves = document.getElementsByClassName('moves')[0];
-
-  // gameView.renderNumMovesMade(18, moves);
 })();
