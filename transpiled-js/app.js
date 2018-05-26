@@ -247,7 +247,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.pauseTimer();
         stateObj.secondsElapsed = 0;
         stateObj.timerId = null;
-        console.log(this.startingSeconds, this.timerId);
+        console.log('resetSeconds', stateObj.secondsElapsed, stateObj.timerId);
       }
     }, {
       key: 'getMinutes',
@@ -303,27 +303,42 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         console.log('start clicked');
         this.toggleGameStarted(stateObj);
         var currentlyPlaying = stateObj.playingGame;
+
         if (currentlyPlaying) {
           timerObj.startTimer(stateObj);
         } else {
           timerObj.pauseTimer(stateObj);
         }
-        console.log('stateObj after togggle is', stateObj);
       }
     }, {
       key: 'handleDeckClick',
       value: function handleDeckClick(e, stateObj) {
+        // UNCOMMENT AT END
+        // if(!stateObj.playingGame) {
+        //   return;
+        // }
         console.log('top level', e.target);
         var cssClasses = e.target.classList;
         var isCard = cssClasses.contains('back') || cssClasses.contains('front');
-        var matched = e.target.parentNode.classList.contains('match');
+        var matched = isMatched(e.target);
+
         if (isCard && !matched) {
           console.log('isCard and !matched e.target', e.target);
           var parent = e.target.parentNode;
-          parent.classList.toggle('open');
-          parent.classList.toggle('show');
+          flip(parent);
         } else {
           console.log('not isCard or is matched');
+        }
+
+        function isMatched(element) {
+          return element.classList.contains('match');
+        }
+
+        function flip(element) {
+          element.classList.toggle('open');
+          element.classList.toggle('show');
+
+          return element;
         }
       }
     }, {
@@ -332,6 +347,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.secondsElapsed = secondsElapsed;
         return stateObj;
       }
+
+      // setFirstCardPicked(stateObj, cardString) {
+      //   stateObj.firstCardPicked = cardString;
+      //   return stateObj;
+      // }
+
     }, {
       key: 'setStarRating',
       value: function setStarRating(stateObj, numberOfStars) {

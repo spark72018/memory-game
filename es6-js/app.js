@@ -199,7 +199,7 @@
       this.pauseTimer();
       stateObj.secondsElapsed = 0;
       stateObj.timerId = null;
-      console.log(this.startingSeconds, this.timerId);
+      console.log('resetSeconds', stateObj.secondsElapsed, stateObj.timerId);
     }
 
     getMinutes(seconds) {
@@ -237,27 +237,42 @@
       console.log('start clicked');
       this.toggleGameStarted(stateObj);
       const currentlyPlaying = stateObj.playingGame;
+
       if(currentlyPlaying) {
         timerObj.startTimer(stateObj);
       }else {
         timerObj.pauseTimer(stateObj);
       }
-      console.log('stateObj after togggle is', stateObj);
     }
 
     handleDeckClick(e, stateObj) {
+      // UNCOMMENT AT END
+      // if(!stateObj.playingGame) {
+      //   return;
+      // }
       console.log('top level', e.target);
       const cssClasses = e.target.classList;
       const isCard =
         cssClasses.contains('back') || cssClasses.contains('front');
-      const matched = e.target.parentNode.classList.contains('match');
+      const matched = isMatched(e.target);
+
       if (isCard && !matched) {
         console.log('isCard and !matched e.target', e.target);
         const parent = e.target.parentNode;
-        parent.classList.toggle('open');
-        parent.classList.toggle('show');
+        flip(parent);
       } else {
         console.log('not isCard or is matched');
+      }
+
+      function isMatched(element) {
+        return element.classList.contains('match');
+      }
+
+      function flip(element) {
+        element.classList.toggle('open');
+        element.classList.toggle('show');
+        
+        return element;
       }
     }
 
@@ -265,6 +280,11 @@
       stateObj.secondsElapsed = secondsElapsed;
       return stateObj;
     }
+
+    // setFirstCardPicked(stateObj, cardString) {
+    //   stateObj.firstCardPicked = cardString;
+    //   return stateObj;
+    // }
 
     setStarRating(stateObj, numberOfStars) {
       stateObj.starRating = numberOfStars;
