@@ -195,10 +195,10 @@
       console.log('new time', stateObj.secondsElapsed);
     }
 
-    resetSeconds() {
+    resetSeconds(stateObj) {
       this.pauseTimer();
-      this.startingSeconds = 0;
-      this.timerId = null;
+      stateObj.secondsElapsed = 0;
+      stateObj.timerId = null;
       console.log(this.startingSeconds, this.timerId);
     }
 

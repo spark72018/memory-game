@@ -243,10 +243,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'resetSeconds',
-      value: function resetSeconds() {
+      value: function resetSeconds(stateObj) {
         this.pauseTimer();
-        this.startingSeconds = 0;
-        this.timerId = null;
+        stateObj.secondsElapsed = 0;
+        stateObj.timerId = null;
         console.log(this.startingSeconds, this.timerId);
       }
     }, {
