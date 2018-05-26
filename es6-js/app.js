@@ -189,7 +189,6 @@
   }
 
   class Timer {
-
     increaseSeconds(stateObj, amount) {
       stateObj.secondsElapsed += amount;
       console.log('new time', stateObj.secondsElapsed);
@@ -213,8 +212,11 @@
       return remainingSeconds;
     }
 
-    startTimer(stateObj) {
-      stateObj.timerId = setInterval(() => this.increaseSeconds(stateObj, 1), 1000);
+    startTimer(stateObj, fn) {
+      stateObj.timerId = setInterval(() => {
+        this.increaseSeconds(stateObj, 1);
+        fn();
+      }, 1000);
     }
 
     pauseTimer(stateObj) {
@@ -233,14 +235,14 @@
       stateObj.playingGame = !currentState;
     }
 
-    handleStartClick(e, stateObj, timerObj) {
+    handleStartClick(e, stateObj, timerObj, viewObj) {
       console.log('start clicked');
       this.toggleGameStarted(stateObj);
       const currentlyPlaying = stateObj.playingGame;
 
-      if(currentlyPlaying) {
-        timerObj.startTimer(stateObj);
-      }else {
+      if (currentlyPlaying) {
+        timerObj.startTimer(stateObj, viewObj);
+      } else {
         timerObj.pauseTimer(stateObj);
       }
     }
@@ -262,8 +264,12 @@
         console.log('not isCard or is matched');
       }
 
+      // utility functions
       function isCard(element) {
-        return element.classList.contains('back') || element.classList.contains('front');
+        return (
+          element.classList.contains('back') ||
+          element.classList.contains('front')
+        );
       }
 
       function isMatched(element) {
@@ -273,7 +279,7 @@
       function flip(element) {
         element.classList.toggle('open');
         element.classList.toggle('show');
-        
+
         return element;
       }
     }
@@ -338,6 +344,10 @@
 
     renderNumMovesMade(num, movesElement) {
       movesElement.innerText = `${num} Moves`;
+    }
+
+    setTimerValue(val, timerElement) {
+      timerElement.innerText = val;
     }
   }
 

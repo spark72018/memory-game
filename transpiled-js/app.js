@@ -264,11 +264,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'startTimer',
-      value: function startTimer(stateObj) {
+      value: function startTimer(stateObj, fn) {
         var _this = this;
 
         stateObj.timerId = setInterval(function () {
-          return _this.increaseSeconds(stateObj, 1);
+          _this.increaseSeconds(stateObj, 1);
+          fn();
         }, 1000);
       }
     }, {
@@ -299,13 +300,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleStartClick',
-      value: function handleStartClick(e, stateObj, timerObj) {
+      value: function handleStartClick(e, stateObj, timerObj, viewObj) {
         console.log('start clicked');
         this.toggleGameStarted(stateObj);
         var currentlyPlaying = stateObj.playingGame;
 
         if (currentlyPlaying) {
-          timerObj.startTimer(stateObj);
+          timerObj.startTimer(stateObj, viewObj);
         } else {
           timerObj.pauseTimer(stateObj);
         }
@@ -329,6 +330,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           console.log('not isCard or is matched');
         }
 
+        // utility functions
         function isCard(element) {
           return element.classList.contains('back') || element.classList.contains('front');
         }
@@ -439,6 +441,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'renderNumMovesMade',
       value: function renderNumMovesMade(num, movesElement) {
         movesElement.innerText = num + ' Moves';
+      }
+    }, {
+      key: 'setTimerValue',
+      value: function setTimerValue(val, timerElement) {
+        timerElement.innerText = val;
       }
     }]);
 
