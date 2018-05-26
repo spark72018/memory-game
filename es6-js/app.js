@@ -270,6 +270,10 @@
         container.appendChild(gameElement)
       );
     }
+
+    renderNumMovesMade(num, movesElement) {
+      movesElement.innerText = `${num} Moves`;
+    }
   }
 
   class GameState {
@@ -311,5 +315,6 @@
   documentBody.addEventListener('click', gameController.handleClick, true);
 
   const moves = document.getElementsByClassName('moves')[0];
-  moves.innerText = 1000;
+
+  gameView.renderNumMovesMade(18, moves);
 })();

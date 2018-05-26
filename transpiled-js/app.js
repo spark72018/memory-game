@@ -363,6 +363,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return container.appendChild(gameElement);
         });
       }
+    }, {
+      key: 'renderNumMovesMade',
+      value: function renderNumMovesMade(num, movesElement) {
+        movesElement.innerText = num + ' Moves';
+      }
     }]);
 
     return GameView;
@@ -416,5 +421,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   documentBody.addEventListener('click', gameController.handleClick, true);
 
   var moves = document.getElementsByClassName('moves')[0];
-  moves.innerText = 1000;
+
+  gameView.renderNumMovesMade(18, moves);
 })();
