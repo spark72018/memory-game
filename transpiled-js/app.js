@@ -438,8 +438,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       }
     }, {
-      key: 'renderNumMovesMade',
-      value: function renderNumMovesMade(num, movesElement) {
+      key: 'setNumMovesMade',
+      value: function setNumMovesMade(num, movesElement) {
         movesElement.innerText = num + ' Moves';
       }
     }, {

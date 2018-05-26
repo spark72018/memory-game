@@ -342,7 +342,7 @@
       );
     }
 
-    renderNumMovesMade(num, movesElement) {
+    setNumMovesMade(num, movesElement) {
       movesElement.innerText = `${num} Moves`;
     }
 
