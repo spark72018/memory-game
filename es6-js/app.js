@@ -27,7 +27,6 @@
     }
   });
 
-
   class ScorePanel {
     makeStartButton() {
       const startButton = document.createElement('div');
@@ -215,7 +214,7 @@
     getSeconds(seconds) {
       const minutes = this.getMinutes(seconds);
       const remainingSeconds = seconds - minutes * 60;
-      
+
       return remainingSeconds;
     }
 
@@ -232,20 +231,31 @@
   }
 
   class GameController {
+    constructor() {
+      this.handleStartClick = this.handleStartClick.bind(this);
+      this.toggleGameStarted = this.toggleGameStarted.bind(this);
+    }
 
-    handleStartClick(stateObj) {
-      return function(e) {
-        console.log('start clicked');
-        console.log('stateObj is', stateObj);
-        console.log('e.target is', e.target);
-      }
+    toggleGameStarted(stateObj) {
+      const currentState = stateObj.gameStarted;
+
+      stateObj.gameStarted = !currentState;
+    }
+
+    handleStartClick(e, stateObj) {
+      console.log('start clicked');
+      console.log('this.toggleGameStarted is', this.toggleGameStarted);
+      this.toggleGameStarted(stateObj);
+
+      console.log('stateObj after togggle is', stateObj);
     }
 
     handleClick(stateObj) {
       return function(e) {
         console.log('top level', e.target);
         const cssClasses = e.target.classList;
-        const isCard = cssClasses.contains('back') || cssClasses.contains('front');
+        const isCard =
+          cssClasses.contains('back') || cssClasses.contains('front');
         const matched = e.target.parentNode.classList.contains('match');
         if (isCard && !matched) {
           console.log('isCard and !matched e.target', e.target);
@@ -255,13 +265,7 @@
         } else {
           console.log('not isCard or is matched');
         }
-      }
-    }
-
-    toggleGameStarted(stateObj) {
-      const currentState = stateObj.gameStarted;
-
-      stateObj.gameStarted = !currentState;
+      };
     }
 
     setSecondsElapsed(stateObj, secondsElapsed) {
@@ -362,9 +366,12 @@
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
 
-  startButton.addEventListener('click', gameController.handleStartClick(gameState), false);
-  deck.addEventListener('click', gameController.handleClick, false);
+  startButton.addEventListener(
+    'click',
+    e => gameController.handleStartClick(e, gameState),
+    false
+  );
+  deck.addEventListener('click', gameController.handleClick(gameState), false);
 
   const moves = document.getElementsByClassName('moves')[0];
-
 })();

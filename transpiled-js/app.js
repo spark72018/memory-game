@@ -291,16 +291,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var GameController = function () {
     function GameController() {
       _classCallCheck(this, GameController);
+
+      this.handleStartClick = this.handleStartClick.bind(this);
+      this.toggleGameStarted = this.toggleGameStarted.bind(this);
     }
 
     _createClass(GameController, [{
+      key: 'toggleGameStarted',
+      value: function toggleGameStarted(stateObj) {
+        var currentState = stateObj.gameStarted;
+
+        stateObj.gameStarted = !currentState;
+      }
+    }, {
       key: 'handleStartClick',
-      value: function handleStartClick(stateObj) {
-        return function (e) {
-          console.log('start clicked');
-          console.log('stateObj is', stateObj);
-          console.log('e.target is', e.target);
-        };
+      value: function handleStartClick(e, stateObj) {
+        console.log('start clicked');
+        console.log('this.toggleGameStarted is', this.toggleGameStarted);
+        this.toggleGameStarted(stateObj);
+
+        console.log('stateObj after togggle is', stateObj);
       }
     }, {
       key: 'handleClick',
@@ -319,13 +329,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             console.log('not isCard or is matched');
           }
         };
-      }
-    }, {
-      key: 'toggleGameStarted',
-      value: function toggleGameStarted(stateObj) {
-        var currentState = stateObj.gameStarted;
-
-        stateObj.gameStarted = !currentState;
       }
     }, {
       key: 'setSecondsElapsed',
@@ -472,8 +475,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var deck = document.getElementsByClassName('deck')[0];
   var startButton = document.getElementsByClassName('start')[0];
 
-  startButton.addEventListener('click', gameController.handleStartClick(gameState), false);
-  deck.addEventListener('click', gameController.handleClick, false);
+  startButton.addEventListener('click', function (e) {
+    return gameController.handleStartClick(e, gameState);
+  }, false);
+  deck.addEventListener('click', gameController.handleClick(gameState), false);
 
   var moves = document.getElementsByClassName('moves')[0];
 })();
