@@ -241,18 +241,20 @@
       }
     }
 
-    handleClick(e) {
-      console.log('top level', e.target);
-      const cssClasses = e.target.classList;
-      const isCard = cssClasses.contains('back') || cssClasses.contains('front');
-      const matched = e.target.parentNode.classList.contains('match');
-      if (isCard && !matched) {
-        console.log('isCard and !matched e.target', e.target);
-        const parent = e.target.parentNode;
-        parent.classList.toggle('open');
-        parent.classList.toggle('show');
-      } else {
-        console.log('not isCard or is matched');
+    handleClick(stateObj) {
+      return function(e) {
+        console.log('top level', e.target);
+        const cssClasses = e.target.classList;
+        const isCard = cssClasses.contains('back') || cssClasses.contains('front');
+        const matched = e.target.parentNode.classList.contains('match');
+        if (isCard && !matched) {
+          console.log('isCard and !matched e.target', e.target);
+          const parent = e.target.parentNode;
+          parent.classList.toggle('open');
+          parent.classList.toggle('show');
+        } else {
+          console.log('not isCard or is matched');
+        }
       }
     }
 

@@ -304,19 +304,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleClick',
-      value: function handleClick(e) {
-        console.log('top level', e.target);
-        var cssClasses = e.target.classList;
-        var isCard = cssClasses.contains('back') || cssClasses.contains('front');
-        var matched = e.target.parentNode.classList.contains('match');
-        if (isCard && !matched) {
-          console.log('isCard and !matched e.target', e.target);
-          var parent = e.target.parentNode;
-          parent.classList.toggle('open');
-          parent.classList.toggle('show');
-        } else {
-          console.log('not isCard or is matched');
-        }
+      value: function handleClick(stateObj) {
+        return function (e) {
+          console.log('top level', e.target);
+          var cssClasses = e.target.classList;
+          var isCard = cssClasses.contains('back') || cssClasses.contains('front');
+          var matched = e.target.parentNode.classList.contains('match');
+          if (isCard && !matched) {
+            console.log('isCard and !matched e.target', e.target);
+            var parent = e.target.parentNode;
+            parent.classList.toggle('open');
+            parent.classList.toggle('show');
+          } else {
+            console.log('not isCard or is matched');
+          }
+        };
       }
     }, {
       key: 'toggleGameStarted',
