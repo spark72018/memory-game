@@ -279,6 +279,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       }
     }, {
+      key: 'toggleGameStarted',
+      value: function toggleGameStarted(stateObj) {
+        var currentState = stateObj.gameStarted;
+
+        stateObj.gameStarted = !currentState;
+      }
+    }, {
       key: 'setSecondsElapsed',
       value: function setSecondsElapsed(stateObj, secondsElapsed) {
         stateObj.secondsElapsed = secondsElapsed;

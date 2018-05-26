@@ -218,6 +218,12 @@
       }
     }
 
+    toggleGameStarted(stateObj) {
+      const currentState = stateObj.gameStarted;
+
+      stateObj.gameStarted = !currentState;
+    }
+
     setSecondsElapsed(stateObj, secondsElapsed) {
       stateObj.secondsElapsed = secondsElapsed;
       return stateObj;
