@@ -57,7 +57,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var spanTag = document.createElement('span');
 
         spanTag.innerText = numOfMoves;
-        spanTag.setAttribute('class', 'text-display moves');
+        spanTag.setAttribute('class', 'move-right moves');
 
         return spanTag;
       }
@@ -67,7 +67,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var spanTag = document.createElement('span');
 
         spanTag.innerText = initialTime;
-        spanTag.setAttribute('class', 'text-display timer');
+        spanTag.setAttribute('class', 'move-right timer');
 
         return spanTag;
       }
@@ -90,6 +90,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'makePanel',
       value: function makePanel(numberOfStars, classString) {
+        var startButton = this.makeStartButton();
         var restartButton = this.makeRestartButton();
         var section = document.createElement('SECTION');
         var unorderedList = document.createElement('ul');
@@ -107,6 +108,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         section.appendChild(unorderedList);
         section.appendChild(movesTag);
         section.appendChild(timerTag);
+        section.appendChild(startButton);
         section.appendChild(restartButton);
 
         section.setAttribute('class', classString);

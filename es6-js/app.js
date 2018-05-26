@@ -49,7 +49,7 @@
       const spanTag = document.createElement('span');
 
       spanTag.innerText = numOfMoves;
-      spanTag.setAttribute('class', 'text-display moves');
+      spanTag.setAttribute('class', 'move-right moves');
 
       return spanTag;
     }
@@ -58,7 +58,7 @@
       const spanTag = document.createElement('span');
 
       spanTag.innerText = initialTime;
-      spanTag.setAttribute('class', 'text-display timer');
+      spanTag.setAttribute('class', 'move-right timer');
 
       return spanTag;
     }
@@ -74,6 +74,7 @@
     }
 
     makePanel(numberOfStars, classString) {
+      const startButton = this.makeStartButton();
       const restartButton = this.makeRestartButton();
       const section = document.createElement('SECTION');
       const unorderedList = document.createElement('ul');
@@ -91,6 +92,7 @@
       section.appendChild(unorderedList);
       section.appendChild(movesTag);
       section.appendChild(timerTag);
+      section.appendChild(startButton);
       section.appendChild(restartButton);
 
       section.setAttribute('class', classString);
