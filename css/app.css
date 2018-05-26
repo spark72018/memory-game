@@ -137,6 +137,12 @@ h1 {
   display: inline-block;
 }
 
+.score-panel .start {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+}
+
 .score-panel .text-display {
   margin-left: 10px;
 }
