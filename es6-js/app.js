@@ -281,10 +281,10 @@
       return stateObj;
     }
 
-    // setFirstCardPicked(stateObj, cardString) {
-    //   stateObj.firstCardPicked = cardString;
-    //   return stateObj;
-    // }
+    setFirstCardPicked(stateObj, cardString) {
+      stateObj.firstCardPicked = cardString;
+      return stateObj;
+    }
 
     setStarRating(stateObj, numberOfStars) {
       stateObj.starRating = numberOfStars;

@@ -347,12 +347,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.secondsElapsed = secondsElapsed;
         return stateObj;
       }
-
-      // setFirstCardPicked(stateObj, cardString) {
-      //   stateObj.firstCardPicked = cardString;
-      //   return stateObj;
-      // }
-
+    }, {
+      key: 'setFirstCardPicked',
+      value: function setFirstCardPicked(stateObj, cardString) {
+        stateObj.firstCardPicked = cardString;
+        return stateObj;
+      }
     }, {
       key: 'setStarRating',
       value: function setStarRating(stateObj, numberOfStars) {
