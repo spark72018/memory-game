@@ -49,7 +49,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var spanTag = document.createElement('span');
 
         spanTag.innerText = numOfMoves;
-        spanTag.setAttribute('class', 'moves');
+        spanTag.setAttribute('class', 'text-display moves');
+
+        return spanTag;
+      }
+    }, {
+      key: 'makeTimerTag',
+      value: function makeTimerTag(initialTime) {
+        var spanTag = document.createElement('span');
+
+        spanTag.innerText = initialTime;
+        spanTag.setAttribute('class', 'text-display timer');
 
         return spanTag;
       }
@@ -75,7 +85,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var restartButton = this.makeRestartButton();
         var section = document.createElement('SECTION');
         var unorderedList = document.createElement('ul');
-        var movesTag = this.makeMovesTag();
+        var movesTag = this.makeMovesTag('0 Moves');
+        var timerTag = this.makeTimerTag('0:00');
 
         for (var i = 0; i < numberOfStars; i++) {
           var iconWithCssClass = this.makeIcon('fa fa-star');
@@ -87,6 +98,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         section.appendChild(unorderedList);
         section.appendChild(movesTag);
+        section.appendChild(timerTag);
         section.appendChild(restartButton);
 
         section.setAttribute('class', classString);
@@ -264,7 +276,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(GameController, [{
       key: 'handleClick',
       value: function handleClick(e) {
-        // e.preventDefault();
         console.log('top level', e.target);
         var cssClasses = e.target.classList;
         var isCard = cssClasses.contains('back') || cssClasses.contains('front');
@@ -432,5 +443,5 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var moves = document.getElementsByClassName('moves')[0];
 
-  gameView.renderNumMovesMade(18, moves);
+  // gameView.renderNumMovesMade(18, moves);
 })();

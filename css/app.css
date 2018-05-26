@@ -119,14 +119,6 @@ h1 {
   transform: rotateY(0);
 }
 
-/* .card.match .back {
-  z-index: -1;
-} */
-
-/*
- * Styles for the Score Panel
- */
-
 .score-panel {
   text-align: left;
   width: 345px;
@@ -143,6 +135,10 @@ h1 {
 .score-panel .stars li {
   list-style: none;
   display: inline-block;
+}
+
+.score-panel .text-display {
+  margin-left: 10px;
 }
 
 .score-panel .restart {

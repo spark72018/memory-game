@@ -42,7 +42,16 @@
       const spanTag = document.createElement('span');
 
       spanTag.innerText = numOfMoves;
-      spanTag.setAttribute('class', 'moves');
+      spanTag.setAttribute('class', 'text-display moves');
+
+      return spanTag;
+    }
+
+    makeTimerTag(initialTime) {
+      const spanTag = document.createElement('span');
+
+      spanTag.innerText = initialTime;
+      spanTag.setAttribute('class', 'text-display timer');
 
       return spanTag;
     }
@@ -61,7 +70,8 @@
       const restartButton = this.makeRestartButton();
       const section = document.createElement('SECTION');
       const unorderedList = document.createElement('ul');
-      const movesTag = this.makeMovesTag();
+      const movesTag = this.makeMovesTag('0 Moves');
+      const timerTag = this.makeTimerTag('0:00');
 
       for (let i = 0; i < numberOfStars; i++) {
         const iconWithCssClass = this.makeIcon('fa fa-star');
@@ -73,6 +83,7 @@
 
       section.appendChild(unorderedList);
       section.appendChild(movesTag);
+      section.appendChild(timerTag);
       section.appendChild(restartButton);
 
       section.setAttribute('class', classString);
@@ -203,7 +214,6 @@
 
   class GameController {
     handleClick(e) {
-      // e.preventDefault();
       console.log('top level', e.target);
       const cssClasses = e.target.classList;
       const isCard = cssClasses.contains('back') || cssClasses.contains('front');
@@ -324,5 +334,5 @@
 
   const moves = document.getElementsByClassName('moves')[0];
 
-  gameView.renderNumMovesMade(18, moves);
+  // gameView.renderNumMovesMade(18, moves);
 })();
