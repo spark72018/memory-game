@@ -244,28 +244,25 @@
 
     handleStartClick(e, stateObj) {
       console.log('start clicked');
-      console.log('this.toggleGameStarted is', this.toggleGameStarted);
       this.toggleGameStarted(stateObj);
 
       console.log('stateObj after togggle is', stateObj);
     }
 
-    handleClick(stateObj) {
-      return function(e) {
-        console.log('top level', e.target);
-        const cssClasses = e.target.classList;
-        const isCard =
-          cssClasses.contains('back') || cssClasses.contains('front');
-        const matched = e.target.parentNode.classList.contains('match');
-        if (isCard && !matched) {
-          console.log('isCard and !matched e.target', e.target);
-          const parent = e.target.parentNode;
-          parent.classList.toggle('open');
-          parent.classList.toggle('show');
-        } else {
-          console.log('not isCard or is matched');
-        }
-      };
+    handleClick(e, stateObj) {
+      console.log('top level', e.target);
+      const cssClasses = e.target.classList;
+      const isCard =
+        cssClasses.contains('back') || cssClasses.contains('front');
+      const matched = e.target.parentNode.classList.contains('match');
+      if (isCard && !matched) {
+        console.log('isCard and !matched e.target', e.target);
+        const parent = e.target.parentNode;
+        parent.classList.toggle('open');
+        parent.classList.toggle('show');
+      } else {
+        console.log('not isCard or is matched');
+      }
     }
 
     setSecondsElapsed(stateObj, secondsElapsed) {
@@ -371,7 +368,11 @@
     e => gameController.handleStartClick(e, gameState),
     false
   );
-  deck.addEventListener('click', gameController.handleClick(gameState), false);
+  deck.addEventListener(
+    'click',
+    e => gameController.handleClick(e, gameState),
+    false
+  );
 
   const moves = document.getElementsByClassName('moves')[0];
 })();
