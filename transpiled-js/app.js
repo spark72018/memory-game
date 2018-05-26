@@ -318,16 +318,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //   return;
         // }
         console.log('top level', e.target);
-        var cssClasses = e.target.classList;
-        var isCard = cssClasses.contains('back') || cssClasses.contains('front');
+        var card = isCard(e.target);
         var matched = isMatched(e.target);
 
-        if (isCard && !matched) {
+        if (card && !matched) {
           console.log('isCard and !matched e.target', e.target);
           var parent = e.target.parentNode;
           flip(parent);
         } else {
           console.log('not isCard or is matched');
+        }
+
+        function isCard(element) {
+          return element.classList.contains('back') || element.classList.contains('front');
         }
 
         function isMatched(element) {

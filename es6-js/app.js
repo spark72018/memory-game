@@ -251,17 +251,19 @@
       //   return;
       // }
       console.log('top level', e.target);
-      const cssClasses = e.target.classList;
-      const isCard =
-        cssClasses.contains('back') || cssClasses.contains('front');
+      const card = isCard(e.target);
       const matched = isMatched(e.target);
 
-      if (isCard && !matched) {
+      if (card && !matched) {
         console.log('isCard and !matched e.target', e.target);
         const parent = e.target.parentNode;
         flip(parent);
       } else {
         console.log('not isCard or is matched');
+      }
+
+      function isCard(element) {
+        return element.classList.contains('back') || element.classList.contains('front');
       }
 
       function isMatched(element) {
