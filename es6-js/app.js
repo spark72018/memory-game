@@ -214,13 +214,14 @@
     }
 
     startTimer(stateObj) {
-      this.timerId = setInterval(() => this.increaseSeconds(stateObj, 1), 1000);
+      stateObj.timerId = setInterval(() => this.increaseSeconds(stateObj, 1), 1000);
     }
 
     pauseTimer(stateObj) {
-      if (this.timerId !== null) {
-        clearInterval(this.timerId);
-        this.timerId = null;
+      const timerId = stateObj.timerId;
+      if (timerId !== null) {
+        clearInterval(timerId);
+        stateObj.timerId = null;
       }
     }
   }

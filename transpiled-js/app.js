@@ -267,16 +267,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function startTimer(stateObj) {
         var _this = this;
 
-        this.timerId = setInterval(function () {
+        stateObj.timerId = setInterval(function () {
           return _this.increaseSeconds(stateObj, 1);
         }, 1000);
       }
     }, {
       key: 'pauseTimer',
       value: function pauseTimer(stateObj) {
-        if (this.timerId !== null) {
-          clearInterval(this.timerId);
-          this.timerId = null;
+        var timerId = stateObj.timerId;
+        if (timerId !== null) {
+          clearInterval(timerId);
+          stateObj.timerId = null;
         }
       }
     }]);
