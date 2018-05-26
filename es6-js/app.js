@@ -31,7 +31,7 @@
   class ScorePanel {
     makeStartButton() {
       const startButton = document.createElement('div');
-      startButton.setAttribute('class', 'start');
+      startButton.setAttribute('class', 'move-right start');
 
       return startButton;
     }

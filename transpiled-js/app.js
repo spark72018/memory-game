@@ -37,7 +37,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeStartButton',
       value: function makeStartButton() {
         var startButton = document.createElement('div');
-        startButton.setAttribute('class', 'start');
+        startButton.setAttribute('class', 'move-right start');
 
         return startButton;
       }
