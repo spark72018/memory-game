@@ -251,14 +251,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function getMinutes(seconds) {
         return Math.floor(seconds / 60);
       }
+    }, {
+      key: 'getSeconds',
+      value: function getSeconds(seconds) {
+        var minutes = this.getMinutes(seconds);
+        var remainingSeconds = seconds - minutes * 60;
 
-      // getSeconds(seconds) {
-      //   const minutes = this.getMinutes(seconds);
-      //   const remainingSeconds = seconds - minutes * 60;
-
-      //   return remainingSeconds;
-      // }
-
+        return remainingSeconds;
+      }
     }, {
       key: 'startTimer',
       value: function startTimer() {

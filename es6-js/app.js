@@ -204,12 +204,12 @@
       return Math.floor(seconds / 60);
     }
 
-    // getSeconds(seconds) {
-    //   const minutes = this.getMinutes(seconds);
-    //   const remainingSeconds = seconds - minutes * 60;
+    getSeconds(seconds) {
+      const minutes = this.getMinutes(seconds);
+      const remainingSeconds = seconds - minutes * 60;
       
-    //   return remainingSeconds;
-    // }
+      return remainingSeconds;
+    }
 
     startTimer() {
       this.timerId = setInterval(() => this.increaseSeconds(1), 1000);
