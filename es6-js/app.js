@@ -189,15 +189,10 @@
   }
 
   class Timer {
-    constructor() {
-      this.timerId = null;
 
-      // this.increaseSeconds = this.increaseSeconds.bind(this);
-    }
-
-    increaseSeconds(amount) {
-      this.startingSeconds += amount;
-      console.log('new time', this.startingSeconds);
+    increaseSeconds(stateObj, amount) {
+      stateObj.secondsElapsed += amount;
+      console.log('new time', stateObj.secondsElapsed);
     }
 
     resetSeconds() {
@@ -218,11 +213,11 @@
       return remainingSeconds;
     }
 
-    startTimer() {
-      this.timerId = setInterval(() => this.increaseSeconds(1), 1000);
+    startTimer(stateObj) {
+      this.timerId = setInterval(() => this.increaseSeconds(stateObj, 1), 1000);
     }
 
-    pauseTimer() {
+    pauseTimer(stateObj) {
       if (this.timerId !== null) {
         clearInterval(this.timerId);
         this.timerId = null;
@@ -231,21 +226,21 @@
   }
 
   class GameController {
-    constructor() {
-      this.handleStartClick = this.handleStartClick.bind(this);
-      this.toggleGameStarted = this.toggleGameStarted.bind(this);
-    }
-
     toggleGameStarted(stateObj) {
-      const currentState = stateObj.gameStarted;
+      const currentState = stateObj.playingGame;
 
-      stateObj.gameStarted = !currentState;
+      stateObj.playingGame = !currentState;
     }
 
-    handleStartClick(e, stateObj) {
+    handleStartClick(e, stateObj, timerObj) {
       console.log('start clicked');
       this.toggleGameStarted(stateObj);
-
+      const currentlyPlaying = stateObj.playingGame;
+      if(currentlyPlaying) {
+        timerObj.startTimer(stateObj);
+      }else {
+        timerObj.pauseTimer(stateObj);
+      }
       console.log('stateObj after togggle is', stateObj);
     }
 
@@ -325,7 +320,8 @@
 
   class GameState {
     constructor({
-      gameStarted = false,
+      playingGame = false,
+      timerId = null,
       firstCardPicked = null,
       numFlippableCards = 16,
       secondsElapsed = 0,
@@ -335,7 +331,8 @@
       numFailedMatches = 0,
       arrOfIconStrings = CARD_ICONS
     } = {}) {
-      this.gameStarted = gameStarted;
+      this.playingGame = playingGame;
+      this.timerId = timerId;
       this.firstCardPicked = firstCardPicked;
       this.numFlippableCards = numFlippableCards;
       this.secondsElapsed = secondsElapsed;
@@ -348,6 +345,7 @@
   }
 
   const gameContainer = document.getElementsByClassName('container')[0];
+  const timer = new Timer();
   const gameState = new GameState();
   const gameController = new GameController();
   const gameView = new GameView();
@@ -365,7 +363,7 @@
 
   startButton.addEventListener(
     'click',
-    e => gameController.handleStartClick(e, gameState),
+    e => gameController.handleStartClick(e, gameState, timer),
     false
   );
   deck.addEventListener(

@@ -233,17 +233,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var Timer = function () {
     function Timer() {
       _classCallCheck(this, Timer);
-
-      this.timerId = null;
-
-      // this.increaseSeconds = this.increaseSeconds.bind(this);
     }
 
     _createClass(Timer, [{
       key: 'increaseSeconds',
-      value: function increaseSeconds(amount) {
-        this.startingSeconds += amount;
-        console.log('new time', this.startingSeconds);
+      value: function increaseSeconds(stateObj, amount) {
+        stateObj.secondsElapsed += amount;
+        console.log('new time', stateObj.secondsElapsed);
       }
     }, {
       key: 'resetSeconds',
@@ -268,16 +264,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'startTimer',
-      value: function startTimer() {
+      value: function startTimer(stateObj) {
         var _this = this;
 
         this.timerId = setInterval(function () {
-          return _this.increaseSeconds(1);
+          return _this.increaseSeconds(stateObj, 1);
         }, 1000);
       }
     }, {
       key: 'pauseTimer',
-      value: function pauseTimer() {
+      value: function pauseTimer(stateObj) {
         if (this.timerId !== null) {
           clearInterval(this.timerId);
           this.timerId = null;
@@ -291,24 +287,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var GameController = function () {
     function GameController() {
       _classCallCheck(this, GameController);
-
-      this.handleStartClick = this.handleStartClick.bind(this);
-      this.toggleGameStarted = this.toggleGameStarted.bind(this);
     }
 
     _createClass(GameController, [{
       key: 'toggleGameStarted',
       value: function toggleGameStarted(stateObj) {
-        var currentState = stateObj.gameStarted;
+        var currentState = stateObj.playingGame;
 
-        stateObj.gameStarted = !currentState;
+        stateObj.playingGame = !currentState;
       }
     }, {
       key: 'handleStartClick',
-      value: function handleStartClick(e, stateObj) {
+      value: function handleStartClick(e, stateObj, timerObj) {
         console.log('start clicked');
         this.toggleGameStarted(stateObj);
-
+        var currentlyPlaying = stateObj.playingGame;
+        if (currentlyPlaying) {
+          timerObj.startTimer(stateObj);
+        } else {
+          timerObj.pauseTimer(stateObj);
+        }
         console.log('stateObj after togggle is', stateObj);
       }
     }, {
@@ -424,8 +422,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var GameState = function GameState() {
     var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref7$gameStarted = _ref7.gameStarted,
-        gameStarted = _ref7$gameStarted === undefined ? false : _ref7$gameStarted,
+        _ref7$playingGame = _ref7.playingGame,
+        playingGame = _ref7$playingGame === undefined ? false : _ref7$playingGame,
+        _ref7$timerId = _ref7.timerId,
+        timerId = _ref7$timerId === undefined ? null : _ref7$timerId,
         _ref7$firstCardPicked = _ref7.firstCardPicked,
         firstCardPicked = _ref7$firstCardPicked === undefined ? null : _ref7$firstCardPicked,
         _ref7$numFlippableCar = _ref7.numFlippableCards,
@@ -445,7 +445,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _classCallCheck(this, GameState);
 
-    this.gameStarted = gameStarted;
+    this.playingGame = playingGame;
+    this.timerId = timerId;
     this.firstCardPicked = firstCardPicked;
     this.numFlippableCards = numFlippableCards;
     this.secondsElapsed = secondsElapsed;
@@ -457,6 +458,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   };
 
   var gameContainer = document.getElementsByClassName('container')[0];
+  var timer = new Timer();
   var gameState = new GameState();
   var gameController = new GameController();
   var gameView = new GameView();
@@ -473,7 +475,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var startButton = document.getElementsByClassName('start')[0];
 
   startButton.addEventListener('click', function (e) {
-    return gameController.handleStartClick(e, gameState);
+    return gameController.handleStartClick(e, gameState, timer);
   }, false);
   deck.addEventListener('click', function (e) {
     return gameController.handleDeckClick(e, gameState);
