@@ -232,6 +232,15 @@
   }
 
   class GameController {
+
+    handleStartClick(stateObj) {
+      return function(e) {
+        console.log('start clicked');
+        console.log('stateObj is', stateObj);
+        console.log('e.target is', e.target);
+      }
+    }
+
     handleClick(e) {
       console.log('top level', e.target);
       const cssClasses = e.target.classList;
@@ -340,16 +349,19 @@
   const gameController = new GameController();
   const gameView = new GameView();
 
-  const deck = new Deck().makeDeck(gameState.arrOfIconStrings);
+  const deckOfCards = new Deck().makeDeck(gameState.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   gameView.renderGame({
     container: gameContainer,
-    arrOfGameElements: [scorePanel, deck]
+    arrOfGameElements: [scorePanel, deckOfCards]
   });
 
-  const documentBody = document.body;
-  documentBody.addEventListener('click', gameController.handleClick, true);
+  const deck = document.getElementsByClassName('deck')[0];
+  const startButton = document.getElementsByClassName('start')[0];
+
+  startButton.addEventListener('click', gameController.handleStartClick(gameState), false);
+  deck.addEventListener('click', gameController.handleClick, false);
 
   const moves = document.getElementsByClassName('moves')[0];
 

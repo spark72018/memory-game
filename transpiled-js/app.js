@@ -294,6 +294,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(GameController, [{
+      key: 'handleStartClick',
+      value: function handleStartClick(stateObj) {
+        return function (e) {
+          console.log('start clicked');
+          console.log('stateObj is', stateObj);
+          console.log('e.target is', e.target);
+        };
+      }
+    }, {
       key: 'handleClick',
       value: function handleClick(e) {
         console.log('top level', e.target);
@@ -450,16 +459,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var gameController = new GameController();
   var gameView = new GameView();
 
-  var deck = new Deck().makeDeck(gameState.arrOfIconStrings);
+  var deckOfCards = new Deck().makeDeck(gameState.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   gameView.renderGame({
     container: gameContainer,
-    arrOfGameElements: [scorePanel, deck]
+    arrOfGameElements: [scorePanel, deckOfCards]
   });
 
-  var documentBody = document.body;
-  documentBody.addEventListener('click', gameController.handleClick, true);
+  var deck = document.getElementsByClassName('deck')[0];
+  var startButton = document.getElementsByClassName('start')[0];
+
+  startButton.addEventListener('click', gameController.handleStartClick(gameState), false);
+  deck.addEventListener('click', gameController.handleClick, false);
 
   var moves = document.getElementsByClassName('moves')[0];
 })();
