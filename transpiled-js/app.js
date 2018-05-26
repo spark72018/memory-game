@@ -247,6 +247,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         console.log(this.startingSeconds, this.timerId);
       }
     }, {
+      key: 'getMinutes',
+      value: function getMinutes(seconds) {
+        return Math.floor(seconds / 60);
+      }
+
+      // getSeconds(seconds) {
+      //   const minutes = this.getMinutes(seconds);
+      //   const remainingSeconds = seconds - minutes * 60;
+
+      //   return remainingSeconds;
+      // }
+
+    }, {
       key: 'startTimer',
       value: function startTimer() {
         var _this = this;
