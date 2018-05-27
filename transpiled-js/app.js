@@ -357,7 +357,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (currentlyPlaying) {
           timerObj.startTimerAndEmitTimeTickEvent(stateObj);
           timerObj.emitter.on('timeTick', function () {
-            return viewObj.setTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
+            return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
           });
         } else {
           timerObj.pauseTimer(stateObj);
@@ -495,8 +495,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         movesElement.innerText = num + ' Moves';
       }
     }, {
-      key: 'setTimerValue',
-      value: function setTimerValue(val, timerElement) {
+      key: 'renderTimerValue',
+      value: function renderTimerValue(val, timerElement) {
         timerElement.innerText = val;
       }
     }]);

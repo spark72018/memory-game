@@ -280,7 +280,7 @@
       if (currentlyPlaying) {
         timerObj.startTimerAndEmitTimeTickEvent(stateObj);
         timerObj.emitter.on('timeTick', () =>
-          viewObj.setTimerValue(
+          viewObj.renderTimerValue(
             timerObj.getTimeElapsedString(stateObj.secondsElapsed),
             timerElement
           )
@@ -389,7 +389,7 @@
       movesElement.innerText = `${num} Moves`;
     }
 
-    setTimerValue(val, timerElement) {
+    renderTimerValue(val, timerElement) {
       timerElement.innerText = val;
     }
   }
