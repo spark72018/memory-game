@@ -306,19 +306,40 @@
         numMovesMade = 0,
         numSuccessMatches = 0,
         numFailedMatches = 0,
+        numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN (8)
         arrOfIconStrings = CARD_ICONS
       */
       console.log('top level', e.target);
-      const card = isCard(e.target);
-      const matched = isMatched(e.target);
+      const target = e.target;
+      const parent = e.target.parentNode;
 
-      if (card && !matched) {
-        console.log('isCard and !matched e.target', e.target);
-        const parent = e.target.parentNode;
-        flip(parent);
-      } else {
-        console.log('not isCard or is matched');
+      const card = isCard(target);
+      const matched = isMatched(target);
+      // parentNode because 'show' class is toggled on parent
+      const showing = isShowing(parent);
+
+      if (!card || matched || showing) {
+        return;
       }
+
+      const firstCardPicked = stateObj.firstCardPicked;
+
+      /*
+        - if no firstCard, then set e.target.previousSibling.firstChild 
+          on stateObj.firstCardPicked, can only click on a non-showing card
+
+        - else, compare second pick with firstCardPicked
+          - if match, add .match to li, inc stateObj.numSuccessMatches
+            - if stateObj.numSuccessMatches === stateObj.numMatchesToWin
+              - end game
+                - stop timer
+                - TODO
+          - no match, (TODO: add 'wrong' animation) both cards back, inc stateObj.numFailedMatches
+
+          - increment MOVES tag by 1 (only after second pick)
+      */
+
+      flip(parent);
 
       // utility functions
       function isCard(element) {
@@ -332,15 +353,15 @@
         return element.classList.contains('match');
       }
 
+      function isShowing(element) {
+        return element.classList.contains('show');
+      }
+
       function flip(element) {
         element.classList.toggle('open');
         element.classList.toggle('show');
 
         return element;
-      }
-
-      function isShowing(element) {
-        return element.classList.contains('show');
       }
     }
 
@@ -422,6 +443,7 @@
       numMovesMade = 0,
       numSuccessMatches = 0,
       numFailedMatches = 0,
+      numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN,
       arrOfIconStrings = CARD_ICONS
     } = {}) {
       this.playingGame = playingGame;
@@ -433,6 +455,7 @@
       this.numMovesMade = numMovesMade;
       this.numSuccessMatches = numSuccessMatches;
       this.numFailedMatches = numFailedMatches;
+      this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
     }
   }
@@ -457,14 +480,7 @@
 
   startButton.addEventListener(
     'click',
-    e =>
-      Controller.handleStartClick(
-        e,
-        State,
-        timer,
-        View,
-        timerElement
-      ),
+    e => Controller.handleStartClick(e, State, timer, View, timerElement),
     false
   );
   deck.addEventListener(

@@ -381,19 +381,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           numMovesMade = 0,
           numSuccessMatches = 0,
           numFailedMatches = 0,
+          numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN (8)
           arrOfIconStrings = CARD_ICONS
         */
         console.log('top level', e.target);
-        var card = isCard(e.target);
-        var matched = isMatched(e.target);
+        var target = e.target;
+        var parent = e.target.parentNode;
 
-        if (card && !matched) {
-          console.log('isCard and !matched e.target', e.target);
-          var parent = e.target.parentNode;
-          flip(parent);
-        } else {
-          console.log('not isCard or is matched');
+        var card = isCard(target);
+        var matched = isMatched(target);
+        // parentNode because 'show' class is toggled on parent
+        var showing = isShowing(parent);
+
+        if (!card || matched || showing) {
+          return;
         }
+
+        var firstCardPicked = stateObj.firstCardPicked;
+
+        /*
+          - if no firstCard, then set e.target.previousSibling.firstChild 
+            on stateObj.firstCardPicked, can only click on a non-showing card
+           - else, compare second pick with firstCardPicked
+            - if match, add .match to li, inc stateObj.numSuccessMatches
+              - if stateObj.numSuccessMatches === stateObj.numMatchesToWin
+                - end game
+                  - stop timer
+                  - TODO
+            - no match, (TODO: add 'wrong' animation) both cards back, inc stateObj.numFailedMatches
+             - increment MOVES tag by 1 (only after second pick)
+        */
+
+        flip(parent);
 
         // utility functions
         function isCard(element) {
@@ -404,15 +423,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return element.classList.contains('match');
         }
 
+        function isShowing(element) {
+          return element.classList.contains('show');
+        }
+
         function flip(element) {
           element.classList.toggle('open');
           element.classList.toggle('show');
 
           return element;
-        }
-
-        function isShowing(element) {
-          return element.classList.contains('show');
         }
       }
     }, {
@@ -541,6 +560,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         numSuccessMatches = _ref7$numSuccessMatch === undefined ? 0 : _ref7$numSuccessMatch,
         _ref7$numFailedMatche = _ref7.numFailedMatches,
         numFailedMatches = _ref7$numFailedMatche === undefined ? 0 : _ref7$numFailedMatche,
+        _ref7$numMatchesToWin = _ref7.numMatchesToWin,
+        numMatchesToWin = _ref7$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref7$numMatchesToWin,
         _ref7$arrOfIconString = _ref7.arrOfIconStrings,
         arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString;
 
@@ -555,6 +576,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numMovesMade = numMovesMade;
     this.numSuccessMatches = numSuccessMatches;
     this.numFailedMatches = numFailedMatches;
+    this.numMatchesToWin = numMatchesToWin;
     this.arrOfIconStrings = arrOfIconStrings;
   };
 
