@@ -374,7 +374,7 @@
         this.matchEmitter.emit('successfulMatch');
       }else {
         animateFailedMatch(...cardContainers);
-        setTimeout(() => flip(...cardContainers), 2000);
+        setTimeout(() => flip(...cardContainers), 1500);
 
         this.matchEmitter.emit('failedMatch');
       }
@@ -392,8 +392,8 @@
 
       function animateFailedMatch(...elements) {
         elements.forEach(element => {
-          setTimeout(() => addFailClassTo(element), 800);
-          setTimeout(() => removeFailClassFrom(element), 3000);
+          setTimeout(() => addFailClassTo(element), 600);
+          setTimeout(() => removeFailClassFrom(element), 1500);
         });
       }
 

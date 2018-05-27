@@ -457,7 +457,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           animateFailedMatch.apply(undefined, _toConsumableArray(cardContainers));
           setTimeout(function () {
             return flip.apply(undefined, _toConsumableArray(cardContainers));
-          }, 2000);
+          }, 1500);
 
           this.matchEmitter.emit('failedMatch');
         }
@@ -481,10 +481,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           elements.forEach(function (element) {
             setTimeout(function () {
               return addFailClassTo(element);
-            }, 800);
+            }, 600);
             setTimeout(function () {
               return removeFailClassFrom(element);
-            }, 3000);
+            }, 1500);
           });
         }
 

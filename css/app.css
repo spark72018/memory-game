@@ -124,6 +124,10 @@ h1 {
   animation: failed-match 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
 
+.card.fail > .front {
+  background: red;
+}
+
 .score-panel {
   text-align: left;
   width: 345px;
@@ -156,6 +160,17 @@ h1 {
 .score-panel .restart {
   float: right;
   cursor: pointer;
+}
+
+.modal {
+  /* display: none; */
+  position: fixed;
+  z-index: 100;
+  margin: 0 auto;
+  width: 40%;
+  height: 40%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 @keyframes failed-match {
