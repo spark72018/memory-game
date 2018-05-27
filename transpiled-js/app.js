@@ -429,6 +429,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var firstCardPicked = stateObj.firstCardPicked;
 
         if (!firstCardPicked) {
+          // store reference to <i> tag containing icon className
           var firstCard = target.previousSibling.firstChild;
 
           return this.setFirstCardPicked(stateObj, firstCard);
@@ -436,11 +437,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.matchEmitter.emit('moveMade');
 
+        // store reference to <i> tag containing icon className
         var secondCardPicked = target.previousSibling.firstChild;
         var cardsPicked = [firstCardPicked, secondCardPicked];
-        console.log('cardsPicked is', cardsPicked);
+
         var secondCardValue = target.previousSibling.firstChild.className;
         var firstCardValue = firstCardPicked.className;
+
         var cardsAreMatch = firstCardValue === secondCardValue;
         var cardContainers = cardsPicked.map(function (iconTag) {
           return iconTag.parentNode.parentNode;

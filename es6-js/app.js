@@ -350,6 +350,7 @@
       const firstCardPicked = stateObj.firstCardPicked;
       
       if (!firstCardPicked) {
+        // store reference to <i> tag containing icon className
         const firstCard = target.previousSibling.firstChild;
 
         return this.setFirstCardPicked(stateObj, firstCard);
@@ -357,11 +358,13 @@
 
       this.matchEmitter.emit('moveMade');
 
+      // store reference to <i> tag containing icon className
       const secondCardPicked = target.previousSibling.firstChild;
       const cardsPicked = [firstCardPicked, secondCardPicked];
-      console.log('cardsPicked is', cardsPicked);
+
       const secondCardValue = target.previousSibling.firstChild.className;
       const firstCardValue = firstCardPicked.className;
+
       const cardsAreMatch = firstCardValue === secondCardValue;
       const cardContainers = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
 
