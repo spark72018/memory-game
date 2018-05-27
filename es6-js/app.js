@@ -205,18 +205,27 @@
       return Math.floor(seconds / 60);
     }
 
-    getSeconds(seconds) {
+    getRemainingSeconds(seconds) {
       const minutes = this.getMinutes(seconds);
       const remainingSeconds = seconds - minutes * 60;
 
       return remainingSeconds;
     }
 
-    startTimer(stateObj, fn) {
-      stateObj.timerId = setInterval(() => {
-        this.increaseSeconds(stateObj, 1);
-        fn();
-      }, 1000);
+    getTimeElapsedString(seconds) {
+      const minutes = this.getMinutes(seconds);
+      const remainingSeconds = this.getRemainingSeconds(seconds);
+
+      return `${minutes}:${
+        remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds
+      }`;
+    }
+
+    startTimer(stateObj) {
+      stateObj.timerId = setInterval(
+        () => this.increaseSeconds(stateObj, 1),
+        1000
+      );
     }
 
     pauseTimer(stateObj) {
@@ -235,13 +244,17 @@
       stateObj.playingGame = !currentState;
     }
 
-    handleStartClick(e, stateObj, timerObj, viewObj) {
+    handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
       console.log('start clicked');
       this.toggleGameStarted(stateObj);
       const currentlyPlaying = stateObj.playingGame;
 
       if (currentlyPlaying) {
-        timerObj.startTimer(stateObj, viewObj);
+        // start interval increment of seconds
+        // update view each time, supplying state obj as arg each time
+        timerObj.startTimer(stateObj, stateObj =>
+          viewObj.setTimerValue(stateObj.secondsElapsed, timerElement)
+        );
       } else {
         timerObj.pauseTimer(stateObj);
       }
@@ -393,10 +406,11 @@
 
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
+  const timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener(
     'click',
-    e => gameController.handleStartClick(e, gameState, timer),
+    e => gameController.handleStartClick(e, gameState, timer, timerElement),
     false
   );
   deck.addEventListener(

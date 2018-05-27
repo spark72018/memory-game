@@ -255,21 +255,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Math.floor(seconds / 60);
       }
     }, {
-      key: 'getSeconds',
-      value: function getSeconds(seconds) {
+      key: 'getRemainingSeconds',
+      value: function getRemainingSeconds(seconds) {
         var minutes = this.getMinutes(seconds);
         var remainingSeconds = seconds - minutes * 60;
 
         return remainingSeconds;
       }
     }, {
+      key: 'getTimeElapsedString',
+      value: function getTimeElapsedString(seconds) {
+        var minutes = this.getMinutes(seconds);
+        var remainingSeconds = this.getRemainingSeconds(seconds);
+
+        return minutes + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds);
+      }
+    }, {
       key: 'startTimer',
-      value: function startTimer(stateObj, fn) {
+      value: function startTimer(stateObj) {
         var _this = this;
 
         stateObj.timerId = setInterval(function () {
-          _this.increaseSeconds(stateObj, 1);
-          fn();
+          return _this.increaseSeconds(stateObj, 1);
         }, 1000);
       }
     }, {
@@ -300,13 +307,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleStartClick',
-      value: function handleStartClick(e, stateObj, timerObj, viewObj) {
+      value: function handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
         console.log('start clicked');
         this.toggleGameStarted(stateObj);
         var currentlyPlaying = stateObj.playingGame;
 
         if (currentlyPlaying) {
-          timerObj.startTimer(stateObj, viewObj);
+          // start interval increment of seconds
+          // update view each time, supplying state obj as arg each time
+          timerObj.startTimer(stateObj, function (stateObj) {
+            return viewObj.setTimerValue(stateObj.secondsElapsed, timerElement);
+          });
         } else {
           timerObj.pauseTimer(stateObj);
         }
@@ -505,9 +516,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var deck = document.getElementsByClassName('deck')[0];
   var startButton = document.getElementsByClassName('start')[0];
+  var timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener('click', function (e) {
-    return gameController.handleStartClick(e, gameState, timer);
+    return gameController.handleStartClick(e, gameState, timer, timerElement);
   }, false);
   deck.addEventListener('click', function (e) {
     return gameController.handleDeckClick(e, gameState);
