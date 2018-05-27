@@ -188,6 +188,42 @@
     }
   }
 
+//  function Emitter() {
+//    this.events = {};
+//  }
+
+//  Emitter.prototype.on = function(type, listener) {
+//    this.events[type] = this.events[type] || [];
+//    this.events[type].push(listener);
+//  }
+
+//  Emitter.prototype.emit = function(type) {
+//    if(this.events[type]) {
+//      this.events[type].forEach(listener => listener());
+//    }
+//  }
+
+ class Emitter {
+   constructor(events = {}) {
+     this.events = events;
+   }
+
+   on(type, listener) {
+     this.events[type] = this.events[type] || [];
+     if(typeof listener === 'function') {
+      this.events[type].push(listener);
+     }else {
+       throw new Error('listener must be a function!');
+     }
+   }
+
+   emit(type) {
+    if(this.events[type]) {
+      this.events[type].forEach(listener => listener());
+    }
+   }
+ }
+
   class Timer {
     increaseSeconds(stateObj, amount) {
       stateObj.secondsElapsed += amount;

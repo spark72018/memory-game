@@ -230,6 +230,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Deck;
   }();
 
+  //  function Emitter() {
+  //    this.events = {};
+  //  }
+
+  //  Emitter.prototype.on = function(type, listener) {
+  //    this.events[type] = this.events[type] || [];
+  //    this.events[type].push(listener);
+  //  }
+
+  //  Emitter.prototype.emit = function(type) {
+  //    if(this.events[type]) {
+  //      this.events[type].forEach(listener => listener());
+  //    }
+  //  }
+
+  var Emitter = function () {
+    function Emitter() {
+      var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      _classCallCheck(this, Emitter);
+
+      this.events = events;
+    }
+
+    _createClass(Emitter, [{
+      key: 'on',
+      value: function on(type, listener) {
+        this.events[type] = this.events[type] || [];
+        if (typeof listener === 'function') {
+          this.events[type].push(listener);
+        } else {
+          throw new Error('listener must be a function!');
+        }
+      }
+    }, {
+      key: 'emit',
+      value: function emit(type) {
+        if (this.events[type]) {
+          this.events[type].forEach(function (listener) {
+            return listener();
+          });
+        }
+      }
+    }]);
+
+    return Emitter;
+  }();
+
   var Timer = function () {
     function Timer() {
       _classCallCheck(this, Timer);
