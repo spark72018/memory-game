@@ -271,6 +271,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.events[type].forEach(function (listener) {
             return listener();
           });
+        } else {
+          throw new Error(type + ' does not exist on events object!');
         }
       }
     }]);
@@ -281,6 +283,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var Timer = function () {
     function Timer() {
       _classCallCheck(this, Timer);
+
+      this.emitter = new Emitter();
     }
 
     _createClass(Timer, [{
@@ -319,12 +323,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return minutes + ':' + (remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds);
       }
     }, {
-      key: 'startTimer',
-      value: function startTimer(stateObj) {
+      key: 'startTimerAndEmitTimeTickEvent',
+      value: function startTimerAndEmitTimeTickEvent(stateObj) {
         var _this = this;
 
-        stateObj.timerId = setInterval(function () {
+        // in setInterval, emit 'timeTick' each second
+        this.emitter.on('timeTick', function () {
           return _this.increaseSeconds(stateObj, 1);
+        });
+        stateObj.timerId = setInterval(function () {
+          _this.emitter.emit('timeTick');
         }, 1000);
       }
     }, {
@@ -334,6 +342,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (timerId !== null) {
           clearInterval(timerId);
           stateObj.timerId = null;
+          // clear event listeners for timeTick event
+          this.emitter.events = {};
         }
       }
     }]);
@@ -361,10 +371,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var currentlyPlaying = stateObj.playingGame;
 
         if (currentlyPlaying) {
-          // start interval increment of seconds
-          // update view each time, supplying state obj as arg each time
-          timerObj.startTimer(stateObj, function (stateObj) {
-            return viewObj.setTimerValue(stateObj.secondsElapsed, timerElement);
+          timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+          timerObj.emitter.on('timeTick', function () {
+            return viewObj.setTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
           });
         } else {
           timerObj.pauseTimer(stateObj);
@@ -554,6 +563,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var gameController = new GameController();
   var gameView = new GameView();
 
+  /*
+    - every setInterval tick, emit 'timeTick' event
+    - ON timeTick event, increaseSeconds, () => updateView(getTimerString, timerElement)
+  */
+
   var deckOfCards = new Deck().makeDeck(gameState.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -562,12 +576,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     arrOfGameElements: [scorePanel, deckOfCards]
   });
 
+  // handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
+
   var deck = document.getElementsByClassName('deck')[0];
   var startButton = document.getElementsByClassName('start')[0];
   var timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener('click', function (e) {
-    return gameController.handleStartClick(e, gameState, timer, timerElement);
+    return gameController.handleStartClick(e, gameState, timer, gameView, timerElement);
   }, false);
   deck.addEventListener('click', function (e) {
     return gameController.handleDeckClick(e, gameState);

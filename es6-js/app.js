@@ -188,43 +188,48 @@
     }
   }
 
-//  function Emitter() {
-//    this.events = {};
-//  }
+  //  function Emitter() {
+  //    this.events = {};
+  //  }
 
-//  Emitter.prototype.on = function(type, listener) {
-//    this.events[type] = this.events[type] || [];
-//    this.events[type].push(listener);
-//  }
+  //  Emitter.prototype.on = function(type, listener) {
+  //    this.events[type] = this.events[type] || [];
+  //    this.events[type].push(listener);
+  //  }
 
-//  Emitter.prototype.emit = function(type) {
-//    if(this.events[type]) {
-//      this.events[type].forEach(listener => listener());
-//    }
-//  }
+  //  Emitter.prototype.emit = function(type) {
+  //    if(this.events[type]) {
+  //      this.events[type].forEach(listener => listener());
+  //    }
+  //  }
 
- class Emitter {
-   constructor(events = {}) {
-     this.events = events;
-   }
-
-   on(type, listener) {
-     this.events[type] = this.events[type] || [];
-     if(typeof listener === 'function') {
-      this.events[type].push(listener);
-     }else {
-       throw new Error('listener must be a function!');
-     }
-   }
-
-   emit(type) {
-    if(this.events[type]) {
-      this.events[type].forEach(listener => listener());
+  class Emitter {
+    constructor(events = {}) {
+      this.events = events;
     }
-   }
- }
+
+    on(type, listener) {
+      this.events[type] = this.events[type] || [];
+      if (typeof listener === 'function') {
+        this.events[type].push(listener);
+      } else {
+        throw new Error('listener must be a function!');
+      }
+    }
+
+    emit(type) {
+      if (this.events[type]) {
+        this.events[type].forEach(listener => listener());
+      } else {
+        throw new Error(`${type} does not exist on events object!`);
+      }
+    }
+  }
 
   class Timer {
+    constructor() {
+      this.emitter = new Emitter();
+    }
     increaseSeconds(stateObj, amount) {
       stateObj.secondsElapsed += amount;
       console.log('new time', stateObj.secondsElapsed);
@@ -257,11 +262,12 @@
       }`;
     }
 
-    startTimer(stateObj) {
-      stateObj.timerId = setInterval(
-        () => this.increaseSeconds(stateObj, 1),
-        1000
-      );
+    startTimerAndEmitTimeTickEvent(stateObj) {
+      // in setInterval, emit 'timeTick' each second
+      this.emitter.on('timeTick', () => this.increaseSeconds(stateObj, 1));
+      stateObj.timerId = setInterval(() => {
+        this.emitter.emit('timeTick');
+      }, 1000);
     }
 
     pauseTimer(stateObj) {
@@ -269,6 +275,8 @@
       if (timerId !== null) {
         clearInterval(timerId);
         stateObj.timerId = null;
+        // clear event listeners for timeTick event
+        this.emitter.events = {};
       }
     }
   }
@@ -286,10 +294,12 @@
       const currentlyPlaying = stateObj.playingGame;
 
       if (currentlyPlaying) {
-        // start interval increment of seconds
-        // update view each time, supplying state obj as arg each time
-        timerObj.startTimer(stateObj, stateObj =>
-          viewObj.setTimerValue(stateObj.secondsElapsed, timerElement)
+        timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+        timerObj.emitter.on('timeTick', () =>
+          viewObj.setTimerValue(
+            timerObj.getTimeElapsedString(stateObj.secondsElapsed),
+            timerElement
+          )
         );
       } else {
         timerObj.pauseTimer(stateObj);
@@ -432,6 +442,11 @@
   const gameController = new GameController();
   const gameView = new GameView();
 
+  /*
+    - every setInterval tick, emit 'timeTick' event
+    - ON timeTick event, increaseSeconds, () => updateView(getTimerString, timerElement)
+  */
+
   const deckOfCards = new Deck().makeDeck(gameState.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -440,13 +455,22 @@
     arrOfGameElements: [scorePanel, deckOfCards]
   });
 
+  // handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
+
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener(
     'click',
-    e => gameController.handleStartClick(e, gameState, timer, timerElement),
+    e =>
+      gameController.handleStartClick(
+        e,
+        gameState,
+        timer,
+        gameView,
+        timerElement
+      ),
     false
   );
   deck.addEventListener(
