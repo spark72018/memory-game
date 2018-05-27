@@ -13,8 +13,7 @@
   ];
   // utility functions
 
-  // used to mixin behavior into classes rather than
-  // "extend"ing since multiple inheritance isn't supported
+  // used to mixin behavior into classes
   const FunctionalMixin = behavior => target => Object.assign(target, behavior);
 
   // mixin makeIcon method into a class
@@ -187,21 +186,6 @@
       return deck;
     }
   }
-
-  //  function Emitter() {
-  //    this.events = {};
-  //  }
-
-  //  Emitter.prototype.on = function(type, listener) {
-  //    this.events[type] = this.events[type] || [];
-  //    this.events[type].push(listener);
-  //  }
-
-  //  Emitter.prototype.emit = function(type) {
-  //    if(this.events[type]) {
-  //      this.events[type].forEach(listener => listener());
-  //    }
-  //  }
 
   class Emitter {
     constructor(events = {}) {
@@ -442,11 +426,6 @@
   const Controller = new GameController();
   const View = new GameView();
 
-  /*
-    - every setInterval tick, emit 'timeTick' event
-    - ON timeTick event, increaseSeconds, () => updateView(getTimerString, timerElement)
-  */
-
   const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -454,8 +433,6 @@
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
-
-  // handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
 
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];

@@ -10,8 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
   // utility functions
 
-  // used to mixin behavior into classes rather than
-  // "extend"ing since multiple inheritance isn't supported
+  // used to mixin behavior into classes
   var FunctionalMixin = function FunctionalMixin(behavior) {
     return function (target) {
       return Object.assign(target, behavior);
@@ -229,21 +228,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return Deck;
   }();
-
-  //  function Emitter() {
-  //    this.events = {};
-  //  }
-
-  //  Emitter.prototype.on = function(type, listener) {
-  //    this.events[type] = this.events[type] || [];
-  //    this.events[type].push(listener);
-  //  }
-
-  //  Emitter.prototype.emit = function(type) {
-  //    if(this.events[type]) {
-  //      this.events[type].forEach(listener => listener());
-  //    }
-  //  }
 
   var Emitter = function () {
     function Emitter() {
@@ -563,11 +547,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var Controller = new GameController();
   var View = new GameView();
 
-  /*
-    - every setInterval tick, emit 'timeTick' event
-    - ON timeTick event, increaseSeconds, () => updateView(getTimerString, timerElement)
-  */
-
   var deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -575,8 +554,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
-
-  // handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
 
   var deck = document.getElementsByClassName('deck')[0];
   var startButton = document.getElementsByClassName('start')[0];
