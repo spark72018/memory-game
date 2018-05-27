@@ -439,7 +439,7 @@
   const gameContainer = document.getElementsByClassName('container')[0];
   const timer = new Timer();
   const State = new GameState();
-  const gameController = new GameController();
+  const Controller = new GameController();
   const gameView = new GameView();
 
   /*
@@ -464,7 +464,7 @@
   startButton.addEventListener(
     'click',
     e =>
-      gameController.handleStartClick(
+      Controller.handleStartClick(
         e,
         State,
         timer,
@@ -475,7 +475,7 @@
   );
   deck.addEventListener(
     'click',
-    e => gameController.handleDeckClick(e, State),
+    e => Controller.handleDeckClick(e, State),
     false
   );
 

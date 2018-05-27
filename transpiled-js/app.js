@@ -560,7 +560,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var gameContainer = document.getElementsByClassName('container')[0];
   var timer = new Timer();
   var State = new GameState();
-  var gameController = new GameController();
+  var Controller = new GameController();
   var gameView = new GameView();
 
   /*
@@ -583,10 +583,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener('click', function (e) {
-    return gameController.handleStartClick(e, State, timer, gameView, timerElement);
+    return Controller.handleStartClick(e, State, timer, gameView, timerElement);
   }, false);
   deck.addEventListener('click', function (e) {
-    return gameController.handleDeckClick(e, State);
+    return Controller.handleDeckClick(e, State);
   }, false);
 
   var moves = document.getElementsByClassName('moves')[0];
