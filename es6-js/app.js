@@ -295,6 +295,19 @@
       // if(!stateObj.playingGame) {
       //   return;
       // }
+
+      /*
+        playingGame = false,
+        timerId = null,
+        firstCardPicked = null,
+        numFlippableCards = 16,
+        secondsElapsed = 0,
+        starRating = 3,
+        numMovesMade = 0,
+        numSuccessMatches = 0,
+        numFailedMatches = 0,
+        arrOfIconStrings = CARD_ICONS
+      */
       console.log('top level', e.target);
       const card = isCard(e.target);
       const matched = isMatched(e.target);
@@ -324,6 +337,10 @@
         element.classList.toggle('show');
 
         return element;
+      }
+
+      function isShowing(element) {
+        return element.classList.contains('show');
       }
     }
 

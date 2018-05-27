@@ -370,6 +370,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // if(!stateObj.playingGame) {
         //   return;
         // }
+
+        /*
+          playingGame = false,
+          timerId = null,
+          firstCardPicked = null,
+          numFlippableCards = 16,
+          secondsElapsed = 0,
+          starRating = 3,
+          numMovesMade = 0,
+          numSuccessMatches = 0,
+          numFailedMatches = 0,
+          arrOfIconStrings = CARD_ICONS
+        */
         console.log('top level', e.target);
         var card = isCard(e.target);
         var matched = isMatched(e.target);
@@ -396,6 +409,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           element.classList.toggle('show');
 
           return element;
+        }
+
+        function isShowing(element) {
+          return element.classList.contains('show');
         }
       }
     }, {
