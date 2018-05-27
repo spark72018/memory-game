@@ -17,7 +17,8 @@ body {
 }
 
 body {
-  background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
+  background: #ffffff url('../img/geometry2.png');
+  /* Background pattern from Subtle Patterns */
   font-family: 'Coda', cursive;
 }
 
@@ -119,6 +120,10 @@ h1 {
   transform: rotateY(0);
 }
 
+.card.fail {
+  animation: failed-match 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
 .score-panel {
   text-align: left;
   width: 345px;
@@ -151,4 +156,24 @@ h1 {
 .score-panel .restart {
   float: right;
   cursor: pointer;
+}
+
+@keyframes failed-match {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }

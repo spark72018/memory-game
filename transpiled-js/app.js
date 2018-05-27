@@ -465,6 +465,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.setFirstCardPicked(stateObj, null);
 
         // utility functions
+
+
         function isCard(element) {
           return element.classList.contains('back') || element.classList.contains('front');
         }

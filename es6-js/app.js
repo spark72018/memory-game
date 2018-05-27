@@ -382,6 +382,8 @@
       this.setFirstCardPicked(stateObj, null);
 
       // utility functions
+      
+
       function isCard(element) {
         return (
           element.classList.contains('back') ||
