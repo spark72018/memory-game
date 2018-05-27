@@ -266,14 +266,52 @@
   }
 
   class GameController {
+    constructor() {
+      this.matchEmitter = new Emitter();
+    }
     toggleGameStarted(stateObj) {
       const currentState = stateObj.playingGame;
 
       stateObj.playingGame = !currentState;
     }
 
+    checkIfGameWon(stateObj) {
+      return stateObj.numSuccessMatches === stateObj.numMatchesToWin;
+    }
+
+    endGame() {
+      console.log('endGame called');
+    }
+
     handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
       console.log('start clicked');
+
+      this.matchEmitter.on('successfulMatch', () => {
+        console.log('successfulMatch event emitted');
+        this.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
+        const gameWon = this.checkIfGameWon(stateObj);
+        if(gameWon) {
+          return this.endGame();
+        }
+      });
+
+      // TODO: check if at limit for star degredation
+        // if it is change star rating
+        // render new stars
+      this.matchEmitter.on('failedMatch', () => {
+        console.log('failedMatch event emitted');
+        this.setFailedMatches(stateObj, ++stateObj.numFailedMatches);
+
+      });
+
+      this.matchEmitter.on('moveMade', () => {
+        console.log('moveMade event emitted');
+        this.setMovesMade(stateObj, ++stateObj.numMovesMade);
+
+        const movesTag = document.getElementsByClassName('moves')[0];
+        viewObj.renderNumMovesMade(`${stateObj.numMovesMade} Moves`, movesTag);
+      });
+
       this.toggleGameStarted(stateObj);
       const currentlyPlaying = stateObj.playingGame;
 
@@ -322,24 +360,32 @@
         return;
       }
 
-      const firstCardPicked = stateObj.firstCardPicked;
-
-      /*
-        - if no firstCard, then set e.target.previousSibling.firstChild 
-          on stateObj.firstCardPicked, can only click on a non-showing card
-
-        - else, compare second pick with firstCardPicked
-          - if match, add .match to li, inc stateObj.numSuccessMatches
-            - if stateObj.numSuccessMatches === stateObj.numMatchesToWin
-              - end game
-                - stop timer
-                - TODO
-          - no match, (TODO: add 'wrong' animation) both cards back, inc stateObj.numFailedMatches
-
-          - increment MOVES tag by 1 (only after second pick)
-      */
-
       flip(parent);
+      
+      const firstCardPicked = stateObj.firstCardPicked;
+      
+      if (!firstCardPicked) {
+        const firstCardValue = target.previousSibling.firstChild.className;
+
+        return this.setFirstCardPicked(stateObj, firstCardValue);
+      }
+// 
+      const secondCardValue = target.previousSibling.firstChild.className;
+      const cardsAreMatch = firstCardPicked === secondCardValue;
+      
+      if (cardsAreMatch) {
+        const matchingCards = [...document.getElementsByClassName(firstCardPicked)];
+        const cardContainers = matchingCards.map(iconTag => iconTag.parentNode.parentNode);
+        
+        setCardsAsMatched(...cardContainers);
+
+        this.matchEmitter.emit('successfulMatch');
+      }else {
+        this.matchEmitter.emit('failedMatch');
+      }
+
+      this.matchEmitter.emit('moveMade');
+      this.setFirstCardPicked(stateObj, null);
 
       // utility functions
       function isCard(element) {
@@ -363,6 +409,43 @@
 
         return element;
       }
+
+      function removeClasses(...classesToRemove) {
+        return function(card) {
+          card.classList.remove(...classesToRemove);
+
+          return card;
+        };
+      }
+
+      function addClasses(...classesToAdd) {
+        return function(card) {
+          card.classList.add(...classesToAdd);
+
+          return card;
+        };
+      }
+
+      function compose(fn1, fn2) {
+        return function(initVal) {
+          return fn1(fn2(initVal));
+        };
+      }
+
+      function setCardsAsMatched(firstCard, secondCard) {
+        const setCardToMatched = compose(
+          addClasses('match'),
+          removeClasses('open', 'show')
+        );
+
+        try {
+          setCardToMatched(firstCard);
+          setCardToMatched(secondCard);
+          return true;
+        } catch (e) {
+          throw new Error(`setCardsAsMatched error: ${e}`);
+        }
+      }
     }
 
     setSecondsElapsed(stateObj, secondsElapsed) {
@@ -370,8 +453,8 @@
       return stateObj;
     }
 
-    setFirstCardPicked(stateObj, cardString) {
-      stateObj.firstCardPicked = cardString;
+    setFirstCardPicked(stateObj, cardStringOrNull) {
+      stateObj.firstCardPicked = cardStringOrNull;
       return stateObj;
     }
 

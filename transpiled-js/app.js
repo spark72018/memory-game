@@ -2,6 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function () {
@@ -338,6 +340,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var GameController = function () {
     function GameController() {
       _classCallCheck(this, GameController);
+
+      this.matchEmitter = new Emitter();
     }
 
     _createClass(GameController, [{
@@ -348,9 +352,47 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.playingGame = !currentState;
       }
     }, {
+      key: 'checkIfGameWon',
+      value: function checkIfGameWon(stateObj) {
+        return stateObj.numSuccessMatches === stateObj.numMatchesToWin;
+      }
+    }, {
+      key: 'endGame',
+      value: function endGame() {
+        console.log('endGame called');
+      }
+    }, {
       key: 'handleStartClick',
       value: function handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
+        var _this2 = this;
+
         console.log('start clicked');
+
+        this.matchEmitter.on('successfulMatch', function () {
+          console.log('successfulMatch event emitted');
+          _this2.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
+          var gameWon = _this2.checkIfGameWon(stateObj);
+          if (gameWon) {
+            return _this2.endGame();
+          }
+        });
+
+        // TODO: check if at limit for star degredation
+        // if it is change star rating
+        // render new stars
+        this.matchEmitter.on('failedMatch', function () {
+          console.log('failedMatch event emitted');
+          _this2.setFailedMatches(stateObj, ++stateObj.numFailedMatches);
+        });
+
+        this.matchEmitter.on('moveMade', function () {
+          console.log('moveMade event emitted');
+          _this2.setMovesMade(stateObj, ++stateObj.numMovesMade);
+
+          var movesTag = document.getElementsByClassName('moves')[0];
+          viewObj.renderNumMovesMade(stateObj.numMovesMade + ' Moves', movesTag);
+        });
+
         this.toggleGameStarted(stateObj);
         var currentlyPlaying = stateObj.playingGame;
 
@@ -397,22 +439,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return;
         }
 
+        flip(parent);
+
         var firstCardPicked = stateObj.firstCardPicked;
 
-        /*
-          - if no firstCard, then set e.target.previousSibling.firstChild 
-            on stateObj.firstCardPicked, can only click on a non-showing card
-           - else, compare second pick with firstCardPicked
-            - if match, add .match to li, inc stateObj.numSuccessMatches
-              - if stateObj.numSuccessMatches === stateObj.numMatchesToWin
-                - end game
-                  - stop timer
-                  - TODO
-            - no match, (TODO: add 'wrong' animation) both cards back, inc stateObj.numFailedMatches
-             - increment MOVES tag by 1 (only after second pick)
-        */
+        if (!firstCardPicked) {
+          var firstCardValue = target.previousSibling.firstChild.className;
 
-        flip(parent);
+          return this.setFirstCardPicked(stateObj, firstCardValue);
+        }
+        // 
+        var secondCardValue = target.previousSibling.firstChild.className;
+        var cardsAreMatch = firstCardPicked === secondCardValue;
+
+        if (cardsAreMatch) {
+          var matchingCards = [].concat(_toConsumableArray(document.getElementsByClassName(firstCardPicked)));
+          var cardContainers = matchingCards.map(function (iconTag) {
+            return iconTag.parentNode.parentNode;
+          });
+
+          setCardsAsMatched.apply(undefined, _toConsumableArray(cardContainers));
+
+          this.matchEmitter.emit('successfulMatch');
+        } else {
+          this.matchEmitter.emit('failedMatch');
+        }
+
+        this.matchEmitter.emit('moveMade');
+        this.setFirstCardPicked(stateObj, null);
 
         // utility functions
         function isCard(element) {
@@ -433,6 +487,52 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           return element;
         }
+
+        function removeClasses() {
+          for (var _len2 = arguments.length, classesToRemove = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            classesToRemove[_key2] = arguments[_key2];
+          }
+
+          return function (card) {
+            var _card$classList;
+
+            (_card$classList = card.classList).remove.apply(_card$classList, classesToRemove);
+
+            return card;
+          };
+        }
+
+        function addClasses() {
+          for (var _len3 = arguments.length, classesToAdd = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            classesToAdd[_key3] = arguments[_key3];
+          }
+
+          return function (card) {
+            var _card$classList2;
+
+            (_card$classList2 = card.classList).add.apply(_card$classList2, classesToAdd);
+
+            return card;
+          };
+        }
+
+        function compose(fn1, fn2) {
+          return function (initVal) {
+            return fn1(fn2(initVal));
+          };
+        }
+
+        function setCardsAsMatched(firstCard, secondCard) {
+          var setCardToMatched = compose(addClasses('match'), removeClasses('open', 'show'));
+
+          try {
+            setCardToMatched(firstCard);
+            setCardToMatched(secondCard);
+            return true;
+          } catch (e) {
+            throw new Error('setCardsAsMatched error: ' + e);
+          }
+        }
       }
     }, {
       key: 'setSecondsElapsed',
@@ -442,8 +542,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'setFirstCardPicked',
-      value: function setFirstCardPicked(stateObj, cardString) {
-        stateObj.firstCardPicked = cardString;
+      value: function setFirstCardPicked(stateObj, cardStringOrNull) {
+        stateObj.firstCardPicked = cardStringOrNull;
         return stateObj;
       }
     }, {
