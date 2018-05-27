@@ -277,7 +277,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'increaseSeconds',
       value: function increaseSeconds(stateObj, amount) {
         stateObj.secondsElapsed += amount;
-        console.log('new time', stateObj.secondsElapsed);
       }
     }, {
       key: 'resetSeconds',
@@ -358,7 +357,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'endGame',
-      value: function endGame() {
+      value: function endGame(stateObj, timerObj, viewObj, timerElement) {
         console.log('endGame called');
       }
     }, {
@@ -373,7 +372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _this2.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
           var gameWon = _this2.checkIfGameWon(stateObj);
           if (gameWon) {
-            return _this2.endGame();
+            return _this2.endGame(stateObj, timerObj, viewObj, timerElement);
           }
         });
 
@@ -412,20 +411,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // if(!stateObj.playingGame) {
         //   return;
         // }
-
-        /*
-          playingGame = false,
-          timerId = null,
-          firstCardPicked = null,
-          numFlippableCards = 16,
-          secondsElapsed = 0,
-          starRating = 3,
-          numMovesMade = 0,
-          numSuccessMatches = 0,
-          numFailedMatches = 0,
-          numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN (8)
-          arrOfIconStrings = CARD_ICONS
-        */
         console.log('top level', e.target);
         var target = e.target;
         var parent = e.target.parentNode;
@@ -444,28 +429,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var firstCardPicked = stateObj.firstCardPicked;
 
         if (!firstCardPicked) {
-          var firstCardValue = target.previousSibling.firstChild.className;
+          var firstCard = target.previousSibling.firstChild;
 
-          return this.setFirstCardPicked(stateObj, firstCardValue);
+          return this.setFirstCardPicked(stateObj, firstCard);
         }
-        // 
+
+        this.matchEmitter.emit('moveMade');
+
+        var secondCardPicked = target.previousSibling.firstChild;
+        var cardsPicked = [firstCardPicked, secondCardPicked];
+        console.log('cardsPicked is', cardsPicked);
         var secondCardValue = target.previousSibling.firstChild.className;
-        var cardsAreMatch = firstCardPicked === secondCardValue;
+        var firstCardValue = firstCardPicked.className;
+        var cardsAreMatch = firstCardValue === secondCardValue;
+        var cardContainers = cardsPicked.map(function (iconTag) {
+          return iconTag.parentNode.parentNode;
+        });
 
         if (cardsAreMatch) {
-          var matchingCards = [].concat(_toConsumableArray(document.getElementsByClassName(firstCardPicked)));
-          var cardContainers = matchingCards.map(function (iconTag) {
-            return iconTag.parentNode.parentNode;
-          });
-
           setCardsAsMatched.apply(undefined, _toConsumableArray(cardContainers));
 
           this.matchEmitter.emit('successfulMatch');
         } else {
+          // TODO: animateFailedMatch(...cardContainers);
+          setTimeout(function () {
+            return flip.apply(undefined, _toConsumableArray(cardContainers));
+          }, 1000);
+
           this.matchEmitter.emit('failedMatch');
         }
 
-        this.matchEmitter.emit('moveMade');
         this.setFirstCardPicked(stateObj, null);
 
         // utility functions
@@ -481,16 +474,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return element.classList.contains('show');
         }
 
-        function flip(element) {
-          element.classList.toggle('open');
-          element.classList.toggle('show');
+        function flip() {
+          for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            elements[_key2] = arguments[_key2];
+          }
 
-          return element;
+          elements.forEach(function (element) {
+            element.classList.toggle('open');
+            element.classList.toggle('show');
+          });
         }
 
         function removeClasses() {
-          for (var _len2 = arguments.length, classesToRemove = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            classesToRemove[_key2] = arguments[_key2];
+          for (var _len3 = arguments.length, classesToRemove = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            classesToRemove[_key3] = arguments[_key3];
           }
 
           return function (card) {
@@ -503,8 +500,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function addClasses() {
-          for (var _len3 = arguments.length, classesToAdd = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-            classesToAdd[_key3] = arguments[_key3];
+          for (var _len4 = arguments.length, classesToAdd = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            classesToAdd[_key4] = arguments[_key4];
           }
 
           return function (card) {

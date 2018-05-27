@@ -216,7 +216,6 @@
     }
     increaseSeconds(stateObj, amount) {
       stateObj.secondsElapsed += amount;
-      console.log('new time', stateObj.secondsElapsed);
     }
 
     resetSeconds(stateObj) {
@@ -279,7 +278,7 @@
       return stateObj.numSuccessMatches === stateObj.numMatchesToWin;
     }
 
-    endGame() {
+    endGame(stateObj, timerObj, viewObj, timerElement) {
       console.log('endGame called');
     }
 
@@ -291,7 +290,7 @@
         this.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
         const gameWon = this.checkIfGameWon(stateObj);
         if(gameWon) {
-          return this.endGame();
+          return this.endGame(stateObj, timerObj, viewObj, timerElement);
         }
       });
 
@@ -333,20 +332,6 @@
       // if(!stateObj.playingGame) {
       //   return;
       // }
-
-      /*
-        playingGame = false,
-        timerId = null,
-        firstCardPicked = null,
-        numFlippableCards = 16,
-        secondsElapsed = 0,
-        starRating = 3,
-        numMovesMade = 0,
-        numSuccessMatches = 0,
-        numFailedMatches = 0,
-        numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN (8)
-        arrOfIconStrings = CARD_ICONS
-      */
       console.log('top level', e.target);
       const target = e.target;
       const parent = e.target.parentNode;
@@ -365,26 +350,32 @@
       const firstCardPicked = stateObj.firstCardPicked;
       
       if (!firstCardPicked) {
-        const firstCardValue = target.previousSibling.firstChild.className;
+        const firstCard = target.previousSibling.firstChild;
 
-        return this.setFirstCardPicked(stateObj, firstCardValue);
+        return this.setFirstCardPicked(stateObj, firstCard);
       }
-// 
+
+      this.matchEmitter.emit('moveMade');
+
+      const secondCardPicked = target.previousSibling.firstChild;
+      const cardsPicked = [firstCardPicked, secondCardPicked];
+      console.log('cardsPicked is', cardsPicked);
       const secondCardValue = target.previousSibling.firstChild.className;
-      const cardsAreMatch = firstCardPicked === secondCardValue;
-      
+      const firstCardValue = firstCardPicked.className;
+      const cardsAreMatch = firstCardValue === secondCardValue;
+      const cardContainers = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
+
       if (cardsAreMatch) {
-        const matchingCards = [...document.getElementsByClassName(firstCardPicked)];
-        const cardContainers = matchingCards.map(iconTag => iconTag.parentNode.parentNode);
-        
         setCardsAsMatched(...cardContainers);
 
         this.matchEmitter.emit('successfulMatch');
       }else {
+        // TODO: animateFailedMatch(...cardContainers);
+        setTimeout(() => flip(...cardContainers), 1000);
+
         this.matchEmitter.emit('failedMatch');
       }
 
-      this.matchEmitter.emit('moveMade');
       this.setFirstCardPicked(stateObj, null);
 
       // utility functions
@@ -403,11 +394,11 @@
         return element.classList.contains('show');
       }
 
-      function flip(element) {
-        element.classList.toggle('open');
-        element.classList.toggle('show');
-
-        return element;
+      function flip(...elements) {
+        elements.forEach(element => {
+          element.classList.toggle('open');
+          element.classList.toggle('show');
+        });
       }
 
       function removeClasses(...classesToRemove) {
