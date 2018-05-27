@@ -373,8 +373,8 @@
 
         this.matchEmitter.emit('successfulMatch');
       }else {
-        // TODO: animateFailedMatch(...cardContainers);
-        setTimeout(() => flip(...cardContainers), 1000);
+        animateFailedMatch(...cardContainers);
+        setTimeout(() => flip(...cardContainers), 2000);
 
         this.matchEmitter.emit('failedMatch');
       }
@@ -382,7 +382,20 @@
       this.setFirstCardPicked(stateObj, null);
 
       // utility functions
-      
+      function addFailClassTo(element) {
+        return addClasses('fail')(element);
+      }
+
+      function removeFailClassFrom(element) {
+        return removeClasses('fail')(element);
+      }
+
+      function animateFailedMatch(...elements) {
+        elements.forEach(element => {
+          setTimeout(() => addFailClassTo(element), 800);
+          setTimeout(() => removeFailClassFrom(element), 3000);
+        });
+      }
 
       function isCard(element) {
         return (

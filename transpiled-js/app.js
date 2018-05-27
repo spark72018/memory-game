@@ -454,10 +454,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           this.matchEmitter.emit('successfulMatch');
         } else {
-          // TODO: animateFailedMatch(...cardContainers);
+          animateFailedMatch.apply(undefined, _toConsumableArray(cardContainers));
           setTimeout(function () {
             return flip.apply(undefined, _toConsumableArray(cardContainers));
-          }, 1000);
+          }, 2000);
 
           this.matchEmitter.emit('failedMatch');
         }
@@ -465,7 +465,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.setFirstCardPicked(stateObj, null);
 
         // utility functions
+        function addFailClassTo(element) {
+          return addClasses('fail')(element);
+        }
 
+        function removeFailClassFrom(element) {
+          return removeClasses('fail')(element);
+        }
+
+        function animateFailedMatch() {
+          for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            elements[_key2] = arguments[_key2];
+          }
+
+          elements.forEach(function (element) {
+            setTimeout(function () {
+              return addFailClassTo(element);
+            }, 800);
+            setTimeout(function () {
+              return removeFailClassFrom(element);
+            }, 3000);
+          });
+        }
 
         function isCard(element) {
           return element.classList.contains('back') || element.classList.contains('front');
@@ -480,8 +501,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function flip() {
-          for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            elements[_key2] = arguments[_key2];
+          for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            elements[_key3] = arguments[_key3];
           }
 
           elements.forEach(function (element) {
@@ -491,8 +512,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function removeClasses() {
-          for (var _len3 = arguments.length, classesToRemove = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-            classesToRemove[_key3] = arguments[_key3];
+          for (var _len4 = arguments.length, classesToRemove = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            classesToRemove[_key4] = arguments[_key4];
           }
 
           return function (card) {
@@ -505,8 +526,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function addClasses() {
-          for (var _len4 = arguments.length, classesToAdd = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-            classesToAdd[_key4] = arguments[_key4];
+          for (var _len5 = arguments.length, classesToAdd = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+            classesToAdd[_key5] = arguments[_key5];
           }
 
           return function (card) {
