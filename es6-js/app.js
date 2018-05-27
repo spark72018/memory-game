@@ -438,7 +438,7 @@
 
   const gameContainer = document.getElementsByClassName('container')[0];
   const timer = new Timer();
-  const gameState = new GameState();
+  const State = new GameState();
   const gameController = new GameController();
   const gameView = new GameView();
 
@@ -447,7 +447,7 @@
     - ON timeTick event, increaseSeconds, () => updateView(getTimerString, timerElement)
   */
 
-  const deckOfCards = new Deck().makeDeck(gameState.arrOfIconStrings);
+  const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   gameView.renderGame({
@@ -466,7 +466,7 @@
     e =>
       gameController.handleStartClick(
         e,
-        gameState,
+        State,
         timer,
         gameView,
         timerElement
@@ -475,7 +475,7 @@
   );
   deck.addEventListener(
     'click',
-    e => gameController.handleDeckClick(e, gameState),
+    e => gameController.handleDeckClick(e, State),
     false
   );
 
