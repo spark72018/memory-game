@@ -123,10 +123,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   canMakeIcons(ScorePanel.prototype);
 
-  var domElementCheck = function domElementCheck(o) {
-    return o instanceof Element;
-  };
-
   var Card = function () {
     function Card(iconClass) {
       _classCallCheck(this, Card);

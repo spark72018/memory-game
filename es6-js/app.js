@@ -101,8 +101,6 @@
 
   canMakeIcons(ScorePanel.prototype);
 
-  const domElementCheck = o => o instanceof Element;
-
   class Card {
     constructor(iconClass) {
       this.iconClass = iconClass;
