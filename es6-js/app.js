@@ -247,8 +247,8 @@
     }
 
     startTimerAndEmitTimeTickEvent(stateObj) {
-      // in setInterval, emit 'timeTick' each second
       this.emitter.on('timeTick', () => this.increaseSeconds(stateObj, 1));
+
       stateObj.timerId = setInterval(() => {
         this.emitter.emit('timeTick');
       }, 1000);
@@ -385,7 +385,7 @@
       );
     }
 
-    setNumMovesMade(num, movesElement) {
+    renderNumMovesMade(num, movesElement) {
       movesElement.innerText = `${num} Moves`;
     }
 

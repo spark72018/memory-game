@@ -311,10 +311,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function startTimerAndEmitTimeTickEvent(stateObj) {
         var _this = this;
 
-        // in setInterval, emit 'timeTick' each second
         this.emitter.on('timeTick', function () {
           return _this.increaseSeconds(stateObj, 1);
         });
+
         stateObj.timerId = setInterval(function () {
           _this.emitter.emit('timeTick');
         }, 1000);
@@ -490,8 +490,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       }
     }, {
-      key: 'setNumMovesMade',
-      value: function setNumMovesMade(num, movesElement) {
+      key: 'renderNumMovesMade',
+      value: function renderNumMovesMade(num, movesElement) {
         movesElement.innerText = num + ' Moves';
       }
     }, {
