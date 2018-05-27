@@ -561,7 +561,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var timer = new Timer();
   var State = new GameState();
   var Controller = new GameController();
-  var gameView = new GameView();
+  var View = new GameView();
 
   /*
     - every setInterval tick, emit 'timeTick' event
@@ -571,7 +571,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
-  gameView.renderGame({
+  View.renderGame({
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
@@ -583,7 +583,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener('click', function (e) {
-    return Controller.handleStartClick(e, State, timer, gameView, timerElement);
+    return Controller.handleStartClick(e, State, timer, View, timerElement);
   }, false);
   deck.addEventListener('click', function (e) {
     return Controller.handleDeckClick(e, State);

@@ -440,7 +440,7 @@
   const timer = new Timer();
   const State = new GameState();
   const Controller = new GameController();
-  const gameView = new GameView();
+  const View = new GameView();
 
   /*
     - every setInterval tick, emit 'timeTick' event
@@ -450,7 +450,7 @@
   const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
-  gameView.renderGame({
+  View.renderGame({
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
@@ -468,7 +468,7 @@
         e,
         State,
         timer,
-        gameView,
+        View,
         timerElement
       ),
     false
