@@ -626,7 +626,6 @@
       this.deckElement = null;
       this.startButton = null;
       this.restartButton = null;
-      this.timerElement = null;
     }
   }
 

@@ -759,7 +759,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.deckElement = null;
     this.startButton = null;
     this.restartButton = null;
-    this.timerElement = null;
   };
 
   var Timer = new GameTimer();
