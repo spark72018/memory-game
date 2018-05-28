@@ -643,14 +643,11 @@
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game.
-  // const deckOfCards = State.currentState.currentDeck;
-  // const scorePanel = State.currentState.scorePanel;
 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: gameContainer,
     state: State
-    // arrOfGameElements: [scorePanel, deckOfCards]
   });
   //////////////////////////////////////////////////////////////////////////
   const deckElement = document.getElementsByClassName('deck')[0];
