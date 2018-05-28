@@ -219,7 +219,7 @@
       stateObj.secondsElapsed += amount;
     }
 
-    resetSeconds(stateObj) {
+    resetTimer(stateObj) {
       this.stopTimer();
       stateObj.secondsElapsed = 0;
       stateObj.timerId = null;

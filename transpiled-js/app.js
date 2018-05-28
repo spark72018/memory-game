@@ -278,8 +278,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.secondsElapsed += amount;
       }
     }, {
-      key: 'resetSeconds',
-      value: function resetSeconds(stateObj) {
+      key: 'resetTimer',
+      value: function resetTimer(stateObj) {
         this.stopTimer();
         stateObj.secondsElapsed = 0;
         stateObj.timerId = null;
