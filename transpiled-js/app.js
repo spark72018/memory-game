@@ -357,10 +357,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'toggleGameStarted',
-      value: function toggleGameStarted(stateObj) {
-        var currentState = stateObj.playingGame;
+      value: function toggleGameStarted(_ref3) {
+        var currentState = _ref3.currentState;
+        var playingGame = currentState.playingGame;
 
-        stateObj.playingGame = !currentState;
+
+        currentState.playingGame = !playingGame;
       }
     }, {
       key: 'checkIfGameWon',
@@ -383,13 +385,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleRestartClick',
-      value: function handleRestartClick(_ref3) {
-        var timer = _ref3.timer,
-            state = _ref3.state,
-            view = _ref3.view,
-            gameContainer = _ref3.gameContainer,
-            startButton = _ref3.startButton,
-            deckHtmlEl = _ref3.deckHtmlEl;
+      value: function handleRestartClick(_ref4) {
+        var timer = _ref4.timer,
+            state = _ref4.state,
+            view = _ref4.view,
+            gameContainer = _ref4.gameContainer,
+            startButton = _ref4.startButton,
+            deckHtmlEl = _ref4.deckHtmlEl;
 
         console.log('handleRestartClick called');
 
@@ -422,7 +424,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return;
         }
 
-        this.toggleGameStarted(stateObj.currentState);
+        this.toggleGameStarted(stateObj);
 
         timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
         timerObj.emitter.on('timeTick', function () {
@@ -664,36 +666,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'getSecondsElapsed',
-      value: function getSecondsElapsed(_ref4) {
-        var secondsElapsed = _ref4.secondsElapsed;
+      value: function getSecondsElapsed(_ref5) {
+        var secondsElapsed = _ref5.secondsElapsed;
 
         return secondsElapsed;
       }
     }, {
       key: 'getStarRating',
-      value: function getStarRating(_ref5) {
-        var starRating = _ref5.starRating;
+      value: function getStarRating(_ref6) {
+        var starRating = _ref6.starRating;
 
         return starRating;
       }
     }, {
       key: 'getNumMovesMade',
-      value: function getNumMovesMade(_ref6) {
-        var numMovesMade = _ref6.numMovesMade;
+      value: function getNumMovesMade(_ref7) {
+        var numMovesMade = _ref7.numMovesMade;
 
         return numMovesMade;
       }
     }, {
       key: 'getNumSuccessMatches',
-      value: function getNumSuccessMatches(_ref7) {
-        var numSuccessMatches = _ref7.numSuccessMatches;
+      value: function getNumSuccessMatches(_ref8) {
+        var numSuccessMatches = _ref8.numSuccessMatches;
 
         return numSuccessMatches;
       }
     }, {
       key: 'getNumFailedMatches',
-      value: function getNumFailedMatches(_ref8) {
-        var numFailedMatches = _ref8.numFailedMatches;
+      value: function getNumFailedMatches(_ref9) {
+        var numFailedMatches = _ref9.numFailedMatches;
 
         return numFailedMatches;
       }
@@ -709,11 +711,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _createClass(GameView, [{
       key: 'renderGame',
-      value: function renderGame(_ref9) {
-        var container = _ref9.container,
-            _ref9$state$currentSt = _ref9.state.currentState,
-            scorePanel = _ref9$state$currentSt.scorePanel,
-            currentDeck = _ref9$state$currentSt.currentDeck;
+      value: function renderGame(_ref10) {
+        var container = _ref10.container,
+            _ref10$state$currentS = _ref10.state.currentState,
+            scorePanel = _ref10$state$currentS.scorePanel,
+            currentDeck = _ref10$state$currentS.currentDeck;
 
         var docFrag = document.createDocumentFragment();
 
@@ -738,29 +740,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }();
 
   var GameState = function GameState() {
-    var _ref10 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref10$playingGame = _ref10.playingGame,
-        playingGame = _ref10$playingGame === undefined ? false : _ref10$playingGame,
-        _ref10$timerId = _ref10.timerId,
-        timerId = _ref10$timerId === undefined ? null : _ref10$timerId,
-        _ref10$firstCardPicke = _ref10.firstCardPicked,
-        firstCardPicked = _ref10$firstCardPicke === undefined ? null : _ref10$firstCardPicke,
-        _ref10$numFlippableCa = _ref10.numFlippableCards,
-        numFlippableCards = _ref10$numFlippableCa === undefined ? 16 : _ref10$numFlippableCa,
-        _ref10$secondsElapsed = _ref10.secondsElapsed,
-        secondsElapsed = _ref10$secondsElapsed === undefined ? 0 : _ref10$secondsElapsed,
-        _ref10$starRating = _ref10.starRating,
-        starRating = _ref10$starRating === undefined ? 3 : _ref10$starRating,
-        _ref10$numMovesMade = _ref10.numMovesMade,
-        numMovesMade = _ref10$numMovesMade === undefined ? 0 : _ref10$numMovesMade,
-        _ref10$numSuccessMatc = _ref10.numSuccessMatches,
-        numSuccessMatches = _ref10$numSuccessMatc === undefined ? 0 : _ref10$numSuccessMatc,
-        _ref10$numFailedMatch = _ref10.numFailedMatches,
-        numFailedMatches = _ref10$numFailedMatch === undefined ? 0 : _ref10$numFailedMatch,
-        _ref10$numMatchesToWi = _ref10.numMatchesToWin,
-        numMatchesToWin = _ref10$numMatchesToWi === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref10$numMatchesToWi,
-        _ref10$arrOfIconStrin = _ref10.arrOfIconStrings,
-        arrOfIconStrings = _ref10$arrOfIconStrin === undefined ? CARD_ICONS : _ref10$arrOfIconStrin;
+    var _ref11 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref11$playingGame = _ref11.playingGame,
+        playingGame = _ref11$playingGame === undefined ? false : _ref11$playingGame,
+        _ref11$timerId = _ref11.timerId,
+        timerId = _ref11$timerId === undefined ? null : _ref11$timerId,
+        _ref11$firstCardPicke = _ref11.firstCardPicked,
+        firstCardPicked = _ref11$firstCardPicke === undefined ? null : _ref11$firstCardPicke,
+        _ref11$numFlippableCa = _ref11.numFlippableCards,
+        numFlippableCards = _ref11$numFlippableCa === undefined ? 16 : _ref11$numFlippableCa,
+        _ref11$secondsElapsed = _ref11.secondsElapsed,
+        secondsElapsed = _ref11$secondsElapsed === undefined ? 0 : _ref11$secondsElapsed,
+        _ref11$starRating = _ref11.starRating,
+        starRating = _ref11$starRating === undefined ? 3 : _ref11$starRating,
+        _ref11$numMovesMade = _ref11.numMovesMade,
+        numMovesMade = _ref11$numMovesMade === undefined ? 0 : _ref11$numMovesMade,
+        _ref11$numSuccessMatc = _ref11.numSuccessMatches,
+        numSuccessMatches = _ref11$numSuccessMatc === undefined ? 0 : _ref11$numSuccessMatc,
+        _ref11$numFailedMatch = _ref11.numFailedMatches,
+        numFailedMatches = _ref11$numFailedMatch === undefined ? 0 : _ref11$numFailedMatch,
+        _ref11$numMatchesToWi = _ref11.numMatchesToWin,
+        numMatchesToWin = _ref11$numMatchesToWi === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref11$numMatchesToWi,
+        _ref11$arrOfIconStrin = _ref11.arrOfIconStrings,
+        arrOfIconStrings = _ref11$arrOfIconStrin === undefined ? CARD_ICONS : _ref11$arrOfIconStrin;
 
     _classCallCheck(this, GameState);
 
@@ -802,12 +804,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   //////////////////////////////////////////////////////////////////////////
   var timerElement = document.getElementsByClassName('timer')[0];
 
-  function startButtonListenerFn(_ref11) {
-    var controller = _ref11.controller,
-        state = _ref11.state,
-        timer = _ref11.timer,
-        view = _ref11.view,
-        timerHtmlEl = _ref11.timerHtmlEl;
+  function startButtonListenerFn(_ref12) {
+    var controller = _ref12.controller,
+        state = _ref12.state,
+        timer = _ref12.timer,
+        view = _ref12.view,
+        timerHtmlEl = _ref12.timerHtmlEl;
 
     return function (e) {
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);

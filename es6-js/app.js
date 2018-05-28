@@ -256,8 +256,8 @@
       }, 1000);
     }
 
-    stopTimer({currentState}) {
-      const {timerId} = currentState;
+    stopTimer({ currentState }) {
+      const { timerId } = currentState;
       if (timerId !== null) {
         clearInterval(timerId);
         currentState.timerId = null;
@@ -278,10 +278,10 @@
       return deckObj.makeDeck(arrOfIconStrings);
     }
 
-    toggleGameStarted(stateObj) {
-      const currentState = stateObj.playingGame;
+    toggleGameStarted({ currentState }) {
+      const { playingGame } = currentState;
 
-      stateObj.playingGame = !currentState;
+      currentState.playingGame = !playingGame;
     }
 
     checkIfGameWon(stateObj) {
@@ -337,7 +337,7 @@
         return;
       }
 
-      this.toggleGameStarted(stateObj.currentState);
+      this.toggleGameStarted(stateObj);
 
       timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
       timerObj.emitter.on('timeTick', () =>
