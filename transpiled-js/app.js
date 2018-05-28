@@ -265,14 +265,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Emitter;
   }();
 
-  var Timer = function () {
-    function Timer() {
-      _classCallCheck(this, Timer);
+  var GameTimer = function () {
+    function GameTimer() {
+      _classCallCheck(this, GameTimer);
 
       this.emitter = new Emitter();
     }
 
-    _createClass(Timer, [{
+    _createClass(GameTimer, [{
       key: 'increaseSeconds',
       value: function increaseSeconds(stateObj, amount) {
         stateObj.secondsElapsed += amount;
@@ -328,11 +328,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           stateObj.timerId = null;
           // clear event listeners for timeTick event
           this.emitter.events = {};
+        } else {
+          throw new Error('pauseTimer error');
         }
       }
     }]);
 
-    return Timer;
+    return GameTimer;
   }();
 
   var GameController = function () {
@@ -358,6 +360,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'endGame',
       value: function endGame(stateObj, timerObj, viewObj, timerElement) {
         console.log('endGame called');
+
+        // pause timer
+        // cause modal to display
+        // modal should:
+        // - ask if they want to play again
+        // - display time it took to win game
+        // - display their star rating
+        timerObj.pauseTimer(stateObj);
+      }
+    }, {
+      key: 'handleRestartClick',
+      value: function handleRestartClick(e, stateObj, gameContainer) {
+        console.log('handleRestartClick called');
+        // reset state
+        // make new Deck
+        // renderGame anew
+
+        /*
+          const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
+          const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+        */
       }
     }, {
       key: 'handleStartClick',
@@ -365,6 +388,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this2 = this;
 
         console.log('start clicked');
+        var currentlyPlaying = stateObj.playingGame;
+
+        // if game already started, start button does nothing
+        if (currentlyPlaying) {
+          return;
+        }
+
+        this.toggleGameStarted(stateObj);
+
+        timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+        timerObj.emitter.on('timeTick', function () {
+          return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
+        });
+        // } else {
+        //   timerObj.pauseTimer(stateObj);
+        // }
 
         this.matchEmitter.on('successfulMatch', function () {
           console.log('successfulMatch event emitted');
@@ -390,18 +429,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var movesTag = document.getElementsByClassName('moves')[0];
           viewObj.renderNumMovesMade(stateObj.numMovesMade + ' Moves', movesTag);
         });
-
-        this.toggleGameStarted(stateObj);
-        var currentlyPlaying = stateObj.playingGame;
-
-        if (currentlyPlaying) {
-          timerObj.startTimerAndEmitTimeTickEvent(stateObj);
-          timerObj.emitter.on('timeTick', function () {
-            return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
-          });
-        } else {
-          timerObj.pauseTimer(stateObj);
-        }
       }
     }, {
       key: 'handleDeckClick',
@@ -434,6 +461,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return this.setFirstCardPicked(stateObj, firstCard);
         }
 
+        // only increment moves if user is on second pick
         this.matchEmitter.emit('moveMade');
 
         // store reference to <i> tag containing icon className
@@ -454,6 +482,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.matchEmitter.emit('successfulMatch');
         } else {
           animateFailedMatch.apply(undefined, _toConsumableArray(cardContainers));
+
+          // flip back the failed matches
           setTimeout(function () {
             return flip.apply(undefined, _toConsumableArray(cardContainers));
           }, 1500);
@@ -685,7 +715,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _ref7$numMatchesToWin = _ref7.numMatchesToWin,
         numMatchesToWin = _ref7$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref7$numMatchesToWin,
         _ref7$arrOfIconString = _ref7.arrOfIconStrings,
-        arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString;
+        arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString,
+        _ref7$controllerObj = _ref7.controllerObj,
+        controllerObj = _ref7$controllerObj === undefined ? null : _ref7$controllerObj;
 
     _classCallCheck(this, GameState);
 
@@ -700,14 +732,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numFailedMatches = numFailedMatches;
     this.numMatchesToWin = numMatchesToWin;
     this.arrOfIconStrings = arrOfIconStrings;
+    this.startButtonListenerFn = controllerObj.handleStartClick;
+    this.deckListenerFn = controllerObj.handleDeckClick;
+    this.restartButtonListenerFn = controllerObj.handleRestartClick;
   };
 
-  var gameContainer = document.getElementsByClassName('container')[0];
-  var timer = new Timer();
-  var State = new GameState();
+  var Timer = new GameTimer();
   var Controller = new GameController();
+  var State = new GameState({ controllerObj: Controller });
   var View = new GameView();
 
+  ///////////////////////////////////////////////////////////////////////
+  // consider if these are Controller's responsibility
+  var gameContainer = document.getElementsByClassName('container')[0];
   var deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -715,16 +752,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
-
+  //////////////////////////////////////////////////////////////////////////
   var deck = document.getElementsByClassName('deck')[0];
   var startButton = document.getElementsByClassName('start')[0];
+  var restartButton = document.getElementsByClassName('restart')[0];
   var timerElement = document.getElementsByClassName('timer')[0];
 
+  // 
   startButton.addEventListener('click', function (e) {
-    return Controller.handleStartClick(e, State, timer, View, timerElement);
+    return Controller.handleStartClick(e, State, Timer, View, timerElement);
   }, false);
   deck.addEventListener('click', function (e) {
     return Controller.handleDeckClick(e, State);
+  }, false);
+  restartButton.addEventListener('click', function (e) {
+    return Controller.handleRestartClick(e, gameContainer, startButton, deck);
   }, false);
 
   var moves = document.getElementsByClassName('moves')[0];

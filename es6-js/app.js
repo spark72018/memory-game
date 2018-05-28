@@ -261,6 +261,8 @@
         stateObj.timerId = null;
         // clear event listeners for timeTick event
         this.emitter.events = {};
+      } else {
+        throw new Error(`pauseTimer error`);
       }
     }
   }
@@ -281,6 +283,26 @@
 
     endGame(stateObj, timerObj, viewObj, timerElement) {
       console.log('endGame called');
+
+      // pause timer
+      // cause modal to display
+      // modal should:
+      // - ask if they want to play again
+      // - display time it took to win game
+      // - display their star rating
+      timerObj.pauseTimer(stateObj);
+    }
+
+    handleRestartClick(e, stateObj, gameContainer) {
+      console.log('handleRestartClick called');
+      // reset state
+      // make new Deck
+      // renderGame anew
+
+      /*
+        const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
+        const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+      */
     }
 
     handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
@@ -545,7 +567,8 @@
       numSuccessMatches = 0,
       numFailedMatches = 0,
       numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN,
-      arrOfIconStrings = CARD_ICONS
+      arrOfIconStrings = CARD_ICONS,
+      controllerObj = null
     } = {}) {
       this.playingGame = playingGame;
       this.timerId = timerId;
@@ -558,17 +581,20 @@
       this.numFailedMatches = numFailedMatches;
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
+      this.startButtonListenerFn = controllerObj.handleStartClick;
+      this.deckListenerFn = controllerObj.handleDeckClick;
+      this.restartButtonListenerFn = controllerObj.handleRestartClick;
     }
   }
 
-  const gameContainer = document.getElementsByClassName('container')[0];
   const Timer = new GameTimer();
-  const State = new GameState();
   const Controller = new GameController();
+  const State = new GameState({controllerObj: Controller});
   const View = new GameView();
 
-  /////////////////////////////////////////////////////////////////////// 
+  ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
+  const gameContainer = document.getElementsByClassName('container')[0];
   const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -576,11 +602,13 @@
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
-//////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
+  const restartButton = document.getElementsByClassName('restart')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
+// 
   startButton.addEventListener(
     'click',
     e => Controller.handleStartClick(e, State, Timer, View, timerElement),
@@ -589,6 +617,11 @@
   deck.addEventListener(
     'click',
     e => Controller.handleDeckClick(e, State),
+    false
+  );
+  restartButton.addEventListener(
+    'click',
+    e => Controller.handleRestartClick(e, gameContainer, startButton, deck),
     false
   );
 
