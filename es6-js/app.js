@@ -623,6 +623,10 @@
       this.arrOfIconStrings = arrOfIconStrings;
       this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
       this.scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+      this.deckElement = null;
+      this.startButton = null;
+      this.restartButton = null;
+      this.timerElement = null;
     }
   }
 
