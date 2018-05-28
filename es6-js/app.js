@@ -554,6 +554,17 @@
       return stateObj;
     }
 
+    /*
+      const deckElement = document.getElementsByClassName('deck')[0];
+      const startButton = document.getElementsByClassName('start')[0];
+      const restartButton = document.getElementsByClassName('restart')[0];
+    */
+
+    getDeckElement() {
+      return document.getElementsByClassName('deck')[0];
+    }
+
+    
     getSecondsElapsed({ secondsElapsed }) {
       return secondsElapsed;
     }
@@ -650,9 +661,6 @@
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
-  const deckElement = document.getElementsByClassName('deck')[0];
-  const startButton = document.getElementsByClassName('start')[0];
-  const restartButton = document.getElementsByClassName('restart')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
   function startButtonListenerFn({

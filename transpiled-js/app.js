@@ -641,6 +641,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.numFailedMatches = numberOfFailedMatches;
         return stateObj;
       }
+
+      /*
+        const deckElement = document.getElementsByClassName('deck')[0];
+        const startButton = document.getElementsByClassName('start')[0];
+        const restartButton = document.getElementsByClassName('restart')[0];
+      */
+
+    }, {
+      key: 'getDeckElement',
+      value: function getDeckElement() {
+        return document.getElementsByClassName('deck')[0];
+      }
     }, {
       key: 'getSecondsElapsed',
       value: function getSecondsElapsed(_ref2) {
@@ -779,9 +791,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
-  var deckElement = document.getElementsByClassName('deck')[0];
-  var startButton = document.getElementsByClassName('start')[0];
-  var restartButton = document.getElementsByClassName('restart')[0];
   var timerElement = document.getElementsByClassName('timer')[0];
 
   function startButtonListenerFn(_ref9) {
