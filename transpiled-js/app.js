@@ -819,22 +819,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }
 
-  startButton.addEventListener('click', startButtonListenerFn({
+  // refactored to not cache startButton, deckElement, and restartButton
+  // HTML elements so they (along with their listeners)
+  // can be garbage collected when removed from DOM
+  Controller.getStartButton().addEventListener('click', startButtonListenerFn({
     controller: Controller,
     state: State,
     timer: Timer,
     view: View,
     timerHtmlEl: timerElement
   }), false);
-  // e, timer, state, view, gameContainer, startButton, deckEl
-  deckElement.addEventListener('click', deckListenerFn(Controller, State), false);
-  restartButton.addEventListener('click', restartButtonListenerFn({
+
+  Controller.getDeckElement().addEventListener('click', deckListenerFn(Controller, State), false);
+
+  Controller.getRestartButton().addEventListener('click', restartButtonListenerFn({
     timer: Timer,
     controller: Controller,
     state: State,
     view: View,
     gameContainer: gameContainer,
-    startButton: startButton,
-    deckHtmlEl: deckElement
+    startButton: Controller.getStartButton(),
+    deckHtmlEl: Controller.getDeckElement()
   }), false);
 })();
