@@ -256,12 +256,11 @@
       }, 1000);
     }
 
-    stopTimer(stateObj) {
-      const timerId = stateObj.timerId;
-
+    stopTimer({currentState}) {
+      const {timerId} = currentState;
       if (timerId !== null) {
         clearInterval(timerId);
-        stateObj.timerId = null;
+        currentState.timerId = null;
         // clear event listeners for timeTick event
         this.emitter.events = {};
       } else {
@@ -299,7 +298,7 @@
       // - ask if they want to play again
       // - display time it took to win game
       // - display their star rating
-      timer.stopTimer(state.currentState);
+      timer.stopTimer(state);
     }
 
     handleRestartClick({
