@@ -643,8 +643,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       /*
-        const deckElement = document.getElementsByClassName('deck')[0];
-        const startButton = document.getElementsByClassName('start')[0];
         const restartButton = document.getElementsByClassName('restart')[0];
       */
 
@@ -652,6 +650,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'getDeckElement',
       value: function getDeckElement() {
         return document.getElementsByClassName('deck')[0];
+      }
+    }, {
+      key: 'getStartButton',
+      value: function getStartButton() {
+        return document.getElementsByClassName('start')[0];
       }
     }, {
       key: 'getSecondsElapsed',
