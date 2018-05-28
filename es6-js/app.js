@@ -220,7 +220,7 @@
     }
 
     resetSeconds(stateObj) {
-      this.pauseTimer();
+      this.stopTimer();
       stateObj.secondsElapsed = 0;
       stateObj.timerId = null;
       console.log('resetSeconds', stateObj.secondsElapsed, stateObj.timerId);
@@ -254,7 +254,7 @@
       }, 1000);
     }
 
-    pauseTimer(stateObj) {
+    stopTimer(stateObj) {
       const timerId = stateObj.timerId;
       if (timerId !== null) {
         clearInterval(timerId);
@@ -262,7 +262,7 @@
         // clear event listeners for timeTick event
         this.emitter.events = {};
       } else {
-        throw new Error(`pauseTimer error`);
+        throw new Error(`stopTimer error`);
       }
     }
   }
@@ -271,6 +271,11 @@
     constructor() {
       this.matchEmitter = new Emitter();
     }
+
+    makeDeck(deckObj, arrOfIconStrings) {
+      return deckObj.makeDeck(arrOfIconStrings);
+    }
+
     toggleGameStarted(stateObj) {
       const currentState = stateObj.playingGame;
 
@@ -290,7 +295,7 @@
       // - ask if they want to play again
       // - display time it took to win game
       // - display their star rating
-      timerObj.pauseTimer(stateObj);
+      timerObj.stopTimer(stateObj);
     }
 
     handleRestartClick(e, stateObj, viewObj, gameContainer, startButton, deck) {
@@ -300,9 +305,6 @@
 
       // reset state
       stateObj.currentState = new GameState();
-
-      // make new Deck
-        // stateObj.currentDeck = new Deck().makeDeck(stateObj.currentState.arrOfIconStrings)
 
       // decide if I need to remove and re-add event listeners from 
       // startButton and deck arguments
@@ -333,9 +335,6 @@
           timerElement
         )
       );
-      // } else {
-      //   timerObj.pauseTimer(stateObj.currentState);
-      // }
 
       this.matchEmitter.on('successfulMatch', () => {
         console.log('successfulMatch event emitted');
@@ -590,12 +589,13 @@
       this.numFailedMatches = numFailedMatches;
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
+      this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
     }
   }
 
   const Timer = new GameTimer();
   const Controller = new GameController();
-  const State = { currentState: new GameState()}
+  const State = { currentState: new GameState()};
   const View = new GameView();
 
   ///////////////////////////////////////////////////////////////////////
@@ -604,7 +604,7 @@
     // maybe store deckOfCards in another property within State?
     // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
     // when resetting game. 
-  const deckOfCards = new Deck().makeDeck(State.currentState.arrOfIconStrings);
+  const deckOfCards = State.currentState.currentDeck;
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   View.renderGame({
@@ -622,11 +622,12 @@
   }
 
   function deckListenerFn(e) {
-    return Controller.handleDeckClick(e, State)
+    return Controller.handleDeckClick(e, State);
   }
   function restartButtonListenerFn(e) {
     return Controller.handleRestartClick(e, State, View, gameContainer, startButton, deck);
   }
+
   startButton.addEventListener(
     'click',
     startButtonListenerFn,

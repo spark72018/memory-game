@@ -280,7 +280,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'resetSeconds',
       value: function resetSeconds(stateObj) {
-        this.pauseTimer();
+        this.stopTimer();
         stateObj.secondsElapsed = 0;
         stateObj.timerId = null;
         console.log('resetSeconds', stateObj.secondsElapsed, stateObj.timerId);
@@ -320,8 +320,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, 1000);
       }
     }, {
-      key: 'pauseTimer',
-      value: function pauseTimer(stateObj) {
+      key: 'stopTimer',
+      value: function stopTimer(stateObj) {
         var timerId = stateObj.timerId;
         if (timerId !== null) {
           clearInterval(timerId);
@@ -329,7 +329,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           // clear event listeners for timeTick event
           this.emitter.events = {};
         } else {
-          throw new Error('pauseTimer error');
+          throw new Error('stopTimer error');
         }
       }
     }]);
@@ -345,6 +345,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     _createClass(GameController, [{
+      key: 'makeDeck',
+      value: function makeDeck(deckObj, arrOfIconStrings) {
+        return deckObj.makeDeck(arrOfIconStrings);
+      }
+    }, {
       key: 'toggleGameStarted',
       value: function toggleGameStarted(stateObj) {
         var currentState = stateObj.playingGame;
@@ -367,7 +372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // - ask if they want to play again
         // - display time it took to win game
         // - display their star rating
-        timerObj.pauseTimer(stateObj);
+        timerObj.stopTimer(stateObj);
       }
     }, {
       key: 'handleRestartClick',
@@ -378,9 +383,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         // reset state
         stateObj.currentState = new GameState();
-
-        // make new Deck
-        // stateObj.currentDeck = new Deck().makeDeck(stateObj.currentState.arrOfIconStrings)
 
         // decide if I need to remove and re-add event listeners from 
         // startButton and deck arguments
@@ -411,9 +413,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         timerObj.emitter.on('timeTick', function () {
           return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.currentState.secondsElapsed), timerElement);
         });
-        // } else {
-        //   timerObj.pauseTimer(stateObj.currentState);
-        // }
 
         this.matchEmitter.on('successfulMatch', function () {
           console.log('successfulMatch event emitted');
@@ -740,6 +739,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numFailedMatches = numFailedMatches;
     this.numMatchesToWin = numMatchesToWin;
     this.arrOfIconStrings = arrOfIconStrings;
+    this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
   };
 
   var Timer = new GameTimer();
@@ -753,7 +753,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game. 
-  var deckOfCards = new Deck().makeDeck(State.currentState.arrOfIconStrings);
+  var deckOfCards = State.currentState.currentDeck;
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   View.renderGame({
@@ -776,6 +776,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   function restartButtonListenerFn(e) {
     return Controller.handleRestartClick(e, State, View, gameContainer, startButton, deck);
   }
+
   startButton.addEventListener('click', startButtonListenerFn, false);
   deck.addEventListener('click', deckListenerFn, false);
   restartButton.addEventListener('click', restartButtonListenerFn, false);
