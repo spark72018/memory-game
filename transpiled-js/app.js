@@ -325,8 +325,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'stopTimer',
-      value: function stopTimer(_ref2) {
-        var currentState = _ref2.currentState;
+      value: function stopTimer(currentState) {
         var timerId = currentState.timerId;
 
         if (timerId !== null) {
@@ -357,8 +356,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'toggleGameStarted',
-      value: function toggleGameStarted(_ref3) {
-        var currentState = _ref3.currentState;
+      value: function toggleGameStarted(currentState) {
         var playingGame = currentState.playingGame;
 
 
@@ -366,9 +364,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'checkIfGameWon',
-      value: function checkIfGameWon(stateObj) {
-        var state = stateObj.currentState;
-        return state.numSuccessMatches === state.numMatchesToWin;
+      value: function checkIfGameWon(_ref2) {
+        var numSuccessMatches = _ref2.numSuccessMatches,
+            numMatchesToWin = _ref2.numMatchesToWin;
+
+        return numSuccessMatches === numMatchesToWin;
       }
     }, {
       key: 'endGame',
@@ -385,13 +385,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleRestartClick',
-      value: function handleRestartClick(_ref4) {
-        var timer = _ref4.timer,
-            state = _ref4.state,
-            view = _ref4.view,
-            gameContainer = _ref4.gameContainer,
-            startButton = _ref4.startButton,
-            deckHtmlEl = _ref4.deckHtmlEl;
+      value: function handleRestartClick(_ref3) {
+        var timer = _ref3.timer,
+            state = _ref3.state,
+            view = _ref3.view,
+            gameContainer = _ref3.gameContainer,
+            startButton = _ref3.startButton,
+            deckHtmlEl = _ref3.deckHtmlEl;
 
         console.log('handleRestartClick called');
 
@@ -413,30 +413,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleStartClick',
-      value: function handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
+      value: function handleStartClick(e, _ref4, timerObj, viewObj, timerElement) {
+        var currentState = _ref4.currentState;
+
         var _this2 = this;
 
         console.log('start clicked');
-        var currentlyPlaying = stateObj.currentState.playingGame;
+        var playingGame = currentState.playingGame;
 
         // if game already started, start button does nothing
-        if (currentlyPlaying) {
+
+        if (playingGame) {
           return;
         }
 
-        this.toggleGameStarted(stateObj);
+        this.toggleGameStarted(currentState);
 
-        timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
+        timerObj.startTimerAndEmitTimeTickEvent(currentState);
         timerObj.emitter.on('timeTick', function () {
-          return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.currentState.secondsElapsed), timerElement);
+          return viewObj.renderTimerValue(timerObj.getTimeElapsedString(currentState.secondsElapsed), timerElement);
         });
 
         this.matchEmitter.on('successfulMatch', function () {
           console.log('successfulMatch event emitted');
-          _this2.setSuccessMatches(stateObj.currentState, ++stateObj.currentState.numSuccessMatches);
-          var gameWon = _this2.checkIfGameWon(stateObj);
+          _this2.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
+          var gameWon = _this2.checkIfGameWon(currentState);
           if (gameWon) {
-            return _this2.endGame(stateObj, timerObj, viewObj, timerElement);
+            return _this2.endGame(currentState, timerObj, viewObj, timerElement);
           }
         });
 
@@ -445,15 +448,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // render new stars
         this.matchEmitter.on('failedMatch', function () {
           console.log('failedMatch event emitted');
-          _this2.setFailedMatches(stateObj.currentState, ++stateObj.currentState.numFailedMatches);
+          _this2.setFailedMatches(currentState, ++currentState.numFailedMatches);
         });
 
         this.matchEmitter.on('moveMade', function () {
           console.log('moveMade event emitted');
-          _this2.setMovesMade(stateObj.currentState, ++stateObj.currentState.numMovesMade);
+          _this2.setMovesMade(currentState, ++currentState.numMovesMade);
 
           var movesTag = document.getElementsByClassName('moves')[0];
-          viewObj.renderNumMovesMade(stateObj.currentState.numMovesMade + ' Moves', movesTag);
+          viewObj.renderNumMovesMade('' + currentState.numMovesMade, movesTag);
         });
       }
     }, {

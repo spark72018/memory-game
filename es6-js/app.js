@@ -256,7 +256,7 @@
       }, 1000);
     }
 
-    stopTimer({ currentState }) {
+    stopTimer(currentState) {
       const { timerId } = currentState;
       if (timerId !== null) {
         clearInterval(timerId);
@@ -278,15 +278,14 @@
       return deckObj.makeDeck(arrOfIconStrings);
     }
 
-    toggleGameStarted({ currentState }) {
+    toggleGameStarted(currentState) {
       const { playingGame } = currentState;
 
       currentState.playingGame = !playingGame;
     }
 
-    checkIfGameWon(stateObj) {
-      const state = stateObj.currentState;
-      return state.numSuccessMatches === state.numMatchesToWin;
+    checkIfGameWon({ numSuccessMatches, numMatchesToWin }) {
+      return numSuccessMatches === numMatchesToWin;
     }
 
     endGame(state, timer, view, timerElement) {
@@ -328,34 +327,31 @@
       */
     }
 
-    handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
+    handleStartClick(e, { currentState }, timerObj, viewObj, timerElement) {
       console.log('start clicked');
-      const currentlyPlaying = stateObj.currentState.playingGame;
+      const { playingGame } = currentState;
 
       // if game already started, start button does nothing
-      if (currentlyPlaying) {
+      if (playingGame) {
         return;
       }
 
-      this.toggleGameStarted(stateObj);
+      this.toggleGameStarted(currentState);
 
-      timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
+      timerObj.startTimerAndEmitTimeTickEvent(currentState);
       timerObj.emitter.on('timeTick', () =>
         viewObj.renderTimerValue(
-          timerObj.getTimeElapsedString(stateObj.currentState.secondsElapsed),
+          timerObj.getTimeElapsedString(currentState.secondsElapsed),
           timerElement
         )
       );
 
       this.matchEmitter.on('successfulMatch', () => {
         console.log('successfulMatch event emitted');
-        this.setSuccessMatches(
-          stateObj.currentState,
-          ++stateObj.currentState.numSuccessMatches
-        );
-        const gameWon = this.checkIfGameWon(stateObj);
+        this.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
+        const gameWon = this.checkIfGameWon(currentState);
         if (gameWon) {
-          return this.endGame(stateObj, timerObj, viewObj, timerElement);
+          return this.endGame(currentState, timerObj, viewObj, timerElement);
         }
       });
 
@@ -364,24 +360,15 @@
       // render new stars
       this.matchEmitter.on('failedMatch', () => {
         console.log('failedMatch event emitted');
-        this.setFailedMatches(
-          stateObj.currentState,
-          ++stateObj.currentState.numFailedMatches
-        );
+        this.setFailedMatches(currentState, ++currentState.numFailedMatches);
       });
 
       this.matchEmitter.on('moveMade', () => {
         console.log('moveMade event emitted');
-        this.setMovesMade(
-          stateObj.currentState,
-          ++stateObj.currentState.numMovesMade
-        );
+        this.setMovesMade(currentState, ++currentState.numMovesMade);
 
         const movesTag = document.getElementsByClassName('moves')[0];
-        viewObj.renderNumMovesMade(
-          `${stateObj.currentState.numMovesMade} Moves`,
-          movesTag
-        );
+        viewObj.renderNumMovesMade(`${currentState.numMovesMade}`, movesTag);
       });
     }
 
