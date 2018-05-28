@@ -554,16 +554,16 @@
       return stateObj;
     }
 
-    /*
-      const restartButton = document.getElementsByClassName('restart')[0];
-    */
-
     getDeckElement() {
       return document.getElementsByClassName('deck')[0];
     }
 
     getStartButton() {
       return document.getElementsByClassName('start')[0];
+    }
+
+    getRestartButton() {
+      return document.getElementsByClassName('restart')[0];
     }
 
     

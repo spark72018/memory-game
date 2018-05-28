@@ -641,11 +641,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         stateObj.numFailedMatches = numberOfFailedMatches;
         return stateObj;
       }
-
-      /*
-        const restartButton = document.getElementsByClassName('restart')[0];
-      */
-
     }, {
       key: 'getDeckElement',
       value: function getDeckElement() {
@@ -655,6 +650,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'getStartButton',
       value: function getStartButton() {
         return document.getElementsByClassName('start')[0];
+      }
+    }, {
+      key: 'getRestartButton',
+      value: function getRestartButton() {
+        return document.getElementsByClassName('restart')[0];
       }
     }, {
       key: 'getSecondsElapsed',
