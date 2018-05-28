@@ -219,11 +219,12 @@
       stateObj.secondsElapsed += amount;
     }
 
-    resetTimer(stateObj) {
-      this.stopTimer();
-      stateObj.secondsElapsed = 0;
-      stateObj.timerId = null;
-      console.log('resetSeconds', stateObj.secondsElapsed, stateObj.timerId);
+    resetTimer(state) {
+      console.log('resetTimer called');
+      this.stopTimer(state.currentState);
+      state.currentState.secondsElapsed = 0;
+      state.currentState.timerId = null;
+      console.log('resetTimer end', state);
     }
 
     getMinutes(seconds) {
@@ -256,6 +257,7 @@
 
     stopTimer(stateObj) {
       const timerId = stateObj.timerId;
+
       if (timerId !== null) {
         clearInterval(timerId);
         stateObj.timerId = null;
@@ -286,7 +288,7 @@
       return stateObj.numSuccessMatches === stateObj.numMatchesToWin;
     }
 
-    endGame(stateObj, timerObj, viewObj, timerElement) {
+    endGame(state, timer, view, timerElement) {
       console.log('endGame called');
 
       // pause timer
@@ -295,21 +297,31 @@
       // - ask if they want to play again
       // - display time it took to win game
       // - display their star rating
-      timerObj.stopTimer(stateObj);
+      timer.stopTimer(state);
     }
 
-    handleRestartClick(e, stateObj, viewObj, gameContainer, startButton, deck) {
+    handleRestartClick({
+      timer,
+      state,
+      view,
+      gameContainer,
+      startButton,
+      deckHtmlEl
+    }) {
       console.log('handleRestartClick called');
-      // viewObj.currentState is mutable, even though const State binding
-      // from further down is not. The object's property can still change. 
+
+      timer.resetTimer(state);
 
       // reset state
-      stateObj.currentState = new GameState();
+      state.currentState = new GameState();
 
-      // decide if I need to remove and re-add event listeners from 
-      // startButton and deck arguments
+      // remove 
 
       // renderGame anew
+
+
+      // attach listeners to startbutton and deckhtmlel
+
 
       /*
         const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
@@ -338,10 +350,18 @@
 
       this.matchEmitter.on('successfulMatch', () => {
         console.log('successfulMatch event emitted');
-        this.setSuccessMatches(stateObj.currentState, ++stateObj.currentState.numSuccessMatches);
+        this.setSuccessMatches(
+          stateObj.currentState,
+          ++stateObj.currentState.numSuccessMatches
+        );
         const gameWon = this.checkIfGameWon(stateObj.currentState);
         if (gameWon) {
-          return this.endGame(stateObj.currentState, timerObj, viewObj, timerElement);
+          return this.endGame(
+            stateObj.currentState,
+            timerObj,
+            viewObj,
+            timerElement
+          );
         }
       });
 
@@ -350,15 +370,24 @@
       // render new stars
       this.matchEmitter.on('failedMatch', () => {
         console.log('failedMatch event emitted');
-        this.setFailedMatches(stateObj.currentState, ++stateObj.currentState.numFailedMatches);
+        this.setFailedMatches(
+          stateObj.currentState,
+          ++stateObj.currentState.numFailedMatches
+        );
       });
 
       this.matchEmitter.on('moveMade', () => {
         console.log('moveMade event emitted');
-        this.setMovesMade(stateObj.currentState, ++stateObj.currentState.numMovesMade);
+        this.setMovesMade(
+          stateObj.currentState,
+          ++stateObj.currentState.numMovesMade
+        );
 
         const movesTag = document.getElementsByClassName('moves')[0];
-        viewObj.renderNumMovesMade(`${stateObj.currentState.numMovesMade} Moves`, movesTag);
+        viewObj.renderNumMovesMade(
+          `${stateObj.currentState.numMovesMade} Moves`,
+          movesTag
+        );
       });
     }
 
@@ -417,7 +446,7 @@
         setTimeout(() => flip(...cardContainers), 1500);
 
         this.matchEmitter.emit('failedMatch');
-      } 
+      }
 
       this.setFirstCardPicked(stateObj, null);
 
@@ -550,9 +579,12 @@
 
   class GameView {
     renderGame({ container, arrOfGameElements }) {
+      const docFrag = document.createDocumentFragment();
       arrOfGameElements.forEach(gameElement =>
-        container.appendChild(gameElement)
+        docFrag.appendChild(gameElement)
       );
+
+      container.appendChild(docFrag);
     }
 
     renderNumMovesMade(num, movesElement) {
@@ -590,59 +622,86 @@
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
       this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
+      this.scorePanel = new ScorePanel().makePanel(3, 'score-panel');
     }
   }
 
   const Timer = new GameTimer();
   const Controller = new GameController();
-  const State = { currentState: new GameState()};
+  const State = { currentState: new GameState() };
   const View = new GameView();
 
   ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
   const gameContainer = document.getElementsByClassName('container')[0];
-    // maybe store deckOfCards in another property within State?
-    // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
-    // when resetting game. 
+  // maybe store deckOfCards in another property within State?
+  // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
+  // when resetting game.
   const deckOfCards = State.currentState.currentDeck;
-  const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+  const scorePanel = State.currentState.scorePanel;
 
+  // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
   //////////////////////////////////////////////////////////////////////////
-  const deck = document.getElementsByClassName('deck')[0];
+  const deckElement = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
   const restartButton = document.getElementsByClassName('restart')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
-  function startButtonListenerFn(e) {
-    return Controller.handleStartClick(e, State, Timer, View, timerElement);
+  function startButtonListenerFn({
+    controller,
+    state,
+    timer,
+    view,
+    timerHtmlEl
+  }) {
+    return function(e) {
+      return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
+    };
   }
 
-  function deckListenerFn(e) {
-    return Controller.handleDeckClick(e, State);
+  function deckListenerFn(controller, state) {
+    return function(e) {
+      return controller.handleDeckClick(e, state);
+    };
   }
-  function restartButtonListenerFn(e) {
-    return Controller.handleRestartClick(e, State, View, gameContainer, startButton, deck);
+  function restartButtonListenerFn(obj) {
+    return function(e) {
+      return obj.controller.handleRestartClick(obj);
+    };
   }
 
   startButton.addEventListener(
     'click',
-    startButtonListenerFn,
+    startButtonListenerFn({
+      controller: Controller,
+      state: State,
+      timer: Timer,
+      view: View,
+      timerHtmlEl: timerElement
+    }),
     false
   );
-  deck.addEventListener(
+  // e, timer, state, view, gameContainer, startButton, deckEl
+  deckElement.addEventListener(
     'click',
-    deckListenerFn,
+    deckListenerFn(Controller, State),
     false
   );
   restartButton.addEventListener(
     'click',
-    restartButtonListenerFn,
+    restartButtonListenerFn({
+      timer: Timer,
+      controller: Controller,
+      state: State,
+      view: View,
+      gameContainer: gameContainer,
+      startButton: startButton,
+      deckHtmlEl: deckElement
+    }),
     false
   );
-
-  const moves = document.getElementsByClassName('moves')[0];
 })();
