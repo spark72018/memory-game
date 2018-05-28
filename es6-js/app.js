@@ -293,10 +293,20 @@
       timerObj.pauseTimer(stateObj);
     }
 
-    handleRestartClick(e, stateObj, gameContainer) {
+    handleRestartClick(e, stateObj, viewObj, gameContainer, startButton, deck) {
       console.log('handleRestartClick called');
+      // viewObj.currentState is mutable, even though const State binding
+      // from further down is not. The object's property can still change. 
+
       // reset state
+      stateObj.currentState = new GameState();
+
       // make new Deck
+        // stateObj.currentDeck = new Deck().makeDeck(stateObj.currentState.arrOfIconStrings)
+
+      // decide if I need to remove and re-add event listeners from 
+      // startButton and deck arguments
+
       // renderGame anew
 
       /*
@@ -307,32 +317,32 @@
 
     handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
       console.log('start clicked');
-      const currentlyPlaying = stateObj.playingGame;
+      const currentlyPlaying = stateObj.currentState.playingGame;
 
       // if game already started, start button does nothing
       if (currentlyPlaying) {
         return;
       }
 
-      this.toggleGameStarted(stateObj);
+      this.toggleGameStarted(stateObj.currentState);
 
-      timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+      timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
       timerObj.emitter.on('timeTick', () =>
         viewObj.renderTimerValue(
-          timerObj.getTimeElapsedString(stateObj.secondsElapsed),
+          timerObj.getTimeElapsedString(stateObj.currentState.secondsElapsed),
           timerElement
         )
       );
       // } else {
-      //   timerObj.pauseTimer(stateObj);
+      //   timerObj.pauseTimer(stateObj.currentState);
       // }
 
       this.matchEmitter.on('successfulMatch', () => {
         console.log('successfulMatch event emitted');
-        this.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
-        const gameWon = this.checkIfGameWon(stateObj);
+        this.setSuccessMatches(stateObj.currentState, ++stateObj.currentState.numSuccessMatches);
+        const gameWon = this.checkIfGameWon(stateObj.currentState);
         if (gameWon) {
-          return this.endGame(stateObj, timerObj, viewObj, timerElement);
+          return this.endGame(stateObj.currentState, timerObj, viewObj, timerElement);
         }
       });
 
@@ -341,15 +351,15 @@
       // render new stars
       this.matchEmitter.on('failedMatch', () => {
         console.log('failedMatch event emitted');
-        this.setFailedMatches(stateObj, ++stateObj.numFailedMatches);
+        this.setFailedMatches(stateObj.currentState, ++stateObj.currentState.numFailedMatches);
       });
 
       this.matchEmitter.on('moveMade', () => {
         console.log('moveMade event emitted');
-        this.setMovesMade(stateObj, ++stateObj.numMovesMade);
+        this.setMovesMade(stateObj.currentState, ++stateObj.currentState.numMovesMade);
 
         const movesTag = document.getElementsByClassName('moves')[0];
-        viewObj.renderNumMovesMade(`${stateObj.numMovesMade} Moves`, movesTag);
+        viewObj.renderNumMovesMade(`${stateObj.currentState.numMovesMade} Moves`, movesTag);
       });
     }
 
@@ -408,7 +418,7 @@
         setTimeout(() => flip(...cardContainers), 1500);
 
         this.matchEmitter.emit('failedMatch');
-      }
+      } 
 
       this.setFirstCardPicked(stateObj, null);
 
@@ -567,8 +577,7 @@
       numSuccessMatches = 0,
       numFailedMatches = 0,
       numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN,
-      arrOfIconStrings = CARD_ICONS,
-      controllerObj = null
+      arrOfIconStrings = CARD_ICONS
     } = {}) {
       this.playingGame = playingGame;
       this.timerId = timerId;
@@ -581,21 +590,21 @@
       this.numFailedMatches = numFailedMatches;
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
-      this.startButtonListenerFn = controllerObj.handleStartClick;
-      this.deckListenerFn = controllerObj.handleDeckClick;
-      this.restartButtonListenerFn = controllerObj.handleRestartClick;
     }
   }
 
   const Timer = new GameTimer();
   const Controller = new GameController();
-  const State = new GameState({controllerObj: Controller});
+  const State = { currentState: new GameState()}
   const View = new GameView();
 
   ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
   const gameContainer = document.getElementsByClassName('container')[0];
-  const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
+    // maybe store deckOfCards in another property within State?
+    // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
+    // when resetting game. 
+  const deckOfCards = new Deck().makeDeck(State.currentState.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   View.renderGame({
@@ -608,20 +617,29 @@
   const restartButton = document.getElementsByClassName('restart')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
-// 
+  function startButtonListenerFn(e) {
+    return Controller.handleStartClick(e, State, Timer, View, timerElement);
+  }
+
+  function deckListenerFn(e) {
+    return Controller.handleDeckClick(e, State)
+  }
+  function restartButtonListenerFn(e) {
+    return Controller.handleRestartClick(e, State, View, gameContainer, startButton, deck);
+  }
   startButton.addEventListener(
     'click',
-    e => Controller.handleStartClick(e, State, Timer, View, timerElement),
+    startButtonListenerFn,
     false
   );
   deck.addEventListener(
     'click',
-    e => Controller.handleDeckClick(e, State),
+    deckListenerFn,
     false
   );
   restartButton.addEventListener(
     'click',
-    e => Controller.handleRestartClick(e, gameContainer, startButton, deck),
+    restartButtonListenerFn,
     false
   );
 

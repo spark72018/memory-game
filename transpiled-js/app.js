@@ -371,10 +371,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleRestartClick',
-      value: function handleRestartClick(e, stateObj, gameContainer) {
+      value: function handleRestartClick(e, stateObj, viewObj, gameContainer, startButton, deck) {
         console.log('handleRestartClick called');
+        // viewObj.currentState is mutable, even though const State binding
+        // from further down is not. The object's property can still change. 
+
         // reset state
+        stateObj.currentState = new GameState();
+
         // make new Deck
+        // stateObj.currentDeck = new Deck().makeDeck(stateObj.currentState.arrOfIconStrings)
+
+        // decide if I need to remove and re-add event listeners from 
+        // startButton and deck arguments
+
         // renderGame anew
 
         /*
@@ -388,29 +398,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this2 = this;
 
         console.log('start clicked');
-        var currentlyPlaying = stateObj.playingGame;
+        var currentlyPlaying = stateObj.currentState.playingGame;
 
         // if game already started, start button does nothing
         if (currentlyPlaying) {
           return;
         }
 
-        this.toggleGameStarted(stateObj);
+        this.toggleGameStarted(stateObj.currentState);
 
-        timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+        timerObj.startTimerAndEmitTimeTickEvent(stateObj.currentState);
         timerObj.emitter.on('timeTick', function () {
-          return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.secondsElapsed), timerElement);
+          return viewObj.renderTimerValue(timerObj.getTimeElapsedString(stateObj.currentState.secondsElapsed), timerElement);
         });
         // } else {
-        //   timerObj.pauseTimer(stateObj);
+        //   timerObj.pauseTimer(stateObj.currentState);
         // }
 
         this.matchEmitter.on('successfulMatch', function () {
           console.log('successfulMatch event emitted');
-          _this2.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
-          var gameWon = _this2.checkIfGameWon(stateObj);
+          _this2.setSuccessMatches(stateObj.currentState, ++stateObj.currentState.numSuccessMatches);
+          var gameWon = _this2.checkIfGameWon(stateObj.currentState);
           if (gameWon) {
-            return _this2.endGame(stateObj, timerObj, viewObj, timerElement);
+            return _this2.endGame(stateObj.currentState, timerObj, viewObj, timerElement);
           }
         });
 
@@ -419,15 +429,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // render new stars
         this.matchEmitter.on('failedMatch', function () {
           console.log('failedMatch event emitted');
-          _this2.setFailedMatches(stateObj, ++stateObj.numFailedMatches);
+          _this2.setFailedMatches(stateObj.currentState, ++stateObj.currentState.numFailedMatches);
         });
 
         this.matchEmitter.on('moveMade', function () {
           console.log('moveMade event emitted');
-          _this2.setMovesMade(stateObj, ++stateObj.numMovesMade);
+          _this2.setMovesMade(stateObj.currentState, ++stateObj.currentState.numMovesMade);
 
           var movesTag = document.getElementsByClassName('moves')[0];
-          viewObj.renderNumMovesMade(stateObj.numMovesMade + ' Moves', movesTag);
+          viewObj.renderNumMovesMade(stateObj.currentState.numMovesMade + ' Moves', movesTag);
         });
       }
     }, {
@@ -715,9 +725,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _ref7$numMatchesToWin = _ref7.numMatchesToWin,
         numMatchesToWin = _ref7$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref7$numMatchesToWin,
         _ref7$arrOfIconString = _ref7.arrOfIconStrings,
-        arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString,
-        _ref7$controllerObj = _ref7.controllerObj,
-        controllerObj = _ref7$controllerObj === undefined ? null : _ref7$controllerObj;
+        arrOfIconStrings = _ref7$arrOfIconString === undefined ? CARD_ICONS : _ref7$arrOfIconString;
 
     _classCallCheck(this, GameState);
 
@@ -732,20 +740,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numFailedMatches = numFailedMatches;
     this.numMatchesToWin = numMatchesToWin;
     this.arrOfIconStrings = arrOfIconStrings;
-    this.startButtonListenerFn = controllerObj.handleStartClick;
-    this.deckListenerFn = controllerObj.handleDeckClick;
-    this.restartButtonListenerFn = controllerObj.handleRestartClick;
   };
 
   var Timer = new GameTimer();
   var Controller = new GameController();
-  var State = new GameState({ controllerObj: Controller });
+  var State = { currentState: new GameState() };
   var View = new GameView();
 
   ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
   var gameContainer = document.getElementsByClassName('container')[0];
-  var deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
+  // maybe store deckOfCards in another property within State?
+  // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
+  // when resetting game. 
+  var deckOfCards = new Deck().makeDeck(State.currentState.arrOfIconStrings);
   var scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
   View.renderGame({
@@ -758,16 +766,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var restartButton = document.getElementsByClassName('restart')[0];
   var timerElement = document.getElementsByClassName('timer')[0];
 
-  // 
-  startButton.addEventListener('click', function (e) {
+  function startButtonListenerFn(e) {
     return Controller.handleStartClick(e, State, Timer, View, timerElement);
-  }, false);
-  deck.addEventListener('click', function (e) {
+  }
+
+  function deckListenerFn(e) {
     return Controller.handleDeckClick(e, State);
-  }, false);
-  restartButton.addEventListener('click', function (e) {
-    return Controller.handleRestartClick(e, gameContainer, startButton, deck);
-  }, false);
+  }
+  function restartButtonListenerFn(e) {
+    return Controller.handleRestartClick(e, State, View, gameContainer, startButton, deck);
+  }
+  startButton.addEventListener('click', startButtonListenerFn, false);
+  deck.addEventListener('click', deckListenerFn, false);
+  restartButton.addEventListener('click', restartButtonListenerFn, false);
 
   var moves = document.getElementsByClassName('moves')[0];
 })();
