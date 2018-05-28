@@ -579,12 +579,12 @@
 
   class GameView {
     renderGame({ container, arrOfGameElements }) {
-      const docFrag = document.createDocumentFragment();
-      arrOfGameElements.forEach(gameElement =>
-        docFrag.appendChild(gameElement)
-      );
+      const docFragWithElements = arrOfGameElements.reduce((acc, gameElement) => {
+        acc.appendChild(gameElement);
+        return acc;
+      }, document.createDocumentFragment());
 
-      container.appendChild(docFrag);
+      container.appendChild(docFragWithElements);
     }
 
     renderNumMovesMade(num, movesElement) {

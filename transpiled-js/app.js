@@ -694,12 +694,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var container = _ref7.container,
             arrOfGameElements = _ref7.arrOfGameElements;
 
-        var docFrag = document.createDocumentFragment();
-        arrOfGameElements.forEach(function (gameElement) {
-          return docFrag.appendChild(gameElement);
-        });
+        var docFragWithElements = arrOfGameElements.reduce(function (acc, gameElement) {
+          acc.appendChild(gameElement);
+          return acc;
+        }, document.createDocumentFragment());
 
-        container.appendChild(docFrag);
+        container.appendChild(docFragWithElements);
       }
     }, {
       key: 'renderNumMovesMade',
