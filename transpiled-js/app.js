@@ -653,6 +653,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
+      key: 'getMovesElement',
+      value: function getMovesElement() {
+        return document.getElementsByClassName('moves')[0];
+      }
+    }, {
       key: 'getDeckElement',
       value: function getDeckElement() {
         return document.getElementsByClassName('deck')[0];

@@ -538,6 +538,10 @@
       return stateObj;
     }
 
+    getMovesElement() {
+      return document.getElementsByClassName('moves')[0];
+    }
+
     getDeckElement() {
       return document.getElementsByClassName('deck')[0];
     }
