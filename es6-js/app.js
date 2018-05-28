@@ -219,12 +219,13 @@
       stateObj.secondsElapsed += amount;
     }
 
-    resetTimer(state) {
+    resetTimer({ currentState }) {
       console.log('resetTimer called');
-      this.stopTimer(state.currentState);
-      state.currentState.secondsElapsed = 0;
-      state.currentState.timerId = null;
-      console.log('resetTimer end', state);
+
+      this.stopTimer(currentState);
+      currentState.secondsElapsed = 0;
+      currentState.timerId = null;
+      console.log('resetTimer end', currentState);
     }
 
     getMinutes(seconds) {
@@ -285,7 +286,8 @@
     }
 
     checkIfGameWon(stateObj) {
-      return stateObj.numSuccessMatches === stateObj.numMatchesToWin;
+      const state = stateObj.currentState;
+      return state.numSuccessMatches === state.numMatchesToWin;
     }
 
     endGame(state, timer, view, timerElement) {
@@ -297,7 +299,7 @@
       // - ask if they want to play again
       // - display time it took to win game
       // - display their star rating
-      timer.stopTimer(state);
+      timer.stopTimer(state.currentState);
     }
 
     handleRestartClick({
@@ -352,14 +354,9 @@
           stateObj.currentState,
           ++stateObj.currentState.numSuccessMatches
         );
-        const gameWon = this.checkIfGameWon(stateObj.currentState);
+        const gameWon = this.checkIfGameWon(stateObj);
         if (gameWon) {
-          return this.endGame(
-            stateObj.currentState,
-            timerObj,
-            viewObj,
-            timerElement
-          );
+          return this.endGame(stateObj, timerObj, viewObj, timerElement);
         }
       });
 
@@ -394,6 +391,7 @@
       // if(!stateObj.playingGame) {
       //   return;
       // }
+      const state = stateObj.currentState;
       console.log('top level', e.target);
       const target = e.target;
       const parent = e.target.parentNode;
@@ -409,13 +407,13 @@
 
       flip(parent);
 
-      const firstCardPicked = stateObj.firstCardPicked;
+      const firstCardPicked = state.firstCardPicked;
 
       if (!firstCardPicked) {
         // store reference to <i> tag containing icon className
         const firstCard = target.previousSibling.firstChild;
 
-        return this.setFirstCardPicked(stateObj, firstCard);
+        return this.setFirstCardPicked(state, firstCard);
       }
 
       // only increment moves if user is on second pick
@@ -446,7 +444,7 @@
         this.matchEmitter.emit('failedMatch');
       }
 
-      this.setFirstCardPicked(stateObj, null);
+      this.setFirstCardPicked(state, null);
 
       // utility functions
       function addFailClassTo(element) {
@@ -701,13 +699,13 @@
     }),
     false
   );
-  
+
   Controller.getDeckElement().addEventListener(
     'click',
     deckListenerFn(Controller, State),
     false
   );
-  
+
   Controller.getRestartButton().addEventListener(
     'click',
     restartButtonListenerFn({
