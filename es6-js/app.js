@@ -315,13 +315,11 @@
       // reset state
       state.currentState = new GameState();
 
-      // remove 
+      // remove
 
       // renderGame anew
 
-
       // attach listeners to startbutton and deckhtmlel
-
 
       /*
         const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
@@ -578,13 +576,18 @@
   }
 
   class GameView {
-    renderGame({ container, arrOfGameElements }) {
-      const docFragWithElements = arrOfGameElements.reduce((acc, gameElement) => {
-        acc.appendChild(gameElement);
-        return acc;
-      }, document.createDocumentFragment());
+    renderGame({
+      container,
+      state: {
+        currentState: { scorePanel, currentDeck }
+      }
+    }) {
+      const docFrag = document.createDocumentFragment();
 
-      container.appendChild(docFragWithElements);
+      docFrag.appendChild(scorePanel);
+      docFrag.appendChild(currentDeck);
+
+      container.appendChild(docFrag);
     }
 
     renderNumMovesMade(num, movesElement) {
@@ -640,13 +643,14 @@
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game.
-  const deckOfCards = State.currentState.currentDeck;
-  const scorePanel = State.currentState.scorePanel;
+  // const deckOfCards = State.currentState.currentDeck;
+  // const scorePanel = State.currentState.scorePanel;
 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: gameContainer,
-    arrOfGameElements: [scorePanel, deckOfCards]
+    state: State
+    // arrOfGameElements: [scorePanel, deckOfCards]
   });
   //////////////////////////////////////////////////////////////////////////
   const deckElement = document.getElementsByClassName('deck')[0];

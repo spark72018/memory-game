@@ -393,13 +393,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // reset state
         state.currentState = new GameState();
 
-        // remove 
+        // remove
 
         // renderGame anew
 
-
         // attach listeners to startbutton and deckhtmlel
-
 
         /*
           const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
@@ -692,14 +690,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'renderGame',
       value: function renderGame(_ref7) {
         var container = _ref7.container,
-            arrOfGameElements = _ref7.arrOfGameElements;
+            _ref7$state$currentSt = _ref7.state.currentState,
+            scorePanel = _ref7$state$currentSt.scorePanel,
+            currentDeck = _ref7$state$currentSt.currentDeck;
 
-        var docFragWithElements = arrOfGameElements.reduce(function (acc, gameElement) {
-          acc.appendChild(gameElement);
-          return acc;
-        }, document.createDocumentFragment());
+        var docFrag = document.createDocumentFragment();
 
-        container.appendChild(docFragWithElements);
+        docFrag.appendChild(scorePanel);
+        docFrag.appendChild(currentDeck);
+
+        container.appendChild(docFrag);
       }
     }, {
       key: 'renderNumMovesMade',
@@ -772,13 +772,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game.
-  var deckOfCards = State.currentState.currentDeck;
-  var scorePanel = State.currentState.scorePanel;
+  // const deckOfCards = State.currentState.currentDeck;
+  // const scorePanel = State.currentState.scorePanel;
 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: gameContainer,
-    arrOfGameElements: [scorePanel, deckOfCards]
+    state: State
+    // arrOfGameElements: [scorePanel, deckOfCards]
   });
   //////////////////////////////////////////////////////////////////////////
   var deckElement = document.getElementsByClassName('deck')[0];
