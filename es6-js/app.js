@@ -29,6 +29,7 @@
   class ScorePanel {
     makeStartButton() {
       const startButton = document.createElement('div');
+
       startButton.setAttribute('class', 'move-right start');
 
       return startButton;
@@ -37,6 +38,7 @@
     makeRestartButton() {
       const aDiv = document.createElement('div');
       const repeatIcon = this.makeIcon('fa fa-repeat');
+
       aDiv.appendChild(repeatIcon);
       aDiv.setAttribute('class', 'restart');
 
@@ -157,7 +159,7 @@
       return deckArray;
     }
 
-    makeDeckOfCards(arrOfIconStrings) {
+    makeShuffledCards(arrOfIconStrings) {
       const arrOfCards = arrOfIconStrings.reduce((acc, iconClass) => {
         const firstCard = new Card(iconClass).makeCard();
         const secondCard = new Card(iconClass).makeCard();
@@ -168,11 +170,12 @@
         return acc;
       }, []);
       const shuffledDeck = this.shuffleDeck(arrOfCards);
+
       return shuffledDeck;
     }
 
     makeDeck(arrOfIconStrings) {
-      const shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+      const shuffledCards = this.makeShuffledCards(arrOfIconStrings);
 
       const deck = shuffledCards.reduce((acc, card) => {
         acc.appendChild(card);
@@ -208,7 +211,7 @@
     }
   }
 
-  class Timer {
+  class GameTimer {
     constructor() {
       this.emitter = new Emitter();
     }
@@ -282,23 +285,41 @@
 
     handleStartClick(e, stateObj, timerObj, viewObj, timerElement) {
       console.log('start clicked');
+      const currentlyPlaying = stateObj.playingGame;
+
+      // if game already started, start button does nothing
+      if (currentlyPlaying) {
+        return;
+      }
+
+      this.toggleGameStarted(stateObj);
+
+      timerObj.startTimerAndEmitTimeTickEvent(stateObj);
+      timerObj.emitter.on('timeTick', () =>
+        viewObj.renderTimerValue(
+          timerObj.getTimeElapsedString(stateObj.secondsElapsed),
+          timerElement
+        )
+      );
+      // } else {
+      //   timerObj.pauseTimer(stateObj);
+      // }
 
       this.matchEmitter.on('successfulMatch', () => {
         console.log('successfulMatch event emitted');
         this.setSuccessMatches(stateObj, ++stateObj.numSuccessMatches);
         const gameWon = this.checkIfGameWon(stateObj);
-        if(gameWon) {
+        if (gameWon) {
           return this.endGame(stateObj, timerObj, viewObj, timerElement);
         }
       });
 
       // TODO: check if at limit for star degredation
-        // if it is change star rating
-        // render new stars
+      // if it is change star rating
+      // render new stars
       this.matchEmitter.on('failedMatch', () => {
         console.log('failedMatch event emitted');
         this.setFailedMatches(stateObj, ++stateObj.numFailedMatches);
-
       });
 
       this.matchEmitter.on('moveMade', () => {
@@ -308,25 +329,10 @@
         const movesTag = document.getElementsByClassName('moves')[0];
         viewObj.renderNumMovesMade(`${stateObj.numMovesMade} Moves`, movesTag);
       });
-
-      this.toggleGameStarted(stateObj);
-      const currentlyPlaying = stateObj.playingGame;
-
-      if (currentlyPlaying) {
-        timerObj.startTimerAndEmitTimeTickEvent(stateObj);
-        timerObj.emitter.on('timeTick', () =>
-          viewObj.renderTimerValue(
-            timerObj.getTimeElapsedString(stateObj.secondsElapsed),
-            timerElement
-          )
-        );
-      } else {
-        timerObj.pauseTimer(stateObj);
-      }
     }
 
     handleDeckClick(e, stateObj) {
-      // UNCOMMENT AT END
+      // UNCOMMENT WHEN FINISHED
       // if(!stateObj.playingGame) {
       //   return;
       // }
@@ -344,9 +350,9 @@
       }
 
       flip(parent);
-      
+
       const firstCardPicked = stateObj.firstCardPicked;
-      
+
       if (!firstCardPicked) {
         // store reference to <i> tag containing icon className
         const firstCard = target.previousSibling.firstChild;
@@ -354,24 +360,29 @@
         return this.setFirstCardPicked(stateObj, firstCard);
       }
 
+      // only increment moves if user is on second pick
       this.matchEmitter.emit('moveMade');
 
       // store reference to <i> tag containing icon className
       const secondCardPicked = target.previousSibling.firstChild;
       const cardsPicked = [firstCardPicked, secondCardPicked];
 
-      const secondCardValue = target.previousSibling.firstChild.className;
+      const secondCardValue = secondCardPicked.className;
       const firstCardValue = firstCardPicked.className;
 
       const cardsAreMatch = firstCardValue === secondCardValue;
-      const cardContainers = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
+      const cardContainers = cardsPicked.map(
+        iconTag => iconTag.parentNode.parentNode
+      );
 
       if (cardsAreMatch) {
         setCardsAsMatched(...cardContainers);
 
         this.matchEmitter.emit('successfulMatch');
-      }else {
+      } else {
         animateFailedMatch(...cardContainers);
+
+        // flip back the failed matches
         setTimeout(() => flip(...cardContainers), 1500);
 
         this.matchEmitter.emit('failedMatch');
@@ -551,11 +562,13 @@
   }
 
   const gameContainer = document.getElementsByClassName('container')[0];
-  const timer = new Timer();
+  const Timer = new GameTimer();
   const State = new GameState();
   const Controller = new GameController();
   const View = new GameView();
 
+  /////////////////////////////////////////////////////////////////////// 
+  // consider if these are Controller's responsibility
   const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
   const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
 
@@ -563,14 +576,14 @@
     container: gameContainer,
     arrOfGameElements: [scorePanel, deckOfCards]
   });
-
+//////////////////////////////////////////////////////////////////////////
   const deck = document.getElementsByClassName('deck')[0];
   const startButton = document.getElementsByClassName('start')[0];
   const timerElement = document.getElementsByClassName('timer')[0];
 
   startButton.addEventListener(
     'click',
-    e => Controller.handleStartClick(e, State, timer, View, timerElement),
+    e => Controller.handleStartClick(e, State, Timer, View, timerElement),
     false
   );
   deck.addEventListener(

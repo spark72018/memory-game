@@ -38,6 +38,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeStartButton',
       value: function makeStartButton() {
         var startButton = document.createElement('div');
+
         startButton.setAttribute('class', 'move-right start');
 
         return startButton;
@@ -47,6 +48,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeRestartButton() {
         var aDiv = document.createElement('div');
         var repeatIcon = this.makeIcon('fa fa-repeat');
+
         aDiv.appendChild(repeatIcon);
         aDiv.setAttribute('class', 'restart');
 
@@ -194,8 +196,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return deckArray;
       }
     }, {
-      key: 'makeDeckOfCards',
-      value: function makeDeckOfCards(arrOfIconStrings) {
+      key: 'makeShuffledCards',
+      value: function makeShuffledCards(arrOfIconStrings) {
         var arrOfCards = arrOfIconStrings.reduce(function (acc, iconClass) {
           var firstCard = new Card(iconClass).makeCard();
           var secondCard = new Card(iconClass).makeCard();
@@ -206,12 +208,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return acc;
         }, []);
         var shuffledDeck = this.shuffleDeck(arrOfCards);
+
         return shuffledDeck;
       }
     }, {
       key: 'makeDeck',
       value: function makeDeck(arrOfIconStrings) {
-        var shuffledCards = this.makeDeckOfCards(arrOfIconStrings);
+        var shuffledCards = this.makeShuffledCards(arrOfIconStrings);
 
         var deck = shuffledCards.reduce(function (acc, card) {
           acc.appendChild(card);
@@ -403,7 +406,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleDeckClick',
       value: function handleDeckClick(e, stateObj) {
-        // UNCOMMENT AT END
+        // UNCOMMENT WHEN FINISHED
         // if(!stateObj.playingGame) {
         //   return;
         // }
@@ -437,7 +440,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var secondCardPicked = target.previousSibling.firstChild;
         var cardsPicked = [firstCardPicked, secondCardPicked];
 
-        var secondCardValue = target.previousSibling.firstChild.className;
+        var secondCardValue = secondCardPicked.className;
         var firstCardValue = firstCardPicked.className;
 
         var cardsAreMatch = firstCardValue === secondCardValue;
