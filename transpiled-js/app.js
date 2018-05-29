@@ -414,51 +414,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           timer: timer,
           view: view
         }), false);
-        this.getRestartButton().addEventListener('click', restartButtonListenerFn(), false);
-        this.getDeckElement().addEventListener('click', deckListenerFn(), false);
+        this.getRestartButton().addEventListener('click', restartButtonListenerFn({
+          controller: this,
+          state: state,
+          timer: timer,
+          view: view
+        }), false);
+        this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
 
         /*
-              function startButtonListenerFn({
-          controller,
-          state,
-          timer,
-          view,
-          timerHtmlEl
-        }) {
-          return function(e) {
-            return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
-          };
-        }
-         function deckListenerFn(controller, state) {
+        function deckListenerFn(controller, state) {
           return function(e) {
             return controller.handleDeckClick(e, state);
           };
-        }
-        function restartButtonListenerFn(obj) {
-          return function(e) {
-            return obj.controller.handleRestartClick(obj);
-          };
-        }
-        */
-        ////////////////////////////////////////////////////////////////////////////////
-        /*
-              getScorePanelElement() {
-        return document.getElementsByClassName('score-panel')[0];
-        }
-        getGameContainer() {
-        return document.getElementsByClassName('container')[0];
-        }
-        getMovesElement() {
-        return document.getElementsByClassName('moves')[0];
-        }
-        getDeckElement() {
-        return document.getElementsByClassName('deck')[0];
-        }
-        getStartButton() {
-        return document.getElementsByClassName('start')[0];
-        }
-        getRestartButton() {
-        return document.getElementsByClassName('restart')[0];
         }
         */
       }

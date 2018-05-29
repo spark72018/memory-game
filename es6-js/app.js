@@ -326,59 +326,22 @@
         timer,
         view
       }), false);
-      this.getRestartButton().addEventListener('click', restartButtonListenerFn(), false);
-      this.getDeckElement().addEventListener('click', deckListenerFn(), false);
-
-      /*
-            function startButtonListenerFn({
-        controller,
+      this.getRestartButton().addEventListener('click', restartButtonListenerFn({
+        controller: this,
         state,
         timer,
-        view,
-        timerHtmlEl
-      }) {
-        return function(e) {
-          return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
-        };
-      }
+        view
+      }), false);
+      this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
 
+      /*
       function deckListenerFn(controller, state) {
         return function(e) {
           return controller.handleDeckClick(e, state);
         };
       }
-      function restartButtonListenerFn(obj) {
-        return function(e) {
-          return obj.controller.handleRestartClick(obj);
-        };
-      }
       */
-////////////////////////////////////////////////////////////////////////////////
-      /*
-            getScorePanelElement() {
-      return document.getElementsByClassName('score-panel')[0];
-    }
 
-    getGameContainer() {
-      return document.getElementsByClassName('container')[0];
-    }
-
-    getMovesElement() {
-      return document.getElementsByClassName('moves')[0];
-    }
-
-    getDeckElement() {
-      return document.getElementsByClassName('deck')[0];
-    }
-
-    getStartButton() {
-      return document.getElementsByClassName('start')[0];
-    }
-
-    getRestartButton() {
-      return document.getElementsByClassName('restart')[0];
-    }
-      */
     }
 
     getTimerElement() {
