@@ -288,10 +288,9 @@
       return numSuccessMatches === numMatchesToWin;
     }
 
+    // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
     endGame(state, timer, view, timerElement) {
       console.log('endGame called');
-
-      // pause timer
       // cause modal to display
       // modal should:
       // - ask if they want to play again
@@ -537,11 +536,6 @@
       }
     }
 
-    setSecondsElapsed(stateObj, secondsElapsed) {
-      stateObj.secondsElapsed = secondsElapsed;
-      return stateObj;
-    }
-
     setFirstCardPickedIcon(stateObj, cardStringOrNull) {
       stateObj.firstCardPickedIcon = cardStringOrNull;
       return stateObj;
@@ -589,26 +583,6 @@
 
     getRestartButton() {
       return document.getElementsByClassName('restart')[0];
-    }
-
-    getSecondsElapsed({ secondsElapsed }) {
-      return secondsElapsed;
-    }
-
-    getStarRating({ starRating }) {
-      return starRating;
-    }
-
-    getNumMovesMade({ numMovesMade }) {
-      return numMovesMade;
-    }
-
-    getNumSuccessMatches({ numSuccessMatches }) {
-      return numSuccessMatches;
-    }
-
-    getNumFailedMatches({ numFailedMatches }) {
-      return numFailedMatches;
     }
   }
 
