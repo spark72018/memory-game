@@ -300,7 +300,7 @@
       timer.stopTimer(state);
     }
 
-    handleRestartClick({ timer, state, view}) {
+    handleRestartClick({ timer, state, view }) {
       console.log('handleRestartClick called');
 
       timer.resetTimer(state);
@@ -312,36 +312,38 @@
       this.getScorePanelElement().remove();
       this.getDeckElement().remove();
 
-  
       view.renderGame({
         container: this.getGameContainer(),
         state
       });
 
       // attach listeners to startButton, resetButton, and deckElement
-      this.getStartButton().addEventListener('click', startButtonListenerFn({
-        controller: this,
-        timerHtmlEl: this.getTimerElement(),
-        state,
-        timer,
-        view
-      }), false);
-      this.getRestartButton().addEventListener('click', restartButtonListenerFn({
-        controller: this,
-        state,
-        timer,
-        view
-      }), false);
-      this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
-
-      /*
-      function deckListenerFn(controller, state) {
-        return function(e) {
-          return controller.handleDeckClick(e, state);
-        };
-      }
-      */
-
+      this.getStartButton().addEventListener(
+        'click',
+        startButtonListenerFn({
+          controller: this,
+          timerHtmlEl: this.getTimerElement(),
+          state,
+          timer,
+          view
+        }),
+        false
+      );
+      this.getRestartButton().addEventListener(
+        'click',
+        restartButtonListenerFn({
+          controller: this,
+          state,
+          timer,
+          view
+        }),
+        false
+      );
+      this.getDeckElement().addEventListener(
+        'click',
+        deckListenerFn(this, state),
+        false
+      );
     }
 
     getTimerElement() {
@@ -655,7 +657,10 @@
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
       this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
-      this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
+      this.scorePanel = new ScorePanel().makePanel(
+        this.starRating,
+        'score-panel'
+      );
       this.deckElement = null;
       this.startButton = null;
       this.restartButton = null;
@@ -667,19 +672,12 @@
   const State = { currentState: new GameState() };
   const View = new GameView();
 
-  ///////////////////////////////////////////////////////////////////////
-  // consider if these are Controller's responsibility
-  
-  // maybe store deckOfCards in another property within State?
-  // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
-  // when resetting game.
-// 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: Controller.getGameContainer(),
     state: State
   });
-  //////////////////////////////////////////////////////////////////////////
+
   function startButtonListenerFn({
     controller,
     state,
@@ -687,24 +685,18 @@
     view,
     timerHtmlEl
   }) {
-    // console.log('lala1', controller, state, timer, view, timerHtmlEl);
     return function(e) {
-      // console.log('lala2');
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
   function deckListenerFn(controller, state) {
-    console.log('deckListenerFn', controller, state);
     return function(e) {
-      console.log('deckListenerFn lvl 2');
       return controller.handleDeckClick(e, state);
     };
   }
   function restartButtonListenerFn(obj) {
-    console.log('restartButtonListenerFn', obj);
     return function(e) {
-      console.log('restartButtonListenerFn lvl 2');
       return obj.controller.handleRestartClick(obj);
     };
   }

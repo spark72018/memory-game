@@ -421,14 +421,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           view: view
         }), false);
         this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
-
-        /*
-        function deckListenerFn(controller, state) {
-          return function(e) {
-            return controller.handleDeckClick(e, state);
-          };
-        }
-        */
       }
     }, {
       key: 'getTimerElement',
@@ -829,19 +821,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var State = { currentState: new GameState() };
   var View = new GameView();
 
-  ///////////////////////////////////////////////////////////////////////
-  // consider if these are Controller's responsibility
-
-  // maybe store deckOfCards in another property within State?
-  // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
-  // when resetting game.
-  // 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
     container: Controller.getGameContainer(),
     state: State
   });
-  //////////////////////////////////////////////////////////////////////////
+
   function startButtonListenerFn(_ref12) {
     var controller = _ref12.controller,
         state = _ref12.state,
@@ -849,24 +834,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         view = _ref12.view,
         timerHtmlEl = _ref12.timerHtmlEl;
 
-    // console.log('lala1', controller, state, timer, view, timerHtmlEl);
     return function (e) {
-      // console.log('lala2');
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
   function deckListenerFn(controller, state) {
-    console.log('deckListenerFn', controller, state);
     return function (e) {
-      console.log('deckListenerFn lvl 2');
       return controller.handleDeckClick(e, state);
     };
   }
   function restartButtonListenerFn(obj) {
-    console.log('restartButtonListenerFn', obj);
     return function (e) {
-      console.log('restartButtonListenerFn lvl 2');
       return obj.controller.handleRestartClick(obj);
     };
   }
