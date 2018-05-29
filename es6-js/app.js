@@ -300,7 +300,7 @@
       timer.stopTimer(state);
     }
 
-    handleRestartClick({ timer, state, view, gameContainer }) {
+    handleRestartClick({ timer, state, view}) {
       console.log('handleRestartClick called');
 
       timer.resetTimer(state);
@@ -309,7 +309,10 @@
       state.currentState = new GameState();
 
       // remove
+      
+      // this.getDeckElement().remove();
 
+  
       // renderGame anew
 
       // attach listeners to startbutton and deckhtmlel
@@ -527,6 +530,10 @@
       return stateObj;
     }
 
+    getScorePanelElement() {
+      return document.getElementsByClassName('score-panel')[0];
+    }
+
     getGameContainer() {
       return document.getElementsByClassName('container')[0];
     }
@@ -688,15 +695,14 @@
     deckListenerFn(Controller, State),
     false
   );
-// 
+
   Controller.getRestartButton().addEventListener(
     'click',
     restartButtonListenerFn({
       timer: Timer,
       controller: Controller,
       state: State,
-      view: View,
-      gameContainer: Controller.getGameContainer()
+      view: View
     }),
     false
   );

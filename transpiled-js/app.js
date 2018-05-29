@@ -388,8 +388,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function handleRestartClick(_ref3) {
         var timer = _ref3.timer,
             state = _ref3.state,
-            view = _ref3.view,
-            gameContainer = _ref3.gameContainer;
+            view = _ref3.view;
 
         console.log('handleRestartClick called');
 
@@ -399,6 +398,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         state.currentState = new GameState();
 
         // remove
+
+        // this.getDeckElement().remove();
+
 
         // renderGame anew
 
@@ -644,6 +646,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
+      key: 'getScorePanelElement',
+      value: function getScorePanelElement() {
+        return document.getElementsByClassName('score-panel')[0];
+      }
+    }, {
       key: 'getGameContainer',
       value: function getGameContainer() {
         return document.getElementsByClassName('container')[0];
@@ -843,12 +850,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }), false);
 
   Controller.getDeckElement().addEventListener('click', deckListenerFn(Controller, State), false);
-  // 
+
   Controller.getRestartButton().addEventListener('click', restartButtonListenerFn({
     timer: Timer,
     controller: Controller,
     state: State,
-    view: View,
-    gameContainer: Controller.getGameContainer()
+    view: View
   }), false);
 })();
