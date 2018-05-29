@@ -300,14 +300,7 @@
       timer.stopTimer(state);
     }
 
-    handleRestartClick({
-      timer,
-      state,
-      view,
-      gameContainer,
-      startButton,
-      deckHtmlEl
-    }) {
+    handleRestartClick({ timer, state, view, gameContainer }) {
       console.log('handleRestartClick called');
 
       timer.resetTimer(state);
@@ -320,11 +313,6 @@
       // renderGame anew
 
       // attach listeners to startbutton and deckhtmlel
-
-      /*
-        const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
-        const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
-      */
     }
 
     handleStartClick(e, { currentState }, timerObj, viewObj, timerElement) {
@@ -366,9 +354,10 @@
       this.matchEmitter.on('moveMade', () => {
         console.log('moveMade event emitted');
         this.setMovesMade(currentState, ++currentState.numMovesMade);
-
-        const movesTag = document.getElementsByClassName('moves')[0];
-        viewObj.renderNumMovesMade(`${currentState.numMovesMade}`, movesTag);
+        viewObj.renderNumMovesMade(
+          `${currentState.numMovesMade}`,
+          this.getMovesElement()
+        );
       });
     }
 
@@ -538,6 +527,10 @@
       return stateObj;
     }
 
+    getGameContainer() {
+      return document.getElementsByClassName('container')[0];
+    }
+
     getMovesElement() {
       return document.getElementsByClassName('moves')[0];
     }
@@ -639,14 +632,14 @@
 
   ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
-  const gameContainer = document.getElementsByClassName('container')[0];
+  
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game.
-
+// 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
-    container: gameContainer,
+    container: Controller.getGameContainer(),
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
@@ -676,7 +669,7 @@
   }
 
   // refactored to not cache startButton, deckElement, and restartButton
-  // HTML elements so they (along with their listeners)
+  // HTML elements in variables so they (along with their listeners)
   // can be garbage collected when removed from DOM
   Controller.getStartButton().addEventListener(
     'click',
@@ -695,7 +688,7 @@
     deckListenerFn(Controller, State),
     false
   );
-
+// 
   Controller.getRestartButton().addEventListener(
     'click',
     restartButtonListenerFn({
@@ -703,9 +696,7 @@
       controller: Controller,
       state: State,
       view: View,
-      gameContainer: gameContainer,
-      startButton: Controller.getStartButton(),
-      deckHtmlEl: Controller.getDeckElement()
+      gameContainer: Controller.getGameContainer()
     }),
     false
   );

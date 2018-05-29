@@ -389,9 +389,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var timer = _ref3.timer,
             state = _ref3.state,
             view = _ref3.view,
-            gameContainer = _ref3.gameContainer,
-            startButton = _ref3.startButton,
-            deckHtmlEl = _ref3.deckHtmlEl;
+            gameContainer = _ref3.gameContainer;
 
         console.log('handleRestartClick called');
 
@@ -405,11 +403,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // renderGame anew
 
         // attach listeners to startbutton and deckhtmlel
-
-        /*
-          const deckOfCards = new Deck().makeDeck(State.arrOfIconStrings);
-          const scorePanel = new ScorePanel().makePanel(3, 'score-panel');
-        */
       }
     }, {
       key: 'handleStartClick',
@@ -454,9 +447,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.matchEmitter.on('moveMade', function () {
           console.log('moveMade event emitted');
           _this2.setMovesMade(currentState, ++currentState.numMovesMade);
-
-          var movesTag = document.getElementsByClassName('moves')[0];
-          viewObj.renderNumMovesMade('' + currentState.numMovesMade, movesTag);
+          viewObj.renderNumMovesMade('' + currentState.numMovesMade, _this2.getMovesElement());
         });
       }
     }, {
@@ -653,6 +644,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
+      key: 'getGameContainer',
+      value: function getGameContainer() {
+        return document.getElementsByClassName('container')[0];
+      }
+    }, {
       key: 'getMovesElement',
       value: function getMovesElement() {
         return document.getElementsByClassName('moves')[0];
@@ -799,14 +795,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   ///////////////////////////////////////////////////////////////////////
   // consider if these are Controller's responsibility
-  var gameContainer = document.getElementsByClassName('container')[0];
+
   // maybe store deckOfCards in another property within State?
   // so I can just set it to a new Deck().makeDeck(State.currentState.arrOfIconStrings)
   // when resetting game.
-
+  // 
   // initial render, subsequent renders handled by Controller
   View.renderGame({
-    container: gameContainer,
+    container: Controller.getGameContainer(),
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
@@ -836,7 +832,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }
 
   // refactored to not cache startButton, deckElement, and restartButton
-  // HTML elements so they (along with their listeners)
+  // HTML elements in variables so they (along with their listeners)
   // can be garbage collected when removed from DOM
   Controller.getStartButton().addEventListener('click', startButtonListenerFn({
     controller: Controller,
@@ -847,14 +843,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }), false);
 
   Controller.getDeckElement().addEventListener('click', deckListenerFn(Controller, State), false);
-
+  // 
   Controller.getRestartButton().addEventListener('click', restartButtonListenerFn({
     timer: Timer,
     controller: Controller,
     state: State,
     view: View,
-    gameContainer: gameContainer,
-    startButton: Controller.getStartButton(),
-    deckHtmlEl: Controller.getDeckElement()
+    gameContainer: Controller.getGameContainer()
   }), false);
 })();
