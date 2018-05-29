@@ -300,15 +300,20 @@
       timer.stopTimer(state);
     }
 
-    handleRestartClick({ timer, state, view }) {
+    handleRestartClick({ fnsObj, timer, state, view }) {
+      // TODO, INITIAL EVENT LISTENERS NOT BEING REMOVED
+      // SO AFTER RESET, MULTIPLE EVENTS BEING EMITTED
+      // ON DECK CLICK
       console.log('handleRestartClick called');
+      
+      // dereference old Emitter with new Emitter
+      this.matchEmitter = new Emitter();
 
       timer.resetTimer(state);
 
       // reset state
       state.currentState = new GameState();
 
-      // remove
       this.getScorePanelElement().remove();
       this.getDeckElement().remove();
 
@@ -401,7 +406,7 @@
       // if(!stateObj.playingGame) {
       //   return;
       // }
-      const state = stateObj.currentState;
+      const { currentState } = stateObj;
       console.log('top level', e.target);
       const target = e.target;
       const parent = e.target.parentNode;
@@ -417,44 +422,44 @@
 
       flip(parent);
 
-      const firstCardPicked = state.firstCardPicked;
+      const { firstCardPickedIcon } = currentState;
 
-      if (!firstCardPicked) {
+      if (!firstCardPickedIcon) {
         // store reference to <i> tag containing icon className
-        const firstCard = target.previousSibling.firstChild;
+        const firstCardIcon = target.previousSibling.firstChild;
 
-        return this.setFirstCardPicked(state, firstCard);
+        return this.setFirstCardPickedIcon(currentState, firstCardIcon);
       }
 
       // only increment moves if user is on second pick
       this.matchEmitter.emit('moveMade');
 
       // store reference to <i> tag containing icon className
-      const secondCardPicked = target.previousSibling.firstChild;
-      const cardsPicked = [firstCardPicked, secondCardPicked];
+      const secondCardPickedIcon = target.previousSibling.firstChild;
+      const cardsPicked = [firstCardPickedIcon, secondCardPickedIcon];
 
-      const secondCardValue = secondCardPicked.className;
-      const firstCardValue = firstCardPicked.className;
+      const firstCardIconValue = firstCardPickedIcon.className;
+      const secondCardIconValue = secondCardPickedIcon.className;
 
-      const cardsAreMatch = firstCardValue === secondCardValue;
-      const cardContainers = cardsPicked.map(
-        iconTag => iconTag.parentNode.parentNode
-      );
+      const cardsAreMatch = firstCardIconValue === secondCardIconValue;
+      // card element that contains both back and front faces is
+      // grandparent of icon tag that contains card value
+      const cards = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
 
       if (cardsAreMatch) {
-        setCardsAsMatched(...cardContainers);
+        setCardsAsMatched(...cards);
 
         this.matchEmitter.emit('successfulMatch');
       } else {
-        animateFailedMatch(...cardContainers);
+        animateFailedMatch(...cards);
 
         // flip back the failed matches
-        setTimeout(() => flip(...cardContainers), 1500);
+        setTimeout(() => flip(...cards), 1500);
 
         this.matchEmitter.emit('failedMatch');
       }
 
-      this.setFirstCardPicked(state, null);
+      this.setFirstCardPickedIcon(currentState, null);
 
       // utility functions
       function addFailClassTo(element) {
@@ -537,8 +542,8 @@
       return stateObj;
     }
 
-    setFirstCardPicked(stateObj, cardStringOrNull) {
-      stateObj.firstCardPicked = cardStringOrNull;
+    setFirstCardPickedIcon(stateObj, cardStringOrNull) {
+      stateObj.firstCardPickedIcon = cardStringOrNull;
       return stateObj;
     }
 
@@ -635,7 +640,7 @@
     constructor({
       playingGame = false,
       timerId = null,
-      firstCardPicked = null,
+      firstCardPickedIcon = null,
       numFlippableCards = 16,
       secondsElapsed = 0,
       starRating = 3,
@@ -647,7 +652,7 @@
     } = {}) {
       this.playingGame = playingGame;
       this.timerId = timerId;
-      this.firstCardPicked = firstCardPicked;
+      this.firstCardPickedIcon = firstCardPickedIcon;
       this.numFlippableCards = numFlippableCards;
       this.secondsElapsed = secondsElapsed;
       this.starRating = starRating;
@@ -683,14 +688,15 @@
     state,
     timer,
     view,
-    timerHtmlEl
+    timerHtmlEl,
+    fnsObj
   }) {
     return function(e) {
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
-  function deckListenerFn(controller, state) {
+  function deckListenerFn(controller, state, fnsObj) {
     return function(e) {
       return controller.handleDeckClick(e, state);
     };

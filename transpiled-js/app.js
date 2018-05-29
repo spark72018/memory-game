@@ -386,18 +386,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleRestartClick',
       value: function handleRestartClick(_ref3) {
-        var timer = _ref3.timer,
+        var fnsObj = _ref3.fnsObj,
+            timer = _ref3.timer,
             state = _ref3.state,
             view = _ref3.view;
 
+        // TODO, INITIAL EVENT LISTENERS NOT BEING REMOVED
+        // SO AFTER RESET, MULTIPLE EVENTS BEING EMITTED
+        // ON DECK CLICK
         console.log('handleRestartClick called');
+
+        // dereference old Emitter with new Emitter
+        this.matchEmitter = new Emitter();
 
         timer.resetTimer(state);
 
         // reset state
         state.currentState = new GameState();
 
-        // remove
         this.getScorePanelElement().remove();
         this.getDeckElement().remove();
 
@@ -480,7 +486,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // if(!stateObj.playingGame) {
         //   return;
         // }
-        var state = stateObj.currentState;
+        var currentState = stateObj.currentState;
+
         console.log('top level', e.target);
         var target = e.target;
         var parent = e.target.parentNode;
@@ -496,46 +503,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         flip(parent);
 
-        var firstCardPicked = state.firstCardPicked;
+        var firstCardPickedIcon = currentState.firstCardPickedIcon;
 
-        if (!firstCardPicked) {
+
+        if (!firstCardPickedIcon) {
           // store reference to <i> tag containing icon className
-          var firstCard = target.previousSibling.firstChild;
+          var firstCardIcon = target.previousSibling.firstChild;
 
-          return this.setFirstCardPicked(state, firstCard);
+          return this.setFirstCardPickedIcon(currentState, firstCardIcon);
         }
 
         // only increment moves if user is on second pick
         this.matchEmitter.emit('moveMade');
 
         // store reference to <i> tag containing icon className
-        var secondCardPicked = target.previousSibling.firstChild;
-        var cardsPicked = [firstCardPicked, secondCardPicked];
+        var secondCardPickedIcon = target.previousSibling.firstChild;
+        var cardsPicked = [firstCardPickedIcon, secondCardPickedIcon];
 
-        var secondCardValue = secondCardPicked.className;
-        var firstCardValue = firstCardPicked.className;
+        var firstCardIconValue = firstCardPickedIcon.className;
+        var secondCardIconValue = secondCardPickedIcon.className;
 
-        var cardsAreMatch = firstCardValue === secondCardValue;
-        var cardContainers = cardsPicked.map(function (iconTag) {
+        var cardsAreMatch = firstCardIconValue === secondCardIconValue;
+        // card element that contains both back and front faces is
+        // grandparent of icon tag that contains card value
+        var cards = cardsPicked.map(function (iconTag) {
           return iconTag.parentNode.parentNode;
         });
 
         if (cardsAreMatch) {
-          setCardsAsMatched.apply(undefined, _toConsumableArray(cardContainers));
+          setCardsAsMatched.apply(undefined, _toConsumableArray(cards));
 
           this.matchEmitter.emit('successfulMatch');
         } else {
-          animateFailedMatch.apply(undefined, _toConsumableArray(cardContainers));
+          animateFailedMatch.apply(undefined, _toConsumableArray(cards));
 
           // flip back the failed matches
           setTimeout(function () {
-            return flip.apply(undefined, _toConsumableArray(cardContainers));
+            return flip.apply(undefined, _toConsumableArray(cards));
           }, 1500);
 
           this.matchEmitter.emit('failedMatch');
         }
 
-        this.setFirstCardPicked(state, null);
+        this.setFirstCardPickedIcon(currentState, null);
 
         // utility functions
         function addFailClassTo(element) {
@@ -637,9 +647,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
-      key: 'setFirstCardPicked',
-      value: function setFirstCardPicked(stateObj, cardStringOrNull) {
-        stateObj.firstCardPicked = cardStringOrNull;
+      key: 'setFirstCardPickedIcon',
+      value: function setFirstCardPickedIcon(stateObj, cardStringOrNull) {
+        stateObj.firstCardPickedIcon = cardStringOrNull;
         return stateObj;
       }
     }, {
@@ -777,8 +787,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         playingGame = _ref11$playingGame === undefined ? false : _ref11$playingGame,
         _ref11$timerId = _ref11.timerId,
         timerId = _ref11$timerId === undefined ? null : _ref11$timerId,
-        _ref11$firstCardPicke = _ref11.firstCardPicked,
-        firstCardPicked = _ref11$firstCardPicke === undefined ? null : _ref11$firstCardPicke,
+        _ref11$firstCardPicke = _ref11.firstCardPickedIcon,
+        firstCardPickedIcon = _ref11$firstCardPicke === undefined ? null : _ref11$firstCardPicke,
         _ref11$numFlippableCa = _ref11.numFlippableCards,
         numFlippableCards = _ref11$numFlippableCa === undefined ? 16 : _ref11$numFlippableCa,
         _ref11$secondsElapsed = _ref11.secondsElapsed,
@@ -800,7 +810,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     this.playingGame = playingGame;
     this.timerId = timerId;
-    this.firstCardPicked = firstCardPicked;
+    this.firstCardPickedIcon = firstCardPickedIcon;
     this.numFlippableCards = numFlippableCards;
     this.secondsElapsed = secondsElapsed;
     this.starRating = starRating;
@@ -832,14 +842,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         state = _ref12.state,
         timer = _ref12.timer,
         view = _ref12.view,
-        timerHtmlEl = _ref12.timerHtmlEl;
+        timerHtmlEl = _ref12.timerHtmlEl,
+        fnsObj = _ref12.fnsObj;
 
     return function (e) {
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
-  function deckListenerFn(controller, state) {
+  function deckListenerFn(controller, state, fnsObj) {
     return function (e) {
       return controller.handleDeckClick(e, state);
     };
