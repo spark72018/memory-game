@@ -398,13 +398,74 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         state.currentState = new GameState();
 
         // remove
+        this.getScorePanelElement().remove();
+        this.getDeckElement().remove();
 
-        // this.getDeckElement().remove();
+        view.renderGame({
+          container: this.getGameContainer(),
+          state: state
+        });
 
+        // attach listeners to startButton, resetButton, and deckElement
+        this.getStartButton().addEventListener('click', startButtonListenerFn({
+          controller: this,
+          timerHtmlEl: this.getTimerElement(),
+          state: state,
+          timer: timer,
+          view: view
+        }), false);
+        this.getRestartButton().addEventListener('click', restartButtonListenerFn(), false);
+        this.getDeckElement().addEventListener('click', deckListenerFn(), false);
 
-        // renderGame anew
-
-        // attach listeners to startbutton and deckhtmlel
+        /*
+              function startButtonListenerFn({
+          controller,
+          state,
+          timer,
+          view,
+          timerHtmlEl
+        }) {
+          return function(e) {
+            return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
+          };
+        }
+         function deckListenerFn(controller, state) {
+          return function(e) {
+            return controller.handleDeckClick(e, state);
+          };
+        }
+        function restartButtonListenerFn(obj) {
+          return function(e) {
+            return obj.controller.handleRestartClick(obj);
+          };
+        }
+        */
+        ////////////////////////////////////////////////////////////////////////////////
+        /*
+              getScorePanelElement() {
+        return document.getElementsByClassName('score-panel')[0];
+        }
+        getGameContainer() {
+        return document.getElementsByClassName('container')[0];
+        }
+        getMovesElement() {
+        return document.getElementsByClassName('moves')[0];
+        }
+        getDeckElement() {
+        return document.getElementsByClassName('deck')[0];
+        }
+        getStartButton() {
+        return document.getElementsByClassName('start')[0];
+        }
+        getRestartButton() {
+        return document.getElementsByClassName('restart')[0];
+        }
+        */
+      }
+    }, {
+      key: 'getTimerElement',
+      value: function getTimerElement() {
+        return document.getElementsByClassName('timer')[0];
       }
     }, {
       key: 'handleStartClick',
@@ -789,7 +850,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.numMatchesToWin = numMatchesToWin;
     this.arrOfIconStrings = arrOfIconStrings;
     this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
-    this.scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+    this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
     this.deckElement = null;
     this.startButton = null;
     this.restartButton = null;
@@ -813,8 +874,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
-  var timerElement = document.getElementsByClassName('timer')[0];
-
   function startButtonListenerFn(_ref12) {
     var controller = _ref12.controller,
         state = _ref12.state,
@@ -822,18 +881,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         view = _ref12.view,
         timerHtmlEl = _ref12.timerHtmlEl;
 
+    // console.log('lala1', controller, state, timer, view, timerHtmlEl);
     return function (e) {
+      // console.log('lala2');
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
   function deckListenerFn(controller, state) {
+    console.log('deckListenerFn', controller, state);
     return function (e) {
+      console.log('deckListenerFn lvl 2');
       return controller.handleDeckClick(e, state);
     };
   }
   function restartButtonListenerFn(obj) {
+    console.log('restartButtonListenerFn', obj);
     return function (e) {
+      console.log('restartButtonListenerFn lvl 2');
       return obj.controller.handleRestartClick(obj);
     };
   }
@@ -846,7 +911,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     state: State,
     timer: Timer,
     view: View,
-    timerHtmlEl: timerElement
+    timerHtmlEl: Controller.getTimerElement()
   }), false);
 
   Controller.getDeckElement().addEventListener('click', deckListenerFn(Controller, State), false);

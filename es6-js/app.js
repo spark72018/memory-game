@@ -309,13 +309,80 @@
       state.currentState = new GameState();
 
       // remove
-      
-      // this.getDeckElement().remove();
+      this.getScorePanelElement().remove();
+      this.getDeckElement().remove();
 
   
-      // renderGame anew
+      view.renderGame({
+        container: this.getGameContainer(),
+        state
+      });
 
-      // attach listeners to startbutton and deckhtmlel
+      // attach listeners to startButton, resetButton, and deckElement
+      this.getStartButton().addEventListener('click', startButtonListenerFn({
+        controller: this,
+        timerHtmlEl: this.getTimerElement(),
+        state,
+        timer,
+        view
+      }), false);
+      this.getRestartButton().addEventListener('click', restartButtonListenerFn(), false);
+      this.getDeckElement().addEventListener('click', deckListenerFn(), false);
+
+      /*
+            function startButtonListenerFn({
+        controller,
+        state,
+        timer,
+        view,
+        timerHtmlEl
+      }) {
+        return function(e) {
+          return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
+        };
+      }
+
+      function deckListenerFn(controller, state) {
+        return function(e) {
+          return controller.handleDeckClick(e, state);
+        };
+      }
+      function restartButtonListenerFn(obj) {
+        return function(e) {
+          return obj.controller.handleRestartClick(obj);
+        };
+      }
+      */
+////////////////////////////////////////////////////////////////////////////////
+      /*
+            getScorePanelElement() {
+      return document.getElementsByClassName('score-panel')[0];
+    }
+
+    getGameContainer() {
+      return document.getElementsByClassName('container')[0];
+    }
+
+    getMovesElement() {
+      return document.getElementsByClassName('moves')[0];
+    }
+
+    getDeckElement() {
+      return document.getElementsByClassName('deck')[0];
+    }
+
+    getStartButton() {
+      return document.getElementsByClassName('start')[0];
+    }
+
+    getRestartButton() {
+      return document.getElementsByClassName('restart')[0];
+    }
+      */
+    }
+
+    getTimerElement() {
+      return document.getElementsByClassName('timer')[0];
     }
 
     handleStartClick(e, { currentState }, timerObj, viewObj, timerElement) {
@@ -625,7 +692,7 @@
       this.numMatchesToWin = numMatchesToWin;
       this.arrOfIconStrings = arrOfIconStrings;
       this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
-      this.scorePanel = new ScorePanel().makePanel(3, 'score-panel');
+      this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
       this.deckElement = null;
       this.startButton = null;
       this.restartButton = null;
@@ -650,8 +717,6 @@
     state: State
   });
   //////////////////////////////////////////////////////////////////////////
-  const timerElement = document.getElementsByClassName('timer')[0];
-
   function startButtonListenerFn({
     controller,
     state,
@@ -659,18 +724,24 @@
     view,
     timerHtmlEl
   }) {
+    // console.log('lala1', controller, state, timer, view, timerHtmlEl);
     return function(e) {
+      // console.log('lala2');
       return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
     };
   }
 
   function deckListenerFn(controller, state) {
+    console.log('deckListenerFn', controller, state);
     return function(e) {
+      console.log('deckListenerFn lvl 2');
       return controller.handleDeckClick(e, state);
     };
   }
   function restartButtonListenerFn(obj) {
+    console.log('restartButtonListenerFn', obj);
     return function(e) {
+      console.log('restartButtonListenerFn lvl 2');
       return obj.controller.handleRestartClick(obj);
     };
   }
@@ -685,7 +756,7 @@
       state: State,
       timer: Timer,
       view: View,
-      timerHtmlEl: timerElement
+      timerHtmlEl: Controller.getTimerElement()
     }),
     false
   );
