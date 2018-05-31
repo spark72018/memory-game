@@ -163,7 +163,7 @@ h1 {
 }
 
 .modal {
-  /* display: none; */
+  display: none;
   position: fixed;
   z-index: 100;
   margin: 0 auto;

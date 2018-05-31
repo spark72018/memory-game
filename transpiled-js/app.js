@@ -29,6 +29,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   });
 
+  var GameOverModal = function () {
+    function GameOverModal() {
+      _classCallCheck(this, GameOverModal);
+    }
+
+    _createClass(GameOverModal, [{
+      key: 'makeModal',
+      value: function makeModal() {
+        var modalContainer = document.createElement('div');
+
+        return modalContainer;
+      }
+    }]);
+
+    return GameOverModal;
+  }();
+
   var ScorePanel = function () {
     function ScorePanel() {
       _classCallCheck(this, ScorePanel);
@@ -66,10 +83,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'makeTimerTag',
-      value: function makeTimerTag(initialTime) {
+      value: function makeTimerTag(timeString) {
         var spanTag = document.createElement('span');
 
-        spanTag.innerText = initialTime;
+        spanTag.innerText = timeString;
         spanTag.setAttribute('class', 'move-right timer');
 
         return spanTag;
@@ -372,6 +389,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
+      // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
 
     }, {
       key: 'endGame',
@@ -392,9 +410,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             state = _ref3.state,
             view = _ref3.view;
 
-        // TODO, INITIAL EVENT LISTENERS NOT BEING REMOVED
-        // SO AFTER RESET, MULTIPLE EVENTS BEING EMITTED
-        // ON DECK CLICK
         console.log('handleRestartClick called');
 
         // dereference old Emitter with new Emitter
@@ -413,7 +428,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           state: state
         });
 
-        // attach listeners to startButton, resetButton, and deckElement
         this.getStartButton().addEventListener('click', startButtonListenerFn({
           controller: this,
           timerHtmlEl: this.getTimerElement(),

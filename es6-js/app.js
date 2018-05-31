@@ -26,6 +26,14 @@
     }
   });
 
+  class GameOverModal {
+    makeModal() {
+      const modalContainer = document.createElement('div');
+
+      return modalContainer;
+    }
+  }
+
   class ScorePanel {
     makeStartButton() {
       const startButton = document.createElement('div');
@@ -54,10 +62,10 @@
       return spanTag;
     }
 
-    makeTimerTag(initialTime) {
+    makeTimerTag(timeString) {
       const spanTag = document.createElement('span');
 
-      spanTag.innerText = initialTime;
+      spanTag.innerText = timeString;
       spanTag.setAttribute('class', 'move-right timer');
 
       return spanTag;
@@ -289,6 +297,7 @@
     }
 
     // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
+    // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
     endGame(state, timer, view, timerElement) {
       console.log('endGame called');
       // cause modal to display
@@ -300,9 +309,6 @@
     }
 
     handleRestartClick({ fnsObj, timer, state, view }) {
-      // TODO, INITIAL EVENT LISTENERS NOT BEING REMOVED
-      // SO AFTER RESET, MULTIPLE EVENTS BEING EMITTED
-      // ON DECK CLICK
       console.log('handleRestartClick called');
       
       // dereference old Emitter with new Emitter
@@ -321,7 +327,7 @@
         state
       });
 
-      // attach listeners to startButton, resetButton, and deckElement
+      
       this.getStartButton().addEventListener(
         'click',
         startButtonListenerFn({
