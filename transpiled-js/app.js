@@ -398,6 +398,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return numSuccessMatches === numMatchesToWin;
       }
     }, {
+      key: 'getModalContainer',
+      value: function getModalContainer() {
+        return document.getElementsByClassName('modal')[0];
+      }
+    }, {
       key: 'getModalTimeTag',
       value: function getModalTimeTag() {
         return document.getElementsByClassName('modal-time')[0];

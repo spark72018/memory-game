@@ -306,6 +306,10 @@
       return numSuccessMatches === numMatchesToWin;
     }
 
+    getModalContainer() {
+      return document.getElementsByClassName('modal')[0];
+    }
+
     getModalTimeTag() {
       return document.getElementsByClassName('modal-time')[0];
     }
