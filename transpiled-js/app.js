@@ -14,6 +14,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   // used to mixin behavior into classes
 
+  var appendAll = function appendAll() {
+    for (var _len = arguments.length, children = Array(_len), _key = 0; _key < _len; _key++) {
+      children[_key] = arguments[_key];
+    }
+
+    return function (parent) {
+      return children.forEach(function (child) {
+        return parent.appendChild(child);
+      });
+    };
+  };
+
   var setCssClass = function setCssClass(cssClassString) {
     return function (htmlElement) {
       return htmlElement.setAttribute('class', cssClassString);
@@ -49,16 +61,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var modalGameOverText = document.createElement('span');
         var modalTimeSpanTag = document.createElement('span');
         var modalRatingSpanTag = document.createElement('span');
+        var modalButton = document.createElement('button');
 
         modalGameOverText.innerText = 'Game over! Your final stats are: ';
 
         setCssClass('modal-game-over-text')(modalGameOverText);
         setCssClass('modal-time')(modalTimeSpanTag);
         setCssClass('modal-rating')(modalRatingSpanTag);
+        setCssClass('modal-button')(modalButton);
 
-        modalContainer.appendChild(modalGameOverText);
-        modalContainer.appendChild(modalTimeSpanTag);
-        modalContainer.appendChild(modalRatingSpanTag);
+        appendAll(modalGameOverText, modalTimeSpanTag, modalRatingSpanTag, modalButton)(modalContainer);
 
         setCssClass('modal')(modalContainer);
 
@@ -120,8 +132,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeListItem() {
         var listItem = document.createElement('LI');
 
-        for (var _len = arguments.length, children = Array(_len), _key = 0; _key < _len; _key++) {
-          children[_key] = arguments[_key];
+        for (var _len2 = arguments.length, children = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          children[_key2] = arguments[_key2];
         }
 
         var listItemWithChildren = children.reduce(function (acc, child) {
@@ -149,11 +161,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         setCssClass('stars')(unorderedList);
 
-        section.appendChild(unorderedList);
-        section.appendChild(movesTag);
-        section.appendChild(timerTag);
-        section.appendChild(startButton);
-        section.appendChild(restartButton);
+        appendAll(unorderedList, movesTag, timerTag, startButton, restartButton)(section);
 
         setCssClass(classString)(section);
 
@@ -202,8 +210,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         setCssClass('card')(card);
 
-        card.appendChild(frontFace);
-        card.appendChild(backFace);
+        appendAll(frontFace, backFace)(card);
+
+        // card.appendChild(frontFace);
+        // card.appendChild(backFace);
 
         return card;
       }
@@ -445,15 +455,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'endGame',
       value: function endGame(state, timer, view, timerElement) {
         console.log('endGame called');
-        // cause modal to display
-        // modal should:
-        // - ask if they want to play again
-        // - display time it took to win game
-        // - display their star rating
 
-        // stop timer
-        // get timer value and use it to render value on modal
-        // reset timer after
         this.toggleGameStarted(state);
 
         timer.stopTimer(state);
@@ -652,8 +654,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function animateFailedMatch() {
-          for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            elements[_key2] = arguments[_key2];
+          for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            elements[_key3] = arguments[_key3];
           }
 
           elements.forEach(function (element) {
@@ -679,8 +681,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function flip() {
-          for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-            elements[_key3] = arguments[_key3];
+          for (var _len4 = arguments.length, elements = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            elements[_key4] = arguments[_key4];
           }
 
           elements.forEach(function (element) {
@@ -690,8 +692,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function removeClasses() {
-          for (var _len4 = arguments.length, classesToRemove = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-            classesToRemove[_key4] = arguments[_key4];
+          for (var _len5 = arguments.length, classesToRemove = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+            classesToRemove[_key5] = arguments[_key5];
           }
 
           return function (card) {
@@ -704,8 +706,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function addClasses() {
-          for (var _len5 = arguments.length, classesToAdd = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-            classesToAdd[_key5] = arguments[_key5];
+          for (var _len6 = arguments.length, classesToAdd = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+            classesToAdd[_key6] = arguments[_key6];
           }
 
           return function (card) {
@@ -816,9 +818,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var docFrag = document.createDocumentFragment();
 
-        docFrag.appendChild(gameOverModal);
-        docFrag.appendChild(scorePanel);
-        docFrag.appendChild(currentDeck);
+        appendAll(gameOverModal, scorePanel, currentDeck)(docFrag);
+
+        // docFrag.appendChild(gameOverModal);
+        // docFrag.appendChild(scorePanel);
+        // docFrag.appendChild(currentDeck);
 
         container.appendChild(docFrag);
       }

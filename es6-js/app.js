@@ -15,6 +15,9 @@
 
   // used to mixin behavior into classes
 
+  const appendAll = (...children) => parent =>
+    children.forEach(child => parent.appendChild(child));
+
   const setCssClass = cssClassString => htmlElement =>
     htmlElement.setAttribute('class', cssClassString);
 
@@ -37,16 +40,21 @@
       const modalGameOverText = document.createElement('span');
       const modalTimeSpanTag = document.createElement('span');
       const modalRatingSpanTag = document.createElement('span');
+      const modalButton = document.createElement('button');
 
       modalGameOverText.innerText = 'Game over! Your final stats are: ';
 
       setCssClass('modal-game-over-text')(modalGameOverText);
       setCssClass('modal-time')(modalTimeSpanTag);
       setCssClass('modal-rating')(modalRatingSpanTag);
+      setCssClass('modal-button')(modalButton);
 
-      modalContainer.appendChild(modalGameOverText);
-      modalContainer.appendChild(modalTimeSpanTag);
-      modalContainer.appendChild(modalRatingSpanTag);
+      appendAll(
+        modalGameOverText,
+        modalTimeSpanTag,
+        modalRatingSpanTag,
+        modalButton
+      )(modalContainer);
 
       setCssClass('modal')(modalContainer);
 
@@ -68,7 +76,7 @@
       const repeatIcon = this.makeIcon('fa fa-repeat');
 
       aDiv.appendChild(repeatIcon);
-  
+
       setCssClass('restart')(aDiv);
 
       return aDiv;
@@ -118,11 +126,9 @@
 
       setCssClass('stars')(unorderedList);
 
-      section.appendChild(unorderedList);
-      section.appendChild(movesTag);
-      section.appendChild(timerTag);
-      section.appendChild(startButton);
-      section.appendChild(restartButton);
+      appendAll(unorderedList, movesTag, timerTag, startButton, restartButton)(
+        section
+      );
 
       setCssClass(classString)(section);
 
@@ -159,11 +165,13 @@
       const frontFace = this.makeFrontFace('front');
       const backFace = this.makeBackFace('back');
       const card = document.createElement('LI');
-  
+
       setCssClass('card')(card);
 
-      card.appendChild(frontFace);
-      card.appendChild(backFace);
+      appendAll(frontFace, backFace)(card);
+
+      // card.appendChild(frontFace);
+      // card.appendChild(backFace);
 
       return card;
     }
@@ -342,15 +350,7 @@
     // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
     endGame(state, timer, view, timerElement) {
       console.log('endGame called');
-      // cause modal to display
-      // modal should:
-      // - ask if they want to play again
-      // - display time it took to win game
-      // - display their star rating
 
-      // stop timer
-      // get timer value and use it to render value on modal
-      // reset timer after
       this.toggleGameStarted(state);
 
       timer.stopTimer(state);
@@ -668,10 +668,12 @@
       }
     }) {
       const docFrag = document.createDocumentFragment();
+      
+      appendAll(gameOverModal, scorePanel, currentDeck)(docFrag);
 
-      docFrag.appendChild(gameOverModal);
-      docFrag.appendChild(scorePanel);
-      docFrag.appendChild(currentDeck);
+      // docFrag.appendChild(gameOverModal);
+      // docFrag.appendChild(scorePanel);
+      // docFrag.appendChild(currentDeck);
 
       container.appendChild(docFrag);
     }
