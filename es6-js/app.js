@@ -43,6 +43,7 @@
       const modalButton = document.createElement('button');
 
       modalGameOverText.innerText = 'Game over! Your final stats are: ';
+      modalButton.innerText = 'Play again!';
 
       setCssClass('modal-game-over-text')(modalGameOverText);
       setCssClass('modal-time')(modalTimeSpanTag);
@@ -346,8 +347,6 @@
       return (modalRatingHtmlElement.innerText = numOfStars);
     }
 
-    // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
-    // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
     endGame(state, timer, view, timerElement) {
       console.log('endGame called');
 
@@ -515,6 +514,7 @@
       const secondCardIconValue = secondCardPickedIcon.className;
 
       const cardsAreMatch = firstCardIconValue === secondCardIconValue;
+
       // card element that contains both back and front faces is
       // grandparent of icon tag that contains card value
       const cards = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
@@ -668,12 +668,8 @@
       }
     }) {
       const docFrag = document.createDocumentFragment();
-      
-      appendAll(gameOverModal, scorePanel, currentDeck)(docFrag);
 
-      // docFrag.appendChild(gameOverModal);
-      // docFrag.appendChild(scorePanel);
-      // docFrag.appendChild(currentDeck);
+      appendAll(gameOverModal, scorePanel, currentDeck)(docFrag);
 
       container.appendChild(docFrag);
     }

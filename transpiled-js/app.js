@@ -64,6 +64,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var modalButton = document.createElement('button');
 
         modalGameOverText.innerText = 'Game over! Your final stats are: ';
+        modalButton.innerText = 'Play again!';
 
         setCssClass('modal-game-over-text')(modalGameOverText);
         setCssClass('modal-time')(modalTimeSpanTag);
@@ -447,10 +448,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function setModalRatingValue(modalRatingHtmlElement, numOfStars) {
         return modalRatingHtmlElement.innerText = numOfStars;
       }
-
-      // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
-      // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
-
     }, {
       key: 'endGame',
       value: function endGame(state, timer, view, timerElement) {
@@ -621,6 +618,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var secondCardIconValue = secondCardPickedIcon.className;
 
         var cardsAreMatch = firstCardIconValue === secondCardIconValue;
+
         // card element that contains both back and front faces is
         // grandparent of icon tag that contains card value
         var cards = cardsPicked.map(function (iconTag) {
@@ -819,10 +817,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var docFrag = document.createDocumentFragment();
 
         appendAll(gameOverModal, scorePanel, currentDeck)(docFrag);
-
-        // docFrag.appendChild(gameOverModal);
-        // docFrag.appendChild(scorePanel);
-        // docFrag.appendChild(currentDeck);
 
         container.appendChild(docFrag);
       }
