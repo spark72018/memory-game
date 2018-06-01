@@ -352,8 +352,7 @@
       this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
       this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-      // implement:
-      // view.displayModal();
+      view.displayHtmlElement(this.getModalContainer(), 'block');
     }
 
     resetGame({ timer, state, view }) {

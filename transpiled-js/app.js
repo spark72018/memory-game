@@ -453,8 +453,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
         this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-        // implement:
-        // view.displayModal();
+        view.displayHtmlElement(this.getModalContainer(), 'block');
       }
     }, {
       key: 'resetGame',
