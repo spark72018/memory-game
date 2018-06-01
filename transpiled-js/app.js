@@ -567,28 +567,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       }
     }, {
+      key: 'toggleCurrentlyAnimating',
+      value: function toggleCurrentlyAnimating(state) {
+        state.currentlyAnimating = !state.currentlyAnimating;
+      }
+    }, {
+      key: 'makeDeckUnclickable',
+      value: function makeDeckUnclickable(state, seconds) {
+        var _this4 = this;
+
+        setTimeout(function () {
+          return _this4.toggleCurrentlyAnimating(state);
+        }, seconds);
+        this.toggleCurrentlyAnimating(state);
+      }
+    }, {
       key: 'handleDeckClick',
       value: function handleDeckClick(e, stateObj) {
-        // UNCOMMENT WHEN FINISHED
-        // if(!stateObj.playingGame) {
-        //   return;
-        // }
         var currentState = stateObj.currentState;
+        var playingGame = currentState.playingGame,
+            currentlyAnimating = currentState.currentlyAnimating;
+        // UNCOMMENT WHEN FINISHED
 
+        if (!playingGame || currentlyAnimating) {
+          return;
+        }
         console.log('top level', e.target);
         var target = e.target;
-        var parent = e.target.parentNode;
+        var parentNode = target.parentNode;
+
 
         var card = isCard(target);
         var matched = isMatched(target);
         // parentNode because 'show' class is toggled on parent
-        var showing = isShowing(parent);
+        var showing = isShowing(parentNode);
 
         if (!card || matched || showing) {
           return;
         }
 
-        flip(parent);
+        flip(parentNode);
+
+        // so player can't cheat by flipping too many cards at once
+        this.makeDeckUnclickable(currentState, 740);
 
         var firstCardPickedIcon = currentState.firstCardPickedIcon;
 

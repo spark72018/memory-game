@@ -394,13 +394,13 @@
       this.getStartButton().addEventListener(
         'click',
         e =>
-        Controller.handleStartClick(
-          e,
-          State,
-          Timer,
-          View,
-          this.getTimerElement()
-        ),
+          Controller.handleStartClick(
+            e,
+            State,
+            Timer,
+            View,
+            this.getTimerElement()
+          ),
         false
       );
 
@@ -474,26 +474,39 @@
       });
     }
 
+    toggleCurrentlyAnimating(state) {
+      state.currentlyAnimating = !state.currentlyAnimating;
+    }
+
+    makeDeckUnclickable(state, seconds) {
+      setTimeout(() => this.toggleCurrentlyAnimating(state), seconds);
+      this.toggleCurrentlyAnimating(state);
+    }
+
     handleDeckClick(e, stateObj) {
-      // UNCOMMENT WHEN FINISHED
-      // if(!stateObj.playingGame) {
-      //   return;
-      // }
       const { currentState } = stateObj;
+      const { playingGame, currentlyAnimating } = currentState;
+      // UNCOMMENT WHEN FINISHED
+      if (!playingGame || currentlyAnimating) {
+        return;
+      }
       console.log('top level', e.target);
-      const target = e.target;
-      const parent = e.target.parentNode;
+      const { target } = e;
+      const { parentNode } = target;
 
       const card = isCard(target);
       const matched = isMatched(target);
       // parentNode because 'show' class is toggled on parent
-      const showing = isShowing(parent);
+      const showing = isShowing(parentNode);
 
       if (!card || matched || showing) {
         return;
       }
 
-      flip(parent);
+      flip(parentNode);
+
+      // so player can't cheat by flipping too many cards at once
+      this.makeDeckUnclickable(currentState, 740);
 
       const { firstCardPickedIcon } = currentState;
 

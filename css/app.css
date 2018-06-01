@@ -121,7 +121,7 @@ h1 {
 }
 
 .card.fail {
-  animation: failed-match 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: failed-match 0.75s cubic-bezier(.36,.07,.19,.97) both;
 }
 
 .card.fail > .front {
