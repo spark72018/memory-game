@@ -14,13 +14,18 @@
   // utility functions
 
   // used to mixin behavior into classes
+
+  const setCssClass = cssClassString => htmlElement =>
+    htmlElement.setAttribute('class', cssClassString);
+
   const FunctionalMixin = behavior => target => Object.assign(target, behavior);
 
   // mixin makeIcon method into a class
   const canMakeIcons = FunctionalMixin({
     makeIcon(classString) {
       const icon = document.createElement('I');
-      icon.setAttribute('class', classString);
+
+      setCssClass(classString)(icon);
 
       return icon;
     }
@@ -29,16 +34,21 @@
   class GameOverModal {
     makeModal() {
       const modalContainer = document.createElement('div');
+      const modalGameOverText = document.createElement('span');
       const modalTimeSpanTag = document.createElement('span');
       const modalRatingSpanTag = document.createElement('span');
 
-      modalTimeSpanTag.setAttribute('class', 'modal-time');
-      modalRatingSpanTag.setAttribute('class', 'modal-rating');
+      modalGameOverText.innerText = 'Game over! Your final stats are: ';
 
+      setCssClass('modal-game-over-text')(modalGameOverText);
+      setCssClass('modal-time')(modalTimeSpanTag);
+      setCssClass('modal-rating')(modalRatingSpanTag);
+
+      modalContainer.appendChild(modalGameOverText);
       modalContainer.appendChild(modalTimeSpanTag);
       modalContainer.appendChild(modalRatingSpanTag);
 
-      modalContainer.setAttribute('class', 'modal');
+      setCssClass('modal')(modalContainer);
 
       return modalContainer;
     }
@@ -48,7 +58,7 @@
     makeStartButton() {
       const startButton = document.createElement('div');
 
-      startButton.setAttribute('class', 'move-right start');
+      setCssClass('move-right start')(startButton);
 
       return startButton;
     }
@@ -58,7 +68,8 @@
       const repeatIcon = this.makeIcon('fa fa-repeat');
 
       aDiv.appendChild(repeatIcon);
-      aDiv.setAttribute('class', 'restart');
+  
+      setCssClass('restart')(aDiv);
 
       return aDiv;
     }
@@ -67,7 +78,7 @@
       const spanTag = document.createElement('span');
 
       spanTag.innerText = numOfMoves;
-      spanTag.setAttribute('class', 'move-right moves');
+      setCssClass('move-right moves')(spanTag);
 
       return spanTag;
     }
@@ -76,7 +87,7 @@
       const spanTag = document.createElement('span');
 
       spanTag.innerText = timeString;
-      spanTag.setAttribute('class', 'move-right timer');
+      setCssClass('move-right timer')(spanTag);
 
       return spanTag;
     }
@@ -105,7 +116,7 @@
         unorderedList.appendChild(listItem);
       }
 
-      unorderedList.setAttribute('class', 'stars');
+      setCssClass('stars')(unorderedList);
 
       section.appendChild(unorderedList);
       section.appendChild(movesTag);
@@ -113,7 +124,7 @@
       section.appendChild(startButton);
       section.appendChild(restartButton);
 
-      section.setAttribute('class', classString);
+      setCssClass(classString)(section);
 
       return section;
     }
@@ -131,7 +142,7 @@
       const frontFace = document.createElement('div');
 
       frontFace.appendChild(icon);
-      frontFace.setAttribute('class', str);
+      setCssClass(str)(frontFace);
 
       return frontFace;
     }
@@ -139,7 +150,7 @@
     makeBackFace(str) {
       const backFace = document.createElement('div');
 
-      backFace.setAttribute('class', str);
+      setCssClass(str)(backFace);
 
       return backFace;
     }
@@ -148,7 +159,8 @@
       const frontFace = this.makeFrontFace('front');
       const backFace = this.makeBackFace('back');
       const card = document.createElement('LI');
-      card.setAttribute('class', 'card');
+  
+      setCssClass('card')(card);
 
       card.appendChild(frontFace);
       card.appendChild(backFace);
@@ -200,7 +212,7 @@
         return acc;
       }, document.createElement('ul'));
 
-      deck.setAttribute('class', 'deck');
+      setCssClass('deck')(deck);
 
       return deck;
     }
@@ -343,16 +355,17 @@
 
       timer.stopTimer(state);
       timer.resetTimer(state);
+
       const {
         currentState: { secondsElapsed, starRating }
       } = state;
       const totalGameTime = timer.getTimeElapsedString(secondsElapsed);
 
       // TODODODODOD
-      this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
+      this.setModalTimeValue(this.getModalTimeTag(), totalGameTime);
       this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-      view.displayHtmlElement(this.getModalContainer(), 'block');
+      view.displayHtmlElement(this.getModalContainer(), 'flex');
     }
 
     resetGame({ timer, state, view }) {
@@ -781,4 +794,19 @@
     }),
     false
   );
+
+  /*
+    setModalTimeValue(modalTimeHtmlElement, timeString) {
+      return (modalTimeHtmlElement.innerText = timeString);
+    }
+
+    setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+      return (modalRatingHtmlElement.innerText = numOfStars);
+    }
+  */
+
+  Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
+  Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
+
+  View.displayHtmlElement(Controller.getModalContainer(), 'flex');
 })();

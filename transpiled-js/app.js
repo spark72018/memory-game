@@ -13,6 +13,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // utility functions
 
   // used to mixin behavior into classes
+
+  var setCssClass = function setCssClass(cssClassString) {
+    return function (htmlElement) {
+      return htmlElement.setAttribute('class', cssClassString);
+    };
+  };
+
   var FunctionalMixin = function FunctionalMixin(behavior) {
     return function (target) {
       return Object.assign(target, behavior);
@@ -23,7 +30,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var canMakeIcons = FunctionalMixin({
     makeIcon: function makeIcon(classString) {
       var icon = document.createElement('I');
-      icon.setAttribute('class', classString);
+
+      setCssClass(classString)(icon);
 
       return icon;
     }
@@ -38,16 +46,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeModal',
       value: function makeModal() {
         var modalContainer = document.createElement('div');
+        var modalGameOverText = document.createElement('span');
         var modalTimeSpanTag = document.createElement('span');
         var modalRatingSpanTag = document.createElement('span');
 
-        modalTimeSpanTag.setAttribute('class', 'modal-time');
-        modalRatingSpanTag.setAttribute('class', 'modal-rating');
+        modalGameOverText.innerText = 'Game over! Your final stats are: ';
 
+        setCssClass('modal-game-over-text')(modalGameOverText);
+        setCssClass('modal-time')(modalTimeSpanTag);
+        setCssClass('modal-rating')(modalRatingSpanTag);
+
+        modalContainer.appendChild(modalGameOverText);
         modalContainer.appendChild(modalTimeSpanTag);
         modalContainer.appendChild(modalRatingSpanTag);
 
-        modalContainer.setAttribute('class', 'modal');
+        setCssClass('modal')(modalContainer);
 
         return modalContainer;
       }
@@ -66,7 +79,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeStartButton() {
         var startButton = document.createElement('div');
 
-        startButton.setAttribute('class', 'move-right start');
+        setCssClass('move-right start')(startButton);
 
         return startButton;
       }
@@ -77,7 +90,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var repeatIcon = this.makeIcon('fa fa-repeat');
 
         aDiv.appendChild(repeatIcon);
-        aDiv.setAttribute('class', 'restart');
+
+        setCssClass('restart')(aDiv);
 
         return aDiv;
       }
@@ -87,7 +101,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var spanTag = document.createElement('span');
 
         spanTag.innerText = numOfMoves;
-        spanTag.setAttribute('class', 'move-right moves');
+        setCssClass('move-right moves')(spanTag);
 
         return spanTag;
       }
@@ -97,7 +111,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var spanTag = document.createElement('span');
 
         spanTag.innerText = timeString;
-        spanTag.setAttribute('class', 'move-right timer');
+        setCssClass('move-right timer')(spanTag);
 
         return spanTag;
       }
@@ -133,7 +147,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           unorderedList.appendChild(listItem);
         }
 
-        unorderedList.setAttribute('class', 'stars');
+        setCssClass('stars')(unorderedList);
 
         section.appendChild(unorderedList);
         section.appendChild(movesTag);
@@ -141,7 +155,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         section.appendChild(startButton);
         section.appendChild(restartButton);
 
-        section.setAttribute('class', classString);
+        setCssClass(classString)(section);
 
         return section;
       }
@@ -166,7 +180,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var frontFace = document.createElement('div');
 
         frontFace.appendChild(icon);
-        frontFace.setAttribute('class', str);
+        setCssClass(str)(frontFace);
 
         return frontFace;
       }
@@ -175,7 +189,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeBackFace(str) {
         var backFace = document.createElement('div');
 
-        backFace.setAttribute('class', str);
+        setCssClass(str)(backFace);
 
         return backFace;
       }
@@ -185,7 +199,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var frontFace = this.makeFrontFace('front');
         var backFace = this.makeBackFace('back');
         var card = document.createElement('LI');
-        card.setAttribute('class', 'card');
+
+        setCssClass('card')(card);
 
         card.appendChild(frontFace);
         card.appendChild(backFace);
@@ -248,7 +263,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return acc;
         }, document.createElement('ul'));
 
-        deck.setAttribute('class', 'deck');
+        setCssClass('deck')(deck);
 
         return deck;
       }
@@ -443,6 +458,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         timer.stopTimer(state);
         timer.resetTimer(state);
+
         var _state$currentState = state.currentState,
             secondsElapsed = _state$currentState.secondsElapsed,
             starRating = _state$currentState.starRating;
@@ -450,10 +466,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var totalGameTime = timer.getTimeElapsedString(secondsElapsed);
 
         // TODODODODOD
-        this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
+        this.setModalTimeValue(this.getModalTimeTag(), totalGameTime);
         this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-        view.displayHtmlElement(this.getModalContainer(), 'block');
+        view.displayHtmlElement(this.getModalContainer(), 'flex');
       }
     }, {
       key: 'resetGame',
@@ -928,4 +944,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     state: State,
     view: View
   }), false);
+
+  /*
+    setModalTimeValue(modalTimeHtmlElement, timeString) {
+      return (modalTimeHtmlElement.innerText = timeString);
+    }
+     setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+      return (modalRatingHtmlElement.innerText = numOfStars);
+    }
+  */
+
+  Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
+  Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
+
+  View.displayHtmlElement(Controller.getModalContainer(), 'flex');
 })();
