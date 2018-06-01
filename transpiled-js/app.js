@@ -40,8 +40,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var modalContainer = document.createElement('div');
         var modalTimeSpanTag = document.createElement('span');
         var modalRatingSpanTag = document.createElement('span');
-        // modal-time
-        // modal-rating
+
         modalTimeSpanTag.setAttribute('class', 'modal-time');
         modalRatingSpanTag.setAttribute('class', 'modal-rating');
 
@@ -812,6 +811,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'renderTimerValue',
       value: function renderTimerValue(val, timerElement) {
         timerElement.innerText = val;
+      }
+    }, {
+      key: 'displayHtmlElement',
+      value: function displayHtmlElement(element, displayValue) {
+        element.style.display = displayValue;
       }
     }]);
 

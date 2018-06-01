@@ -31,8 +31,7 @@
       const modalContainer = document.createElement('div');
       const modalTimeSpanTag = document.createElement('span');
       const modalRatingSpanTag = document.createElement('span');
-      // modal-time
-      // modal-rating
+
       modalTimeSpanTag.setAttribute('class', 'modal-time');
       modalRatingSpanTag.setAttribute('class', 'modal-rating');
 
@@ -667,6 +666,10 @@
 
     renderTimerValue(val, timerElement) {
       timerElement.innerText = val;
+    }
+
+    displayHtmlElement(element, displayValue) {
+      element.style.display = displayValue;
     }
   }
 
