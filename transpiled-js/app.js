@@ -389,6 +389,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return numSuccessMatches === numMatchesToWin;
       }
+    }, {
+      key: 'getModalTimeTag',
+      value: function getModalTimeTag() {
+        return document.getElementsByClassName('modal-time')[0];
+      }
+    }, {
+      key: 'getModalRatingTag',
+      value: function getModalRatingTag() {
+        return document.getElementsByClassName('modal-rating')[0];
+      }
+    }, {
+      key: 'setModalTimeValue',
+      value: function setModalTimeValue(timeString) {
+        return this.getModalTimeTag().innerText = timeString;
+      }
+    }, {
+      key: 'setModalRatingValue',
+      value: function setModalRatingValue(numOfStars) {
+        return this.getModalRatingTag().innerText = numOfStars;
+      }
 
       // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
       // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
@@ -402,24 +422,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // - ask if they want to play again
         // - display time it took to win game
         // - display their star rating
+
+        // stop timer
+        // get timer value and use it to render value on modal
+        // reset timer after
         timer.stopTimer(state);
+        timer.resetTimer(state);
+        var _state$currentState = state.currentState,
+            secondsElapsed = _state$currentState.secondsElapsed,
+            starRating = _state$currentState.starRating;
+
+        var totalGameTime = timer.getTimeElapsedString(secondsElapsed);
+
+        this.toggleGameStarted(state);
       }
     }, {
-      key: 'handleRestartClick',
-      value: function handleRestartClick(_ref3) {
-        var fnsObj = _ref3.fnsObj,
-            timer = _ref3.timer,
+      key: 'resetGame',
+      value: function resetGame(_ref3) {
+        var timer = _ref3.timer,
             state = _ref3.state,
             view = _ref3.view;
 
-        console.log('handleRestartClick called');
-
-        // dereference old Emitter with new Emitter
         this.matchEmitter = new Emitter();
 
         timer.resetTimer(state);
 
-        // reset state
         state.currentState = new GameState();
 
         this.getScorePanelElement().remove();
@@ -437,13 +464,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           timer: timer,
           view: view
         }), false);
+
         this.getRestartButton().addEventListener('click', restartButtonListenerFn({
           controller: this,
           state: state,
           timer: timer,
           view: view
         }), false);
+
         this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
+      }
+    }, {
+      key: 'handleRestartClick',
+      value: function handleRestartClick(_ref4) {
+        var timer = _ref4.timer,
+            state = _ref4.state,
+            view = _ref4.view;
+
+        console.log('handleRestartClick called');
+
+        this.resetGame({
+          timer: timer,
+          state: state,
+          view: view
+        });
       }
     }, {
       key: 'getTimerElement',
@@ -452,12 +496,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'handleStartClick',
-      value: function handleStartClick(e, _ref4, timerObj, viewObj, timerElement) {
-        var currentState = _ref4.currentState;
-
+      value: function handleStartClick(e, state, timerObj, viewObj, timerElement) {
         var _this2 = this;
 
         console.log('start clicked');
+        var currentState = state.currentState;
         var playingGame = currentState.playingGame;
 
         // if game already started, start button does nothing
@@ -478,7 +521,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _this2.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
           var gameWon = _this2.checkIfGameWon(currentState);
           if (gameWon) {
-            return _this2.endGame(currentState, timerObj, viewObj, timerElement);
+            return _this2.endGame(state, timerObj, viewObj, timerElement);
           }
         });
 
@@ -808,7 +851,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var Timer = new GameTimer();
   var Controller = new GameController();
   var State = {
-    previousState: null,
     currentState: new GameState()
   };
   var View = new GameView();

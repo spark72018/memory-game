@@ -298,6 +298,22 @@
       return numSuccessMatches === numMatchesToWin;
     }
 
+    getModalTimeTag() {
+      return document.getElementsByClassName('modal-time')[0];
+    }
+
+    getModalRatingTag() {
+      return document.getElementsByClassName('modal-rating')[0];
+    }
+
+    setModalTimeValue(timeString) {
+      return this.getModalTimeTag().innerText = timeString;
+    }
+
+    setModalRatingValue(numOfStars) {
+      return this.getModalRatingTag().innerText = numOfStars;
+    }
+
     // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
     // ALSO, LOOK INTO SETTING UP GULP-MINIFY FOR DEV PIPELINE
     endGame(state, timer, view, timerElement) {
@@ -307,18 +323,25 @@
       // - ask if they want to play again
       // - display time it took to win game
       // - display their star rating
+
+      // stop timer
+      // get timer value and use it to render value on modal
+      // reset timer after
       timer.stopTimer(state);
+      timer.resetTimer(state);
+      const {
+        currentState: { secondsElapsed, starRating }
+      } = state;
+      const totalGameTime = timer.getTimeElapsedString(secondsElapsed);
+
+      this.toggleGameStarted(state);
     }
 
-    handleRestartClick({ fnsObj, timer, state, view }) {
-      console.log('handleRestartClick called');
-
-      // dereference old Emitter with new Emitter
+    resetGame({ timer, state, view }) {
       this.matchEmitter = new Emitter();
 
       timer.resetTimer(state);
 
-      // reset state
       state.currentState = new GameState();
 
       this.getScorePanelElement().remove();
@@ -340,6 +363,7 @@
         }),
         false
       );
+
       this.getRestartButton().addEventListener(
         'click',
         restartButtonListenerFn({
@@ -350,6 +374,7 @@
         }),
         false
       );
+
       this.getDeckElement().addEventListener(
         'click',
         deckListenerFn(this, state),
@@ -357,12 +382,23 @@
       );
     }
 
+    handleRestartClick({ timer, state, view }) {
+      console.log('handleRestartClick called');
+
+      this.resetGame({
+        timer,
+        state,
+        view
+      });
+    }
+
     getTimerElement() {
       return document.getElementsByClassName('timer')[0];
     }
 
-    handleStartClick(e, { currentState }, timerObj, viewObj, timerElement) {
+    handleStartClick(e, state, timerObj, viewObj, timerElement) {
       console.log('start clicked');
+      const { currentState } = state;
       const { playingGame } = currentState;
 
       // if game already started, start button does nothing
@@ -385,7 +421,7 @@
         this.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
         const gameWon = this.checkIfGameWon(currentState);
         if (gameWon) {
-          return this.endGame(currentState, timerObj, viewObj, timerElement);
+          return this.endGame(state, timerObj, viewObj, timerElement);
         }
       });
 
@@ -597,7 +633,7 @@
     renderGame({
       container,
       state: {
-        currentState: {gameOverModal, scorePanel, currentDeck }
+        currentState: { gameOverModal, scorePanel, currentDeck }
       }
     }) {
       const docFrag = document.createDocumentFragment();
@@ -658,7 +694,6 @@
   const Timer = new GameTimer();
   const Controller = new GameController();
   const State = {
-    previousState: null,
     currentState: new GameState()
   };
   const View = new GameView();
