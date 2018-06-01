@@ -709,7 +709,7 @@
       numFailedMatches = 0,
       numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN,
       arrOfIconStrings = CARD_ICONS,
-      modalButtonHandler
+      currentlyAnimating = false
     } = {}) {
       this.playingGame = playingGame;
       this.timerId = timerId;
@@ -728,6 +728,7 @@
         'score-panel'
       );
       this.gameOverModal = new GameOverModal().makeModal();
+      this.currentlyAnimating = currentlyAnimating;
       this.deckElement = null;
       this.startButton = null;
       this.restartButton = null;

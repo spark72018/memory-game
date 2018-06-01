@@ -867,7 +867,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         numMatchesToWin = _ref4$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref4$numMatchesToWin,
         _ref4$arrOfIconString = _ref4.arrOfIconStrings,
         arrOfIconStrings = _ref4$arrOfIconString === undefined ? CARD_ICONS : _ref4$arrOfIconString,
-        modalButtonHandler = _ref4.modalButtonHandler;
+        _ref4$currentlyAnimat = _ref4.currentlyAnimating,
+        currentlyAnimating = _ref4$currentlyAnimat === undefined ? false : _ref4$currentlyAnimat;
 
     _classCallCheck(this, GameState);
 
@@ -885,6 +886,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
     this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
     this.gameOverModal = new GameOverModal().makeModal();
+    this.currentlyAnimating = currentlyAnimating;
     this.deckElement = null;
     this.startButton = null;
     this.restartButton = null;
