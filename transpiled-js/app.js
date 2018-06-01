@@ -39,6 +39,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeModal() {
         var modalContainer = document.createElement('div');
 
+        modalContainer.setAttribute('class', 'modal');
+
         return modalContainer;
       }
     }]);
@@ -730,11 +732,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function renderGame(_ref5) {
         var container = _ref5.container,
             _ref5$state$currentSt = _ref5.state.currentState,
+            gameOverModal = _ref5$state$currentSt.gameOverModal,
             scorePanel = _ref5$state$currentSt.scorePanel,
             currentDeck = _ref5$state$currentSt.currentDeck;
 
         var docFrag = document.createDocumentFragment();
 
+        docFrag.appendChild(gameOverModal);
         docFrag.appendChild(scorePanel);
         docFrag.appendChild(currentDeck);
 
@@ -795,6 +799,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.arrOfIconStrings = arrOfIconStrings;
     this.currentDeck = new Deck().makeDeck(this.arrOfIconStrings);
     this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
+    this.gameOverModal = new GameOverModal().makeModal();
     this.deckElement = null;
     this.startButton = null;
     this.restartButton = null;
@@ -802,7 +807,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var Timer = new GameTimer();
   var Controller = new GameController();
-  var State = { currentState: new GameState() };
+  var State = {
+    previousState: null,
+    currentState: new GameState()
+  };
   var View = new GameView();
 
   // initial render, subsequent renders handled by Controller

@@ -30,6 +30,8 @@
     makeModal() {
       const modalContainer = document.createElement('div');
 
+      modalContainer.setAttribute('class', 'modal');
+
       return modalContainer;
     }
   }
@@ -310,7 +312,7 @@
 
     handleRestartClick({ fnsObj, timer, state, view }) {
       console.log('handleRestartClick called');
-      
+
       // dereference old Emitter with new Emitter
       this.matchEmitter = new Emitter();
 
@@ -327,7 +329,6 @@
         state
       });
 
-      
       this.getStartButton().addEventListener(
         'click',
         startButtonListenerFn({
@@ -596,11 +597,12 @@
     renderGame({
       container,
       state: {
-        currentState: { scorePanel, currentDeck }
+        currentState: {gameOverModal, scorePanel, currentDeck }
       }
     }) {
       const docFrag = document.createDocumentFragment();
 
+      docFrag.appendChild(gameOverModal);
       docFrag.appendChild(scorePanel);
       docFrag.appendChild(currentDeck);
 
@@ -646,6 +648,7 @@
         this.starRating,
         'score-panel'
       );
+      this.gameOverModal = new GameOverModal().makeModal();
       this.deckElement = null;
       this.startButton = null;
       this.restartButton = null;
@@ -654,7 +657,10 @@
 
   const Timer = new GameTimer();
   const Controller = new GameController();
-  const State = { currentState: new GameState() };
+  const State = {
+    previousState: null,
+    currentState: new GameState()
+  };
   const View = new GameView();
 
   // initial render, subsequent renders handled by Controller
