@@ -472,10 +472,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'resetGame',
-      value: function resetGame(_ref3) {
-        var timer = _ref3.timer,
-            state = _ref3.state,
-            view = _ref3.view;
+      value: function resetGame(timer, state, view) {
+        var _this2 = this;
 
         this.matchEmitter = new Emitter();
 
@@ -491,37 +489,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           state: state
         });
 
-        this.getStartButton().addEventListener('click', startButtonListenerFn({
-          controller: this,
-          timerHtmlEl: this.getTimerElement(),
-          state: state,
-          timer: timer,
-          view: view
-        }), false);
+        /*
+           Controller.getRestartButton().addEventListener(
+            'click',
+            e => Controller.handleRestartClick(Timer, State, View),
+            false
+          );
+        */
 
-        this.getRestartButton().addEventListener('click', restartButtonListenerFn({
-          controller: this,
-          state: state,
-          timer: timer,
-          view: view
-        }), false);
+        this.getStartButton().addEventListener('click', function (e) {
+          return Controller.handleStartClick(e, State, Timer, View, _this2.getTimerElement());
+        }, false);
 
-        this.getDeckElement().addEventListener('click', deckListenerFn(this, state), false);
+        this.getRestartButton().addEventListener('click', function (e) {
+          return _this2.handleRestartClick(Timer, State, View);
+        }, false);
+
+        this.getDeckElement().addEventListener('click', function (e) {
+          return _this2.handleDeckClick(e, State);
+        }, false);
       }
     }, {
       key: 'handleRestartClick',
-      value: function handleRestartClick(_ref4) {
-        var timer = _ref4.timer,
-            state = _ref4.state,
-            view = _ref4.view;
-
+      value: function handleRestartClick(timer, state, view) {
         console.log('handleRestartClick called');
 
-        this.resetGame({
-          timer: timer,
-          state: state,
-          view: view
-        });
+        this.resetGame(timer, state, view);
       }
     }, {
       key: 'getTimerElement',
@@ -531,7 +524,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleStartClick',
       value: function handleStartClick(e, state, timerObj, viewObj, timerElement) {
-        var _this2 = this;
+        var _this3 = this;
 
         console.log('start clicked');
         var currentState = state.currentState;
@@ -552,10 +545,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.matchEmitter.on('successfulMatch', function () {
           console.log('successfulMatch event emitted');
-          _this2.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
-          var gameWon = _this2.checkIfGameWon(currentState);
+          _this3.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
+          var gameWon = _this3.checkIfGameWon(currentState);
           if (gameWon) {
-            return _this2.endGame(state, timerObj, viewObj, timerElement);
+            return _this3.endGame(state, timerObj, viewObj, timerElement);
           }
         });
 
@@ -564,13 +557,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // render new stars
         this.matchEmitter.on('failedMatch', function () {
           console.log('failedMatch event emitted');
-          _this2.setFailedMatches(currentState, ++currentState.numFailedMatches);
+          _this3.setFailedMatches(currentState, ++currentState.numFailedMatches);
         });
 
         this.matchEmitter.on('moveMade', function () {
           console.log('moveMade event emitted');
-          _this2.setMovesMade(currentState, ++currentState.numMovesMade);
-          viewObj.renderNumMovesMade('' + currentState.numMovesMade, _this2.getMovesElement());
+          _this3.setMovesMade(currentState, ++currentState.numMovesMade);
+          viewObj.renderNumMovesMade('' + currentState.numMovesMade, _this3.getMovesElement());
         });
       }
     }, {
@@ -731,7 +724,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             setCardToMatched(secondCard);
             return true;
           } catch (e) {
-            throw new Error('setCardsAsMatched error: ' + e);
+            throw new Error('setCardsToMatched error: ' + e);
           }
         }
       }
@@ -766,6 +759,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
+      key: 'getModalButton',
+      value: function getModalButton() {
+        return document.getElementsByClassName('modal-button')[0];
+      }
+    }, {
       key: 'getScorePanelElement',
       value: function getScorePanelElement() {
         return document.getElementsByClassName('score-panel')[0];
@@ -795,6 +793,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function getRestartButton() {
         return document.getElementsByClassName('restart')[0];
       }
+    }, {
+      key: 'modalButtonClickHandler',
+      value: function modalButtonClickHandler(e) {
+        this.this.getModalContainer();
+      }
     }]);
 
     return GameController;
@@ -807,12 +810,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _createClass(GameView, [{
       key: 'renderGame',
-      value: function renderGame(_ref5) {
-        var container = _ref5.container,
-            _ref5$state$currentSt = _ref5.state.currentState,
-            gameOverModal = _ref5$state$currentSt.gameOverModal,
-            scorePanel = _ref5$state$currentSt.scorePanel,
-            currentDeck = _ref5$state$currentSt.currentDeck;
+      value: function renderGame(_ref3) {
+        var container = _ref3.container,
+            _ref3$state$currentSt = _ref3.state.currentState,
+            gameOverModal = _ref3$state$currentSt.gameOverModal,
+            scorePanel = _ref3$state$currentSt.scorePanel,
+            currentDeck = _ref3$state$currentSt.currentDeck;
 
         var docFrag = document.createDocumentFragment();
 
@@ -841,29 +844,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }();
 
   var GameState = function GameState() {
-    var _ref6 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref6$playingGame = _ref6.playingGame,
-        playingGame = _ref6$playingGame === undefined ? false : _ref6$playingGame,
-        _ref6$timerId = _ref6.timerId,
-        timerId = _ref6$timerId === undefined ? null : _ref6$timerId,
-        _ref6$firstCardPicked = _ref6.firstCardPickedIcon,
-        firstCardPickedIcon = _ref6$firstCardPicked === undefined ? null : _ref6$firstCardPicked,
-        _ref6$numFlippableCar = _ref6.numFlippableCards,
-        numFlippableCards = _ref6$numFlippableCar === undefined ? 16 : _ref6$numFlippableCar,
-        _ref6$secondsElapsed = _ref6.secondsElapsed,
-        secondsElapsed = _ref6$secondsElapsed === undefined ? 0 : _ref6$secondsElapsed,
-        _ref6$starRating = _ref6.starRating,
-        starRating = _ref6$starRating === undefined ? 3 : _ref6$starRating,
-        _ref6$numMovesMade = _ref6.numMovesMade,
-        numMovesMade = _ref6$numMovesMade === undefined ? 0 : _ref6$numMovesMade,
-        _ref6$numSuccessMatch = _ref6.numSuccessMatches,
-        numSuccessMatches = _ref6$numSuccessMatch === undefined ? 0 : _ref6$numSuccessMatch,
-        _ref6$numFailedMatche = _ref6.numFailedMatches,
-        numFailedMatches = _ref6$numFailedMatche === undefined ? 0 : _ref6$numFailedMatche,
-        _ref6$numMatchesToWin = _ref6.numMatchesToWin,
-        numMatchesToWin = _ref6$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref6$numMatchesToWin,
-        _ref6$arrOfIconString = _ref6.arrOfIconStrings,
-        arrOfIconStrings = _ref6$arrOfIconString === undefined ? CARD_ICONS : _ref6$arrOfIconString;
+    var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref4$playingGame = _ref4.playingGame,
+        playingGame = _ref4$playingGame === undefined ? false : _ref4$playingGame,
+        _ref4$timerId = _ref4.timerId,
+        timerId = _ref4$timerId === undefined ? null : _ref4$timerId,
+        _ref4$firstCardPicked = _ref4.firstCardPickedIcon,
+        firstCardPickedIcon = _ref4$firstCardPicked === undefined ? null : _ref4$firstCardPicked,
+        _ref4$numFlippableCar = _ref4.numFlippableCards,
+        numFlippableCards = _ref4$numFlippableCar === undefined ? 16 : _ref4$numFlippableCar,
+        _ref4$secondsElapsed = _ref4.secondsElapsed,
+        secondsElapsed = _ref4$secondsElapsed === undefined ? 0 : _ref4$secondsElapsed,
+        _ref4$starRating = _ref4.starRating,
+        starRating = _ref4$starRating === undefined ? 3 : _ref4$starRating,
+        _ref4$numMovesMade = _ref4.numMovesMade,
+        numMovesMade = _ref4$numMovesMade === undefined ? 0 : _ref4$numMovesMade,
+        _ref4$numSuccessMatch = _ref4.numSuccessMatches,
+        numSuccessMatches = _ref4$numSuccessMatch === undefined ? 0 : _ref4$numSuccessMatch,
+        _ref4$numFailedMatche = _ref4.numFailedMatches,
+        numFailedMatches = _ref4$numFailedMatche === undefined ? 0 : _ref4$numFailedMatche,
+        _ref4$numMatchesToWin = _ref4.numMatchesToWin,
+        numMatchesToWin = _ref4$numMatchesToWin === undefined ? SUCCESSFUL_MATCHES_TO_WIN : _ref4$numMatchesToWin,
+        _ref4$arrOfIconString = _ref4.arrOfIconStrings,
+        arrOfIconStrings = _ref4$arrOfIconString === undefined ? CARD_ICONS : _ref4$arrOfIconString,
+        modalButtonHandler = _ref4.modalButtonHandler;
 
     _classCallCheck(this, GameState);
 
@@ -899,61 +903,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     state: State
   });
 
-  function startButtonListenerFn(_ref7) {
-    var controller = _ref7.controller,
-        state = _ref7.state,
-        timer = _ref7.timer,
-        view = _ref7.view,
-        timerHtmlEl = _ref7.timerHtmlEl,
-        fnsObj = _ref7.fnsObj;
-
-    return function (e) {
-      return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
-    };
-  }
-
-  function deckListenerFn(controller, state, fnsObj) {
-    return function (e) {
-      return controller.handleDeckClick(e, state);
-    };
-  }
-  function restartButtonListenerFn(obj) {
-    return function (e) {
-      return obj.controller.handleRestartClick(obj);
-    };
-  }
-
   // refactored to not cache startButton, deckElement, and restartButton
   // HTML elements in variables so they (along with their listeners)
   // can be garbage collected when removed from DOM
-  Controller.getStartButton().addEventListener('click', startButtonListenerFn({
-    controller: Controller,
-    state: State,
-    timer: Timer,
-    view: View,
-    timerHtmlEl: Controller.getTimerElement()
-  }), false);
+  Controller.getStartButton().addEventListener('click', function (e) {
+    return Controller.handleStartClick(e, State, Timer, View, Controller.getTimerElement());
+  }, false);
 
-  Controller.getDeckElement().addEventListener('click', deckListenerFn(Controller, State), false);
+  Controller.getDeckElement().addEventListener('click', function (e) {
+    return Controller.handleDeckClick(e, State);
+  }, false);
 
-  Controller.getRestartButton().addEventListener('click', restartButtonListenerFn({
-    timer: Timer,
-    controller: Controller,
-    state: State,
-    view: View
-  }), false);
+  Controller.getRestartButton().addEventListener('click', function (e) {
+    return Controller.handleRestartClick(Timer, State, View);
+  }, false);
 
-  /*
-    setModalTimeValue(modalTimeHtmlElement, timeString) {
-      return (modalTimeHtmlElement.innerText = timeString);
-    }
-     setModalRatingValue(modalRatingHtmlElement, numOfStars) {
-      return (modalRatingHtmlElement.innerText = numOfStars);
-    }
-  */
+  Controller.getModalButton().addEventListener('click', function (e) {
+    return 'something';
+  }, false);
 
   Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
   Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
 
-  View.displayHtmlElement(Controller.getModalContainer(), 'flex');
+  // View.displayHtmlElement(Controller.getModalContainer(), 'flex');
 })();

@@ -367,7 +367,7 @@
       view.displayHtmlElement(this.getModalContainer(), 'flex');
     }
 
-    resetGame({ timer, state, view }) {
+    resetGame(timer, state, view) {
       this.matchEmitter = new Emitter();
 
       timer.resetTimer(state);
@@ -382,44 +382,45 @@
         state
       });
 
+      /*
+
+        Controller.getRestartButton().addEventListener(
+          'click',
+          e => Controller.handleRestartClick(Timer, State, View),
+          false
+        );
+      */
+
       this.getStartButton().addEventListener(
         'click',
-        startButtonListenerFn({
-          controller: this,
-          timerHtmlEl: this.getTimerElement(),
-          state,
-          timer,
-          view
-        }),
+        e =>
+        Controller.handleStartClick(
+          e,
+          State,
+          Timer,
+          View,
+          this.getTimerElement()
+        ),
         false
       );
 
       this.getRestartButton().addEventListener(
         'click',
-        restartButtonListenerFn({
-          controller: this,
-          state,
-          timer,
-          view
-        }),
+        e => this.handleRestartClick(Timer, State, View),
         false
       );
 
       this.getDeckElement().addEventListener(
         'click',
-        deckListenerFn(this, state),
+        e => this.handleDeckClick(e, State),
         false
       );
     }
 
-    handleRestartClick({ timer, state, view }) {
+    handleRestartClick(timer, state, view) {
       console.log('handleRestartClick called');
 
-      this.resetGame({
-        timer,
-        state,
-        view
-      });
+      this.resetGame(timer, state, view);
     }
 
     getTimerElement() {
@@ -605,7 +606,7 @@
           setCardToMatched(secondCard);
           return true;
         } catch (e) {
-          throw new Error(`setCardsAsMatched error: ${e}`);
+          throw new Error(`setCardsToMatched error: ${e}`);
         }
       }
     }
@@ -635,6 +636,10 @@
       return stateObj;
     }
 
+    getModalButton() {
+      return document.getElementsByClassName('modal-button')[0];
+    }
+
     getScorePanelElement() {
       return document.getElementsByClassName('score-panel')[0];
     }
@@ -657,6 +662,10 @@
 
     getRestartButton() {
       return document.getElementsByClassName('restart')[0];
+    }
+
+    modalButtonClickHandler(e) {
+      this.this.getModalContainer();
     }
   }
 
@@ -699,7 +708,8 @@
       numSuccessMatches = 0,
       numFailedMatches = 0,
       numMatchesToWin = SUCCESSFUL_MATCHES_TO_WIN,
-      arrOfIconStrings = CARD_ICONS
+      arrOfIconStrings = CARD_ICONS,
+      modalButtonHandler
     } = {}) {
       this.playingGame = playingGame;
       this.timerId = timerId;
@@ -737,74 +747,42 @@
     state: State
   });
 
-  function startButtonListenerFn({
-    controller,
-    state,
-    timer,
-    view,
-    timerHtmlEl,
-    fnsObj
-  }) {
-    return function(e) {
-      return controller.handleStartClick(e, state, timer, view, timerHtmlEl);
-    };
-  }
-
-  function deckListenerFn(controller, state, fnsObj) {
-    return function(e) {
-      return controller.handleDeckClick(e, state);
-    };
-  }
-  function restartButtonListenerFn(obj) {
-    return function(e) {
-      return obj.controller.handleRestartClick(obj);
-    };
-  }
-
   // refactored to not cache startButton, deckElement, and restartButton
   // HTML elements in variables so they (along with their listeners)
   // can be garbage collected when removed from DOM
   Controller.getStartButton().addEventListener(
     'click',
-    startButtonListenerFn({
-      controller: Controller,
-      state: State,
-      timer: Timer,
-      view: View,
-      timerHtmlEl: Controller.getTimerElement()
-    }),
+    e =>
+      Controller.handleStartClick(
+        e,
+        State,
+        Timer,
+        View,
+        Controller.getTimerElement()
+      ),
     false
   );
 
   Controller.getDeckElement().addEventListener(
     'click',
-    deckListenerFn(Controller, State),
+    e => Controller.handleDeckClick(e, State),
     false
   );
 
   Controller.getRestartButton().addEventListener(
     'click',
-    restartButtonListenerFn({
-      timer: Timer,
-      controller: Controller,
-      state: State,
-      view: View
-    }),
+    e => Controller.handleRestartClick(Timer, State, View),
     false
   );
 
-  /*
-    setModalTimeValue(modalTimeHtmlElement, timeString) {
-      return (modalTimeHtmlElement.innerText = timeString);
-    }
-
-    setModalRatingValue(modalRatingHtmlElement, numOfStars) {
-      return (modalRatingHtmlElement.innerText = numOfStars);
-    }
-  */
+  Controller.getModalButton().addEventListener(
+    'click',
+    e => 'something',
+    false
+  );
 
   Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
   Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
 
-  View.displayHtmlElement(Controller.getModalContainer(), 'flex');
+  // View.displayHtmlElement(Controller.getModalContainer(), 'flex');
 })();
