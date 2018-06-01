@@ -29,6 +29,15 @@
   class GameOverModal {
     makeModal() {
       const modalContainer = document.createElement('div');
+      const modalTimeSpanTag = document.createElement('span');
+      const modalRatingSpanTag = document.createElement('span');
+      // modal-time
+      // modal-rating
+      modalTimeSpanTag.setAttribute('class', 'modal-time');
+      modalRatingSpanTag.setAttribute('class', 'modal-rating');
+
+      modalContainer.appendChild(modalTimeSpanTag);
+      modalContainer.appendChild(modalRatingSpanTag);
 
       modalContainer.setAttribute('class', 'modal');
 
@@ -306,12 +315,12 @@
       return document.getElementsByClassName('modal-rating')[0];
     }
 
-    setModalTimeValue(timeString) {
-      return this.getModalTimeTag().innerText = timeString;
+    setModalTimeValue(modalTimeHtmlElement, timeString) {
+      return (modalTimeHtmlElement.innerText = timeString);
     }
 
-    setModalRatingValue(numOfStars) {
-      return this.getModalRatingTag().innerText = numOfStars;
+    setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+      return (modalRatingHtmlElement.innerText = numOfStars);
     }
 
     // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
@@ -327,6 +336,8 @@
       // stop timer
       // get timer value and use it to render value on modal
       // reset timer after
+      this.toggleGameStarted(state);
+
       timer.stopTimer(state);
       timer.resetTimer(state);
       const {
@@ -334,7 +345,12 @@
       } = state;
       const totalGameTime = timer.getTimeElapsedString(secondsElapsed);
 
-      this.toggleGameStarted(state);
+      // TODODODODOD
+      this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
+      this.setModalRatingValue(this.getModalRatingTag(), starRating);
+
+      // implement:
+      // view.displayModal();
     }
 
     resetGame({ timer, state, view }) {

@@ -38,6 +38,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeModal',
       value: function makeModal() {
         var modalContainer = document.createElement('div');
+        var modalTimeSpanTag = document.createElement('span');
+        var modalRatingSpanTag = document.createElement('span');
+        // modal-time
+        // modal-rating
+        modalTimeSpanTag.setAttribute('class', 'modal-time');
+        modalRatingSpanTag.setAttribute('class', 'modal-rating');
+
+        modalContainer.appendChild(modalTimeSpanTag);
+        modalContainer.appendChild(modalRatingSpanTag);
 
         modalContainer.setAttribute('class', 'modal');
 
@@ -401,13 +410,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: 'setModalTimeValue',
-      value: function setModalTimeValue(timeString) {
-        return this.getModalTimeTag().innerText = timeString;
+      value: function setModalTimeValue(modalTimeHtmlElement, timeString) {
+        return modalTimeHtmlElement.innerText = timeString;
       }
     }, {
       key: 'setModalRatingValue',
-      value: function setModalRatingValue(numOfStars) {
-        return this.getModalRatingTag().innerText = numOfStars;
+      value: function setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+        return modalRatingHtmlElement.innerText = numOfStars;
       }
 
       // TODO, SUCCESSFULLY GETS CALLED AFTER ALL CARDS MATCHED
@@ -426,6 +435,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // stop timer
         // get timer value and use it to render value on modal
         // reset timer after
+        this.toggleGameStarted(state);
+
         timer.stopTimer(state);
         timer.resetTimer(state);
         var _state$currentState = state.currentState,
@@ -434,7 +445,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var totalGameTime = timer.getTimeElapsedString(secondsElapsed);
 
-        this.toggleGameStarted(state);
+        // TODODODODOD
+        this.setModalTimeValue(this.getModalTimeTag(), totalGameTIme);
+        this.setModalRatingValue(this.getModalRatingTag(), starRating);
+
+        // implement:
+        // view.displayModal();
       }
     }, {
       key: 'resetGame',
