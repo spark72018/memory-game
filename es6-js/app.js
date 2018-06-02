@@ -306,7 +306,7 @@
 
   class GameController {
     constructor() {
-      this.matchEmitter = new Emitter();
+      this.eventEmitter = new Emitter();
     }
 
     makeDeck(deckObj, arrOfIconStrings) {
@@ -374,7 +374,7 @@
     }
 
     resetGame(timer, state, view) {
-      this.matchEmitter = new Emitter();
+      this.eventEmitter = new Emitter();
 
       timer.resetTimer(state);
 
@@ -437,7 +437,7 @@
         )
       );
 
-      this.matchEmitter.on('successfulMatch', () => {
+      this.eventEmitter.on('successfulMatch', () => {
         this.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
         const gameWon = this.checkIfGameWon(currentState);
         if (gameWon) {
@@ -448,11 +448,11 @@
       // TODO: check if at limit for star degredation
       // if it is change star rating
       // render new stars
-      this.matchEmitter.on('failedMatch', () => {
+      this.eventEmitter.on('failedMatch', () => {
         this.setFailedMatches(currentState, ++currentState.numFailedMatches);
       });
 
-      this.matchEmitter.on('moveMade', () => {
+      this.eventEmitter.on('moveMade', () => {
         this.setMovesMade(currentState, ++currentState.numMovesMade);
         viewObj.renderNumMovesMade(
           `${currentState.numMovesMade}`,
@@ -473,7 +473,7 @@
     handleDeckClick(e, stateObj) {
       const { currentState } = stateObj;
       const { playingGame, currentlyAnimating } = currentState;
-      // UNCOMMENT WHEN FINISHED
+      
       if (!playingGame || currentlyAnimating) {
         return;
       }
@@ -504,8 +504,8 @@
         return this.setFirstCardPickedIcon(currentState, firstCardIcon);
       }
 
-      // only increment moves if user is on second pick
-      this.matchEmitter.emit('moveMade');
+      // only increment moves if user just picked second card
+      this.eventEmitter.emit('moveMade');
 
       // store reference to <i> tag containing icon className
       const secondCardPickedIcon = target.previousSibling.firstChild;
@@ -516,21 +516,21 @@
 
       const cardsAreMatch = firstCardIconValue === secondCardIconValue;
 
-      // card element that contains both back and front faces is
+      // Element that contains both back and front card faces is
       // grandparent of icon tag that contains card value
       const cards = cardsPicked.map(iconTag => iconTag.parentNode.parentNode);
 
       if (cardsAreMatch) {
         setCardsAsMatched(...cards);
 
-        this.matchEmitter.emit('successfulMatch');
+        this.eventEmitter.emit('successfulMatch');
       } else {
         animateFailedMatch(...cards);
 
         // flip back the failed matches
         setTimeout(() => flip(...cards), 1500);
 
-        this.matchEmitter.emit('failedMatch');
+        this.eventEmitter.emit('failedMatch');
       }
 
       this.setFirstCardPickedIcon(currentState, null);
