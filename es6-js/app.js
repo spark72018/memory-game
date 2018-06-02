@@ -340,9 +340,6 @@
     }
 
     setModalTimeValue(modalTimeHtmlElement, timeString) {
-      console.log('setModalTimeValue called');
-      console.log('modalTimeHtmlElement is', modalTimeHtmlElement);
-      console.log('timeString is', timeString);
       return (modalTimeHtmlElement.innerText = timeString);
     }
 
@@ -351,15 +348,10 @@
     }
 
     setModalRatingValue(modalRatingHtmlElement, numOfStars) {
-      console.log('setModalRatingValue called');
-      console.log('modalRatingHtmlElement is', modalRatingHtmlElement);
-      console.log('numOfStars is', numOfStars);
       return (modalRatingHtmlElement.innerText = numOfStars);
     }
 
     endGame(state, timer, view) {
-      console.log('endGame called');
-
       this.toggleGameStarted(state);
 
       timer.stopTimer(state);
@@ -423,13 +415,10 @@
     }
 
     handleRestartClick(timer, state, view) {
-      console.log('handleRestartClick called');
-
       this.resetGame(timer, state, view);
     }
 
     handleStartClick(e, state, timerObj, viewObj, timerElement) {
-      console.log('start clicked');
       const { currentState } = state;
       const { playingGame } = currentState;
 
@@ -449,7 +438,6 @@
       );
 
       this.matchEmitter.on('successfulMatch', () => {
-        console.log('successfulMatch event emitted');
         this.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
         const gameWon = this.checkIfGameWon(currentState);
         if (gameWon) {
@@ -461,12 +449,10 @@
       // if it is change star rating
       // render new stars
       this.matchEmitter.on('failedMatch', () => {
-        console.log('failedMatch event emitted');
         this.setFailedMatches(currentState, ++currentState.numFailedMatches);
       });
 
       this.matchEmitter.on('moveMade', () => {
-        console.log('moveMade event emitted');
         this.setMovesMade(currentState, ++currentState.numMovesMade);
         viewObj.renderNumMovesMade(
           `${currentState.numMovesMade}`,
@@ -485,7 +471,6 @@
     }
 
     handleDeckClick(e, stateObj) {
-      console.log('handleDeckClick e.target', e.target);
       const { currentState } = stateObj;
       const { playingGame, currentlyAnimating } = currentState;
       // UNCOMMENT WHEN FINISHED
@@ -508,7 +493,7 @@
       flip(parentNode);
 
       // so player can't cheat by flipping too many cards at once
-      // this.makeDeckUnclickable(currentState, 740);
+      this.makeDeckUnclickable(currentState, 740);
 
       const { firstCardPickedIcon } = currentState;
 
@@ -685,7 +670,6 @@
     }
 
     handleModalButtonClick(timer, state, view) {
-      console.log('handleModalButtonClick called');
       this.resetGame(timer, state, view);
       view.setCssDisplay(this.getModalContainer(), 'none');
     }

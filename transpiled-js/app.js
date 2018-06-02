@@ -58,22 +58,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: 'makeModal',
       value: function makeModal() {
         var modalContainer = document.createElement('div');
-        var modalGameOverText = document.createElement('span');
+        var modalGameOverTextTag = document.createElement('span');
         var modalTimeSpanTag = document.createElement('span');
         var modalMovesMadeTag = document.createElement('span');
         var modalRatingSpanTag = document.createElement('span');
         var modalButton = document.createElement('button');
 
-        modalGameOverText.innerText = 'Game over! Your final stats are: ';
+        modalGameOverTextTag.innerText = 'Game over! Your final stats are: ';
         modalButton.innerText = 'Play again!';
 
-        setCssClass('modal-game-over-text')(modalGameOverText);
+        setCssClass('modal-game-over-text')(modalGameOverTextTag);
         setCssClass('modal-time')(modalTimeSpanTag);
         setCssClass('modal-moves-made')(modalMovesMadeTag);
         setCssClass('modal-rating')(modalRatingSpanTag);
         setCssClass('modal-button')(modalButton);
 
-        appendAll(modalGameOverText, modalTimeSpanTag, modalMovesMadeTag, modalRatingSpanTag, modalButton)(modalContainer);
+        appendAll(modalGameOverTextTag, modalTimeSpanTag, modalMovesMadeTag, modalRatingSpanTag, modalButton)(modalContainer);
 
         setCssClass('modal')(modalContainer);
 
@@ -441,9 +441,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'setModalTimeValue',
       value: function setModalTimeValue(modalTimeHtmlElement, timeString) {
-        console.log('setModalTimeValue called');
-        console.log('modalTimeHtmlElement is', modalTimeHtmlElement);
-        console.log('timeString is', timeString);
         return modalTimeHtmlElement.innerText = timeString;
       }
     }, {
@@ -454,16 +451,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'setModalRatingValue',
       value: function setModalRatingValue(modalRatingHtmlElement, numOfStars) {
-        console.log('setModalRatingValue called');
-        console.log('modalRatingHtmlElement is', modalRatingHtmlElement);
-        console.log('numOfStars is', numOfStars);
         return modalRatingHtmlElement.innerText = numOfStars;
       }
     }, {
       key: 'endGame',
       value: function endGame(state, timer, view) {
-        console.log('endGame called');
-
         this.toggleGameStarted(state);
 
         timer.stopTimer(state);
@@ -517,8 +509,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleRestartClick',
       value: function handleRestartClick(timer, state, view) {
-        console.log('handleRestartClick called');
-
         this.resetGame(timer, state, view);
       }
     }, {
@@ -526,7 +516,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function handleStartClick(e, state, timerObj, viewObj, timerElement) {
         var _this3 = this;
 
-        console.log('start clicked');
         var currentState = state.currentState;
         var playingGame = currentState.playingGame;
 
@@ -544,7 +533,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
 
         this.matchEmitter.on('successfulMatch', function () {
-          console.log('successfulMatch event emitted');
           _this3.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
           var gameWon = _this3.checkIfGameWon(currentState);
           if (gameWon) {
@@ -556,12 +544,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // if it is change star rating
         // render new stars
         this.matchEmitter.on('failedMatch', function () {
-          console.log('failedMatch event emitted');
           _this3.setFailedMatches(currentState, ++currentState.numFailedMatches);
         });
 
         this.matchEmitter.on('moveMade', function () {
-          console.log('moveMade event emitted');
           _this3.setMovesMade(currentState, ++currentState.numMovesMade);
           viewObj.renderNumMovesMade('' + currentState.numMovesMade, _this3.getMovesElement());
         });
@@ -584,7 +570,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleDeckClick',
       value: function handleDeckClick(e, stateObj) {
-        console.log('handleDeckClick e.target', e.target);
         var currentState = stateObj.currentState;
         var playingGame = currentState.playingGame,
             currentlyAnimating = currentState.currentlyAnimating;
@@ -610,7 +595,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         flip(parentNode);
 
         // so player can't cheat by flipping too many cards at once
-        // this.makeDeckUnclickable(currentState, 740);
+        this.makeDeckUnclickable(currentState, 740);
 
         var firstCardPickedIcon = currentState.firstCardPickedIcon;
 
@@ -823,7 +808,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleModalButtonClick',
       value: function handleModalButtonClick(timer, state, view) {
-        console.log('handleModalButtonClick called');
         this.resetGame(timer, state, view);
         view.setCssDisplay(this.getModalContainer(), 'none');
       }
@@ -916,9 +900,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.scorePanel = new ScorePanel().makePanel(this.starRating, 'score-panel');
     this.gameOverModal = new GameOverModal().makeModal();
     this.currentlyAnimating = currentlyAnimating;
-    this.deckElement = null;
-    this.startButton = null;
-    this.restartButton = null;
   };
 
   var Timer = new GameTimer();
@@ -952,9 +933,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   Controller.getModalButton().addEventListener('click', function (e) {
     return Controller.handleModalButtonClick(Timer, State, View);
   }, false);
-
-  Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
-  Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
-
-  // View.setCssDisplay(Controller.getModalContainer(), 'flex');
 })();
