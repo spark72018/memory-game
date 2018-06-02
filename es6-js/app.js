@@ -39,6 +39,7 @@
       const modalContainer = document.createElement('div');
       const modalGameOverText = document.createElement('span');
       const modalTimeSpanTag = document.createElement('span');
+      const modalMovesMadeTag = document.createElement('span');
       const modalRatingSpanTag = document.createElement('span');
       const modalButton = document.createElement('button');
 
@@ -47,12 +48,14 @@
 
       setCssClass('modal-game-over-text')(modalGameOverText);
       setCssClass('modal-time')(modalTimeSpanTag);
+      setCssClass('modal-moves-made')(modalMovesMadeTag);
       setCssClass('modal-rating')(modalRatingSpanTag);
       setCssClass('modal-button')(modalButton);
 
       appendAll(
         modalGameOverText,
         modalTimeSpanTag,
+        modalMovesMadeTag,
         modalRatingSpanTag,
         modalButton
       )(modalContainer);
@@ -171,9 +174,6 @@
 
       appendAll(frontFace, backFace)(card);
 
-      // card.appendChild(frontFace);
-      // card.appendChild(backFace);
-
       return card;
     }
   }
@@ -258,13 +258,11 @@
       stateObj.secondsElapsed += amount;
     }
 
-    resetTimer({ currentState }) {
-      console.log('resetTimer called');
-
+    resetTimer({ currentState }) {      
       this.stopTimer(currentState);
+
       currentState.secondsElapsed = 0;
       currentState.timerId = null;
-      console.log('resetTimer end', currentState);
     }
 
     getMinutes(seconds) {
@@ -302,8 +300,6 @@
         currentState.timerId = null;
         // clear event listeners for timeTick event
         this.emitter.events = {};
-      } else {
-        throw new Error(`stopTimer error`);
       }
     }
   }
@@ -335,36 +331,54 @@
       return document.getElementsByClassName('modal-time')[0];
     }
 
+    getModalMovesMadeTag() {
+      return document.getElementsByClassName('modal-moves-made')[0];
+    }
+
     getModalRatingTag() {
       return document.getElementsByClassName('modal-rating')[0];
     }
 
     setModalTimeValue(modalTimeHtmlElement, timeString) {
+      console.log('setModalTimeValue called');
+      console.log('modalTimeHtmlElement is', modalTimeHtmlElement);
+      console.log('timeString is', timeString);
       return (modalTimeHtmlElement.innerText = timeString);
     }
 
+    setModalMovesMadeValue(modalMovesMadeHtmlElement, numMovesMade) {
+      return (modalMovesMadeHtmlElement.innerText = `You've made ${numMovesMade} moves in this game`);
+    }
+
     setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+      console.log('setModalRatingValue called');
+      console.log('modalRatingHtmlElement is', modalRatingHtmlElement);
+      console.log('numOfStars is', numOfStars);
       return (modalRatingHtmlElement.innerText = numOfStars);
     }
 
-    endGame(state, timer, view, timerElement) {
+    endGame(state, timer, view) {
       console.log('endGame called');
 
       this.toggleGameStarted(state);
 
       timer.stopTimer(state);
-      timer.resetTimer(state);
 
       const {
-        currentState: { secondsElapsed, starRating }
+        currentState: { numMovesMade, secondsElapsed, starRating }
       } = state;
-      const totalGameTime = timer.getTimeElapsedString(secondsElapsed);
+      const timeString = timer.getTimeElapsedString(secondsElapsed);
 
-      // TODODODODOD
-      this.setModalTimeValue(this.getModalTimeTag(), totalGameTime);
+      timer.resetTimer(state);
+
+      this.setModalTimeValue(this.getModalTimeTag(), timeString);
+      this.setModalMovesMadeValue(
+        this.getModalMovesMadeTag(),
+        `You've made ${numMovesMade} moves`
+      );
       this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-      view.displayHtmlElement(this.getModalContainer(), 'flex');
+      view.setCssDisplay(this.getModalContainer(), 'flex');
     }
 
     resetGame(timer, state, view) {
@@ -381,15 +395,6 @@
         container: this.getGameContainer(),
         state
       });
-
-      /*
-
-        Controller.getRestartButton().addEventListener(
-          'click',
-          e => Controller.handleRestartClick(Timer, State, View),
-          false
-        );
-      */
 
       this.getStartButton().addEventListener(
         'click',
@@ -423,10 +428,6 @@
       this.resetGame(timer, state, view);
     }
 
-    getTimerElement() {
-      return document.getElementsByClassName('timer')[0];
-    }
-
     handleStartClick(e, state, timerObj, viewObj, timerElement) {
       console.log('start clicked');
       const { currentState } = state;
@@ -452,7 +453,7 @@
         this.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
         const gameWon = this.checkIfGameWon(currentState);
         if (gameWon) {
-          return this.endGame(state, timerObj, viewObj, timerElement);
+          return this.endGame(state, timerObj, viewObj);
         }
       });
 
@@ -484,13 +485,14 @@
     }
 
     handleDeckClick(e, stateObj) {
+      console.log('handleDeckClick e.target', e.target);
       const { currentState } = stateObj;
       const { playingGame, currentlyAnimating } = currentState;
       // UNCOMMENT WHEN FINISHED
       if (!playingGame || currentlyAnimating) {
         return;
       }
-      console.log('top level', e.target);
+
       const { target } = e;
       const { parentNode } = target;
 
@@ -506,7 +508,7 @@
       flip(parentNode);
 
       // so player can't cheat by flipping too many cards at once
-      this.makeDeckUnclickable(currentState, 740);
+      // this.makeDeckUnclickable(currentState, 740);
 
       const { firstCardPickedIcon } = currentState;
 
@@ -649,16 +651,17 @@
       return stateObj;
     }
 
-    getModalButton() {
-      return document.getElementsByClassName('modal-button')[0];
+    getGameContainer() {
+      return document.getElementsByClassName('container')[0];
     }
 
     getScorePanelElement() {
       return document.getElementsByClassName('score-panel')[0];
     }
 
-    getGameContainer() {
-      return document.getElementsByClassName('container')[0];
+    
+    getTimerElement() {
+      return document.getElementsByClassName('timer')[0];
     }
 
     getMovesElement() {
@@ -677,8 +680,14 @@
       return document.getElementsByClassName('restart')[0];
     }
 
-    modalButtonClickHandler(e) {
-      this.this.getModalContainer();
+    getModalButton() {
+      return document.getElementsByClassName('modal-button')[0];
+    }
+
+    handleModalButtonClick(timer, state, view) {
+      console.log('handleModalButtonClick called');
+      this.resetGame(timer, state, view);
+      view.setCssDisplay(this.getModalContainer(), 'none');
     }
   }
 
@@ -704,7 +713,7 @@
       timerElement.innerText = val;
     }
 
-    displayHtmlElement(element, displayValue) {
+    setCssDisplay(element, displayValue) {
       element.style.display = displayValue;
     }
   }
@@ -791,12 +800,12 @@
 
   Controller.getModalButton().addEventListener(
     'click',
-    e => 'something',
+    e => Controller.handleModalButtonClick(Timer, State, View),
     false
   );
 
   Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
   Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
 
-  // View.displayHtmlElement(Controller.getModalContainer(), 'flex');
+  // View.setCssDisplay(Controller.getModalContainer(), 'flex');
 })();

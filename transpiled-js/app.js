@@ -60,6 +60,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var modalContainer = document.createElement('div');
         var modalGameOverText = document.createElement('span');
         var modalTimeSpanTag = document.createElement('span');
+        var modalMovesMadeTag = document.createElement('span');
         var modalRatingSpanTag = document.createElement('span');
         var modalButton = document.createElement('button');
 
@@ -68,10 +69,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         setCssClass('modal-game-over-text')(modalGameOverText);
         setCssClass('modal-time')(modalTimeSpanTag);
+        setCssClass('modal-moves-made')(modalMovesMadeTag);
         setCssClass('modal-rating')(modalRatingSpanTag);
         setCssClass('modal-button')(modalButton);
 
-        appendAll(modalGameOverText, modalTimeSpanTag, modalRatingSpanTag, modalButton)(modalContainer);
+        appendAll(modalGameOverText, modalTimeSpanTag, modalMovesMadeTag, modalRatingSpanTag, modalButton)(modalContainer);
 
         setCssClass('modal')(modalContainer);
 
@@ -213,9 +215,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         appendAll(frontFace, backFace)(card);
 
-        // card.appendChild(frontFace);
-        // card.appendChild(backFace);
-
         return card;
       }
     }]);
@@ -335,12 +334,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function resetTimer(_ref) {
         var currentState = _ref.currentState;
 
-        console.log('resetTimer called');
-
         this.stopTimer(currentState);
+
         currentState.secondsElapsed = 0;
         currentState.timerId = null;
-        console.log('resetTimer end', currentState);
       }
     }, {
       key: 'getMinutes',
@@ -386,8 +383,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           currentState.timerId = null;
           // clear event listeners for timeTick event
           this.emitter.events = {};
-        } else {
-          throw new Error('stopTimer error');
         }
       }
     }]);
@@ -434,6 +429,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return document.getElementsByClassName('modal-time')[0];
       }
     }, {
+      key: 'getModalMovesMadeTag',
+      value: function getModalMovesMadeTag() {
+        return document.getElementsByClassName('modal-moves-made')[0];
+      }
+    }, {
       key: 'getModalRatingTag',
       value: function getModalRatingTag() {
         return document.getElementsByClassName('modal-rating')[0];
@@ -441,34 +441,47 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'setModalTimeValue',
       value: function setModalTimeValue(modalTimeHtmlElement, timeString) {
+        console.log('setModalTimeValue called');
+        console.log('modalTimeHtmlElement is', modalTimeHtmlElement);
+        console.log('timeString is', timeString);
         return modalTimeHtmlElement.innerText = timeString;
+      }
+    }, {
+      key: 'setModalMovesMadeValue',
+      value: function setModalMovesMadeValue(modalMovesMadeHtmlElement, numMovesMade) {
+        return modalMovesMadeHtmlElement.innerText = 'You\'ve made ' + numMovesMade + ' moves in this game';
       }
     }, {
       key: 'setModalRatingValue',
       value: function setModalRatingValue(modalRatingHtmlElement, numOfStars) {
+        console.log('setModalRatingValue called');
+        console.log('modalRatingHtmlElement is', modalRatingHtmlElement);
+        console.log('numOfStars is', numOfStars);
         return modalRatingHtmlElement.innerText = numOfStars;
       }
     }, {
       key: 'endGame',
-      value: function endGame(state, timer, view, timerElement) {
+      value: function endGame(state, timer, view) {
         console.log('endGame called');
 
         this.toggleGameStarted(state);
 
         timer.stopTimer(state);
-        timer.resetTimer(state);
 
         var _state$currentState = state.currentState,
+            numMovesMade = _state$currentState.numMovesMade,
             secondsElapsed = _state$currentState.secondsElapsed,
             starRating = _state$currentState.starRating;
 
-        var totalGameTime = timer.getTimeElapsedString(secondsElapsed);
+        var timeString = timer.getTimeElapsedString(secondsElapsed);
 
-        // TODODODODOD
-        this.setModalTimeValue(this.getModalTimeTag(), totalGameTime);
+        timer.resetTimer(state);
+
+        this.setModalTimeValue(this.getModalTimeTag(), timeString);
+        this.setModalMovesMadeValue(this.getModalMovesMadeTag(), 'You\'ve made ' + numMovesMade + ' moves');
         this.setModalRatingValue(this.getModalRatingTag(), starRating);
 
-        view.displayHtmlElement(this.getModalContainer(), 'flex');
+        view.setCssDisplay(this.getModalContainer(), 'flex');
       }
     }, {
       key: 'resetGame',
@@ -489,14 +502,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           state: state
         });
 
-        /*
-           Controller.getRestartButton().addEventListener(
-            'click',
-            e => Controller.handleRestartClick(Timer, State, View),
-            false
-          );
-        */
-
         this.getStartButton().addEventListener('click', function (e) {
           return Controller.handleStartClick(e, State, Timer, View, _this2.getTimerElement());
         }, false);
@@ -515,11 +520,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         console.log('handleRestartClick called');
 
         this.resetGame(timer, state, view);
-      }
-    }, {
-      key: 'getTimerElement',
-      value: function getTimerElement() {
-        return document.getElementsByClassName('timer')[0];
       }
     }, {
       key: 'handleStartClick',
@@ -548,7 +548,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _this3.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
           var gameWon = _this3.checkIfGameWon(currentState);
           if (gameWon) {
-            return _this3.endGame(state, timerObj, viewObj, timerElement);
+            return _this3.endGame(state, timerObj, viewObj);
           }
         });
 
@@ -584,6 +584,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'handleDeckClick',
       value: function handleDeckClick(e, stateObj) {
+        console.log('handleDeckClick e.target', e.target);
         var currentState = stateObj.currentState;
         var playingGame = currentState.playingGame,
             currentlyAnimating = currentState.currentlyAnimating;
@@ -592,7 +593,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (!playingGame || currentlyAnimating) {
           return;
         }
-        console.log('top level', e.target);
+
         var target = e.target;
         var parentNode = target.parentNode;
 
@@ -609,7 +610,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         flip(parentNode);
 
         // so player can't cheat by flipping too many cards at once
-        this.makeDeckUnclickable(currentState, 740);
+        // this.makeDeckUnclickable(currentState, 740);
 
         var firstCardPickedIcon = currentState.firstCardPickedIcon;
 
@@ -780,9 +781,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return stateObj;
       }
     }, {
-      key: 'getModalButton',
-      value: function getModalButton() {
-        return document.getElementsByClassName('modal-button')[0];
+      key: 'getGameContainer',
+      value: function getGameContainer() {
+        return document.getElementsByClassName('container')[0];
       }
     }, {
       key: 'getScorePanelElement',
@@ -790,9 +791,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return document.getElementsByClassName('score-panel')[0];
       }
     }, {
-      key: 'getGameContainer',
-      value: function getGameContainer() {
-        return document.getElementsByClassName('container')[0];
+      key: 'getTimerElement',
+      value: function getTimerElement() {
+        return document.getElementsByClassName('timer')[0];
       }
     }, {
       key: 'getMovesElement',
@@ -815,9 +816,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return document.getElementsByClassName('restart')[0];
       }
     }, {
-      key: 'modalButtonClickHandler',
-      value: function modalButtonClickHandler(e) {
-        this.this.getModalContainer();
+      key: 'getModalButton',
+      value: function getModalButton() {
+        return document.getElementsByClassName('modal-button')[0];
+      }
+    }, {
+      key: 'handleModalButtonClick',
+      value: function handleModalButtonClick(timer, state, view) {
+        console.log('handleModalButtonClick called');
+        this.resetGame(timer, state, view);
+        view.setCssDisplay(this.getModalContainer(), 'none');
       }
     }]);
 
@@ -855,8 +863,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         timerElement.innerText = val;
       }
     }, {
-      key: 'displayHtmlElement',
-      value: function displayHtmlElement(element, displayValue) {
+      key: 'setCssDisplay',
+      value: function setCssDisplay(element, displayValue) {
         element.style.display = displayValue;
       }
     }]);
@@ -942,11 +950,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }, false);
 
   Controller.getModalButton().addEventListener('click', function (e) {
-    return 'something';
+    return Controller.handleModalButtonClick(Timer, State, View);
   }, false);
 
   Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
   Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
 
-  // View.displayHtmlElement(Controller.getModalContainer(), 'flex');
+  // View.setCssDisplay(Controller.getModalContainer(), 'flex');
 })();
