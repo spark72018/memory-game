@@ -37,23 +37,23 @@
   class GameOverModal {
     makeModal() {
       const modalContainer = document.createElement('div');
-      const modalGameOverText = document.createElement('span');
+      const modalGameOverTextTag = document.createElement('span');
       const modalTimeSpanTag = document.createElement('span');
       const modalMovesMadeTag = document.createElement('span');
       const modalRatingSpanTag = document.createElement('span');
       const modalButton = document.createElement('button');
 
-      modalGameOverText.innerText = 'Game over! Your final stats are: ';
+      modalGameOverTextTag.innerText = 'Game over! Your final stats are: ';
       modalButton.innerText = 'Play again!';
 
-      setCssClass('modal-game-over-text')(modalGameOverText);
+      setCssClass('modal-game-over-text')(modalGameOverTextTag);
       setCssClass('modal-time')(modalTimeSpanTag);
       setCssClass('modal-moves-made')(modalMovesMadeTag);
       setCssClass('modal-rating')(modalRatingSpanTag);
       setCssClass('modal-button')(modalButton);
 
       appendAll(
-        modalGameOverText,
+        modalGameOverTextTag,
         modalTimeSpanTag,
         modalMovesMadeTag,
         modalRatingSpanTag,
@@ -751,9 +751,6 @@
       );
       this.gameOverModal = new GameOverModal().makeModal();
       this.currentlyAnimating = currentlyAnimating;
-      this.deckElement = null;
-      this.startButton = null;
-      this.restartButton = null;
     }
   }
 
@@ -803,9 +800,4 @@
     e => Controller.handleModalButtonClick(Timer, State, View),
     false
   );
-
-  Controller.setModalTimeValue(Controller.getModalTimeTag(), '15:57');
-  Controller.setModalRatingValue(Controller.getModalRatingTag(), '3');
-
-  // View.setCssDisplay(Controller.getModalContainer(), 'flex');
 })();
