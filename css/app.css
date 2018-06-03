@@ -147,10 +147,16 @@ h1 {
 }
 
 .score-panel .start {
+  text-align: center;
   display: inline-block;
-  height: 40px;
-  width: 40px;
-  background-color: red;
+  border: 2px solid blue;
+  border-radius: 10px;
+  height: 30px;
+  width: 60px;
+}
+
+.score-panel .start::after {
+  content: "Start";
 }
 
 .score-panel .move-right {

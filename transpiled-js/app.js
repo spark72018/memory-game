@@ -94,6 +94,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeStartButton() {
         var startButton = document.createElement('div');
 
+        // startButton.innerText = 'Start';
+
         setCssClass('move-right start')(startButton);
 
         return startButton;
@@ -282,6 +284,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Deck;
   }();
 
+  // this class is used to create objects that will
+  // emit custom events and run all functions(listeners)
+  // associated with that event
+
+
   var Emitter = function () {
     function Emitter() {
       var events = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -394,8 +401,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function GameController() {
       _classCallCheck(this, GameController);
 
-      this.matchEmitter = new Emitter();
+      this.eventEmitter = new Emitter();
     }
+    // Object, Array -> HtmlElement (ul)
+
 
     _createClass(GameController, [{
       key: 'makeDeck',
@@ -410,6 +419,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         currentState.playingGame = !playingGame;
       }
+      // Object -> Boolean
+
     }, {
       key: 'checkIfGameWon',
       value: function checkIfGameWon(_ref2) {
@@ -480,7 +491,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function resetGame(timer, state, view) {
         var _this2 = this;
 
-        this.matchEmitter = new Emitter();
+        this.eventEmitter = new Emitter();
 
         timer.resetTimer(state);
 
@@ -532,7 +543,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return viewObj.renderTimerValue(timerObj.getTimeElapsedString(currentState.secondsElapsed), timerElement);
         });
 
-        this.matchEmitter.on('successfulMatch', function () {
+        this.eventEmitter.on('successfulMatch', function () {
           _this3.setSuccessMatches(currentState, ++currentState.numSuccessMatches);
           var gameWon = _this3.checkIfGameWon(currentState);
           if (gameWon) {
@@ -543,11 +554,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         // TODO: check if at limit for star degredation
         // if it is change star rating
         // render new stars
-        this.matchEmitter.on('failedMatch', function () {
+        this.eventEmitter.on('failedMatch', function () {
           _this3.setFailedMatches(currentState, ++currentState.numFailedMatches);
         });
 
-        this.matchEmitter.on('moveMade', function () {
+        this.eventEmitter.on('moveMade', function () {
           _this3.setMovesMade(currentState, ++currentState.numMovesMade);
           viewObj.renderNumMovesMade('' + currentState.numMovesMade, _this3.getMovesElement());
         });
@@ -573,7 +584,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var currentState = stateObj.currentState;
         var playingGame = currentState.playingGame,
             currentlyAnimating = currentState.currentlyAnimating;
-        // UNCOMMENT WHEN FINISHED
+
 
         if (!playingGame || currentlyAnimating) {
           return;
@@ -607,8 +618,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           return this.setFirstCardPickedIcon(currentState, firstCardIcon);
         }
 
-        // only increment moves if user is on second pick
-        this.matchEmitter.emit('moveMade');
+        // only increment moves if user just picked second card
+        this.eventEmitter.emit('moveMade');
 
         // store reference to <i> tag containing icon className
         var secondCardPickedIcon = target.previousSibling.firstChild;
@@ -619,7 +630,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         var cardsAreMatch = firstCardIconValue === secondCardIconValue;
 
-        // card element that contains both back and front faces is
+        // Element that contains both back and front card faces is
         // grandparent of icon tag that contains card value
         var cards = cardsPicked.map(function (iconTag) {
           return iconTag.parentNode.parentNode;
@@ -628,7 +639,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (cardsAreMatch) {
           setCardsAsMatched.apply(undefined, _toConsumableArray(cards));
 
-          this.matchEmitter.emit('successfulMatch');
+          this.eventEmitter.emit('successfulMatch');
         } else {
           animateFailedMatch.apply(undefined, _toConsumableArray(cards));
 
@@ -637,7 +648,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return flip.apply(undefined, _toConsumableArray(cards));
           }, 1500);
 
-          this.matchEmitter.emit('failedMatch');
+          this.eventEmitter.emit('failedMatch');
         }
 
         this.setFirstCardPickedIcon(currentState, null);

@@ -70,6 +70,8 @@
     makeStartButton() {
       const startButton = document.createElement('div');
 
+      // startButton.innerText = 'Start';
+
       setCssClass('move-right start')(startButton);
 
       return startButton;
@@ -227,6 +229,9 @@
     }
   }
 
+  // this class is used to create objects that will
+  // emit custom events and run all functions(listeners)
+  // associated with that event
   class Emitter {
     constructor(events = {}) {
       this.events = events;
@@ -308,7 +313,7 @@
     constructor() {
       this.eventEmitter = new Emitter();
     }
-
+    // Object, Array -> HtmlElement (ul)
     makeDeck(deckObj, arrOfIconStrings) {
       return deckObj.makeDeck(arrOfIconStrings);
     }
@@ -318,11 +323,11 @@
 
       currentState.playingGame = !playingGame;
     }
-
+    // Object -> Boolean
     checkIfGameWon({ numSuccessMatches, numMatchesToWin }) {
       return numSuccessMatches === numMatchesToWin;
     }
-
+    
     getModalContainer() {
       return document.getElementsByClassName('modal')[0];
     }
