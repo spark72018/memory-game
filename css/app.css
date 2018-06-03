@@ -55,6 +55,7 @@ h1 {
 
 .deck .card {
   position: relative;
+  background-color: rgba(80, 186, 228, 1);
   height: 125px;
   width: 125px;
   font-size: 0;

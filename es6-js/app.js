@@ -70,8 +70,6 @@
     makeStartButton() {
       const startButton = document.createElement('div');
 
-      // startButton.innerText = 'Start';
-
       setCssClass('move-right start')(startButton);
 
       return startButton;
@@ -106,7 +104,8 @@
       return spanTag;
     }
 
-    makeListItem(...children) {
+    // returns a <li> with all arguments appended to it
+    makeAStar(...children) {
       const listItem = document.createElement('LI');
       const listItemWithChildren = children.reduce((acc, child) => {
         acc.appendChild(child);
@@ -116,6 +115,8 @@
       return listItemWithChildren;
     }
 
+    // returns a <section> tag with:
+    // start button, restart button, star rating, moves, and timer
     makePanel(numberOfStars, classString) {
       const startButton = this.makeStartButton();
       const restartButton = this.makeRestartButton();
@@ -126,7 +127,7 @@
 
       for (let i = 0; i < numberOfStars; i++) {
         const iconWithCssClass = this.makeIcon('fa fa-star');
-        const listItem = this.makeListItem(iconWithCssClass);
+        const listItem = this.makeAStar(iconWithCssClass);
         unorderedList.appendChild(listItem);
       }
 
@@ -149,20 +150,20 @@
       this.iconClass = iconClass;
     }
 
-    makeFrontFace(str) {
+    makeFrontFace(classString) {
       const icon = this.makeIcon(this.iconClass);
       const frontFace = document.createElement('div');
 
       frontFace.appendChild(icon);
-      setCssClass(str)(frontFace);
+      setCssClass(classString)(frontFace);
 
       return frontFace;
     }
 
-    makeBackFace(str) {
+    makeBackFace(classString) {
       const backFace = document.createElement('div');
 
-      setCssClass(str)(backFace);
+      setCssClass(classString)(backFace);
 
       return backFace;
     }
@@ -205,6 +206,9 @@
         const firstCard = new Card(iconClass).makeCard();
         const secondCard = new Card(iconClass).makeCard();
 
+        // inefficient
+        // return [...acc, firstCard, secondCard];
+        
         acc.push(firstCard);
         acc.push(secondCard);
 

@@ -5,16 +5,22 @@
 * [Instructions](#instructions)
 * [Contributing](#contributing)
 
-## Instructions
+## Instructions for dev mode
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+To run development mode, switch into project directory and run
 
-To get started, open `js/app.js` and start building out the app's functionality
+```
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+npm install
 
-## Contributing
+```
+then: 
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+```
+gulp watch
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+```
+
+## Instructions for playing
+
+Match all pairs of cards to win. Stats will be displayed at the end.
