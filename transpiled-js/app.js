@@ -10,10 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   // 16 cards, 8 matches needed to win game
   var SUCCESSFUL_MATCHES_TO_WIN = 8;
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
+
   // utility functions
-
-  // used to mixin behavior into classes
-
   var appendAll = function appendAll() {
     for (var _len = arguments.length, children = Array(_len), _key = 0; _key < _len; _key++) {
       children[_key] = arguments[_key];
@@ -32,6 +30,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   };
 
+  // used to mixin behavior into classes
   var FunctionalMixin = function FunctionalMixin(behavior) {
     return function (target) {
       return Object.assign(target, behavior);
@@ -94,8 +93,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeStartButton() {
         var startButton = document.createElement('div');
 
-        // startButton.innerText = 'Start';
-
         setCssClass('move-right start')(startButton);
 
         return startButton;
@@ -132,9 +129,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return spanTag;
       }
+
+      // returns a <li> with all arguments appended to it
+
     }, {
-      key: 'makeListItem',
-      value: function makeListItem() {
+      key: 'makeAStar',
+      value: function makeAStar() {
         var listItem = document.createElement('LI');
 
         for (var _len2 = arguments.length, children = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -148,6 +148,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return listItemWithChildren;
       }
+
+      // returns a <section> tag with:
+      // start button, restart button, star rating, moves, and timer
+
     }, {
       key: 'makePanel',
       value: function makePanel(numberOfStars, classString) {
@@ -160,7 +164,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         for (var i = 0; i < numberOfStars; i++) {
           var iconWithCssClass = this.makeIcon('fa fa-star');
-          var listItem = this.makeListItem(iconWithCssClass);
+          var listItem = this.makeAStar(iconWithCssClass);
           unorderedList.appendChild(listItem);
         }
 
@@ -188,21 +192,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     _createClass(Card, [{
       key: 'makeFrontFace',
-      value: function makeFrontFace(str) {
+      value: function makeFrontFace(classString) {
         var icon = this.makeIcon(this.iconClass);
         var frontFace = document.createElement('div');
 
         frontFace.appendChild(icon);
-        setCssClass(str)(frontFace);
+        setCssClass(classString)(frontFace);
 
         return frontFace;
       }
     }, {
       key: 'makeBackFace',
-      value: function makeBackFace(str) {
+      value: function makeBackFace(classString) {
         var backFace = document.createElement('div');
 
-        setCssClass(str)(backFace);
+        setCssClass(classString)(backFace);
 
         return backFace;
       }
@@ -255,6 +259,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var arrOfCards = arrOfIconStrings.reduce(function (acc, iconClass) {
           var firstCard = new Card(iconClass).makeCard();
           var secondCard = new Card(iconClass).makeCard();
+
+          // inefficient
+          // return [...acc, firstCard, secondCard];
 
           acc.push(firstCard);
           acc.push(secondCard);

@@ -11,16 +11,15 @@
     'fa fa-bicycle',
     'fa fa-bomb'
   ];
+
   // utility functions
-
-  // used to mixin behavior into classes
-
   const appendAll = (...children) => parent =>
     children.forEach(child => parent.appendChild(child));
 
   const setCssClass = cssClassString => htmlElement =>
     htmlElement.setAttribute('class', cssClassString);
 
+  // used to mixin behavior into classes
   const FunctionalMixin = behavior => target => Object.assign(target, behavior);
 
   // mixin makeIcon method into a class
@@ -208,7 +207,7 @@
 
         // inefficient
         // return [...acc, firstCard, secondCard];
-        
+
         acc.push(firstCard);
         acc.push(secondCard);
 
