@@ -37,25 +37,25 @@
     makeModal() {
       const modalContainer = document.createElement('div');
       const modalGameOverTextTag = document.createElement('span');
-      const modalTimeSpanTag = document.createElement('span');
+      const modalTimeTag = document.createElement('span');
       const modalMovesMadeTag = document.createElement('span');
-      const modalRatingSpanTag = document.createElement('span');
+      const modalRatingTag = document.createElement('span');
       const modalButton = document.createElement('button');
 
       modalGameOverTextTag.innerText = 'Game over! Your final stats are: ';
       modalButton.innerText = 'Play again!';
 
       setCssClass('modal-game-over-text')(modalGameOverTextTag);
-      setCssClass('modal-time')(modalTimeSpanTag);
+      setCssClass('modal-time')(modalTimeTag);
       setCssClass('modal-moves-made')(modalMovesMadeTag);
-      setCssClass('modal-rating')(modalRatingSpanTag);
+      setCssClass('modal-rating')(modalRatingTag);
       setCssClass('modal-button')(modalButton);
 
       appendAll(
         modalGameOverTextTag,
-        modalTimeSpanTag,
+        modalTimeTag,
         modalMovesMadeTag,
-        modalRatingSpanTag,
+        modalRatingTag,
         modalButton
       )(modalContainer);
 

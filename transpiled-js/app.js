@@ -58,21 +58,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeModal() {
         var modalContainer = document.createElement('div');
         var modalGameOverTextTag = document.createElement('span');
-        var modalTimeSpanTag = document.createElement('span');
+        var modalTimeTag = document.createElement('span');
         var modalMovesMadeTag = document.createElement('span');
-        var modalRatingSpanTag = document.createElement('span');
+        var modalRatingTag = document.createElement('span');
         var modalButton = document.createElement('button');
 
         modalGameOverTextTag.innerText = 'Game over! Your final stats are: ';
         modalButton.innerText = 'Play again!';
 
         setCssClass('modal-game-over-text')(modalGameOverTextTag);
-        setCssClass('modal-time')(modalTimeSpanTag);
+        setCssClass('modal-time')(modalTimeTag);
         setCssClass('modal-moves-made')(modalMovesMadeTag);
-        setCssClass('modal-rating')(modalRatingSpanTag);
+        setCssClass('modal-rating')(modalRatingTag);
         setCssClass('modal-button')(modalButton);
 
-        appendAll(modalGameOverTextTag, modalTimeSpanTag, modalMovesMadeTag, modalRatingSpanTag, modalButton)(modalContainer);
+        appendAll(modalGameOverTextTag, modalTimeTag, modalMovesMadeTag, modalRatingTag, modalButton)(modalContainer);
 
         setCssClass('modal')(modalContainer);
 
