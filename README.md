@@ -1,9 +1,15 @@
 # Memory Game Project
 
-## Table of Contents
+## Game Instructions:
+- Match all pairs of cards to win the game
+- Stats are displayed in modal popup after all cards are matched
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+## Functionalities:
+- Different animations for matching cards and failing to match cards
+- Modal pop up when all cards are matched
+- Game timer
+- Unable to flip more than two cards at a time
+- Responsive design
 
 ## Instructions for dev mode
 
