@@ -154,10 +154,16 @@ h1 {
   border-radius: 10px;
   height: 30px;
   width: 60px;
+  transition: all .1s ease-in; 
 }
 
 .score-panel .start::after {
   content: "Start";
+}
+
+.score-panel .start:hover {
+  background-color: rgb(28, 9, 82);
+  color: white;
 }
 
 .score-panel .move-right {
@@ -175,15 +181,26 @@ h1 {
   position: fixed;
   z-index: 100;
   margin: 0 auto;
+  margin-top: 20px;
+  padding: 8px;
   width: 40%;
   height: 40%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  color: white;
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal span {
+  margin-top: 8px;
 }
 
 .modal-button {
   height: 40px;
   width: 80px;
+  margin-top: 10px;
+  font-size: .8em;
+  border-radius: 20px;
+  background-color: white;
 
 }
 

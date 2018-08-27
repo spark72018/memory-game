@@ -376,7 +376,7 @@
         this.getModalMovesMadeTag(),
         `You've made ${numMovesMade} moves`
       );
-      this.setModalRatingValue(this.getModalRatingTag(), starRating);
+      this.setModalRatingValue(this.getModalRatingTag(), `Star Rating: ${starRating}`);
 
       view.setCssDisplay(this.getModalContainer(), 'flex');
     }
@@ -427,6 +427,8 @@
     }
 
     handleStartClick(e, state, timerObj, viewObj, timerElement) {
+      // FOR DEV PURPOSES ONLY
+      // this.endGame(state, timerObj, viewObj);
       const { currentState } = state;
       const { playingGame } = currentState;
 
@@ -792,4 +794,7 @@
     e => Controller.handleModalButtonClick(Timer, State, View),
     false
   );
+
+  // FOR DEV PURPOSES ONLY
+  // Controller.getStartButton().click();
 })();

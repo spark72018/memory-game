@@ -489,7 +489,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.setModalTimeValue(this.getModalTimeTag(), timeString);
         this.setModalMovesMadeValue(this.getModalMovesMadeTag(), 'You\'ve made ' + numMovesMade + ' moves');
-        this.setModalRatingValue(this.getModalRatingTag(), starRating);
+        this.setModalRatingValue(this.getModalRatingTag(), 'Star Rating: ' + starRating);
 
         view.setCssDisplay(this.getModalContainer(), 'flex');
       }
@@ -534,6 +534,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function handleStartClick(e, state, timerObj, viewObj, timerElement) {
         var _this3 = this;
 
+        // FOR DEV PURPOSES ONLY
+        // this.endGame(state, timerObj, viewObj);
         var currentState = state.currentState;
         var playingGame = currentState.playingGame;
 
@@ -951,4 +953,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   Controller.getModalButton().addEventListener('click', function (e) {
     return Controller.handleModalButtonClick(Timer, State, View);
   }, false);
+
+  // FOR DEV PURPOSES ONLY
+  // Controller.getStartButton().click();
 })();
