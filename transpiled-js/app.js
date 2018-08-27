@@ -12,6 +12,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var CARD_ICONS = ['fa fa-diamond', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bicycle', 'fa fa-bomb'];
 
   // utility functions
+  function compose(fn1, fn2) {
+    return function (initVal) {
+      return fn1(fn2(initVal));
+    };
+  }
+
   var appendAll = function appendAll() {
     for (var _len = arguments.length, children = Array(_len), _key = 0; _key < _len; _key++) {
       children[_key] = arguments[_key];
@@ -737,12 +743,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           };
         }
 
-        function compose(fn1, fn2) {
-          return function (initVal) {
-            return fn1(fn2(initVal));
-          };
-        }
-
         function setCardsAsMatched(firstCard, secondCard) {
           var setCardToMatched = compose(addClasses('match'), removeClasses('open', 'show'));
 
@@ -946,14 +946,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return Controller.handleDeckClick(e, State);
   }, false);
 
-  Controller.getRestartButton().addEventListener('click', function (e) {
+  Controller.getRestartButton().addEventListener('click', function () {
     return Controller.handleRestartClick(Timer, State, View);
   }, false);
 
-  Controller.getModalButton().addEventListener('click', function (e) {
+  Controller.getModalButton().addEventListener('click', function () {
     return Controller.handleModalButtonClick(Timer, State, View);
   }, false);
 
   // FOR DEV PURPOSES ONLY
+  // click the 'Start' button as soon as page loads
   // Controller.getStartButton().click();
 })();

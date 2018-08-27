@@ -13,6 +13,12 @@
   ];
 
   // utility functions
+  function compose(fn1, fn2) {
+    return function(initVal) {
+      return fn1(fn2(initVal));
+    };
+  }
+
   const appendAll = (...children) => parent =>
     children.forEach(child => parent.appendChild(child));
 
@@ -266,7 +272,7 @@
       stateObj.secondsElapsed += amount;
     }
 
-    resetTimer({ currentState }) {      
+    resetTimer({ currentState }) {
       this.stopTimer(currentState);
 
       currentState.secondsElapsed = 0;
@@ -330,7 +336,7 @@
     checkIfGameWon({ numSuccessMatches, numMatchesToWin }) {
       return numSuccessMatches === numMatchesToWin;
     }
-    
+
     getModalContainer() {
       return document.getElementsByClassName('modal')[0];
     }
@@ -376,7 +382,10 @@
         this.getModalMovesMadeTag(),
         `You've made ${numMovesMade} moves`
       );
-      this.setModalRatingValue(this.getModalRatingTag(), `Star Rating: ${starRating}`);
+      this.setModalRatingValue(
+        this.getModalRatingTag(),
+        `Star Rating: ${starRating}`
+      );
 
       view.setCssDisplay(this.getModalContainer(), 'flex');
     }
@@ -483,7 +492,7 @@
     handleDeckClick(e, stateObj) {
       const { currentState } = stateObj;
       const { playingGame, currentlyAnimating } = currentState;
-      
+
       if (!playingGame || currentlyAnimating) {
         return;
       }
@@ -599,12 +608,6 @@
         };
       }
 
-      function compose(fn1, fn2) {
-        return function(initVal) {
-          return fn1(fn2(initVal));
-        };
-      }
-
       function setCardsAsMatched(firstCard, secondCard) {
         const setCardToMatched = compose(
           addClasses('match'),
@@ -654,7 +657,6 @@
       return document.getElementsByClassName('score-panel')[0];
     }
 
-    
     getTimerElement() {
       return document.getElementsByClassName('timer')[0];
     }
@@ -785,16 +787,17 @@
 
   Controller.getRestartButton().addEventListener(
     'click',
-    e => Controller.handleRestartClick(Timer, State, View),
+    () => Controller.handleRestartClick(Timer, State, View),
     false
   );
 
   Controller.getModalButton().addEventListener(
     'click',
-    e => Controller.handleModalButtonClick(Timer, State, View),
+    () => Controller.handleModalButtonClick(Timer, State, View),
     false
   );
 
   // FOR DEV PURPOSES ONLY
+  // click the 'Start' button as soon as page loads
   // Controller.getStartButton().click();
 })();
