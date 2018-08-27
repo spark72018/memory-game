@@ -112,12 +112,10 @@
     // returns a <li> with all arguments appended to it
     makeAStar(...children) {
       const listItem = document.createElement('LI');
-      const listItemWithChildren = children.reduce((acc, child) => {
-        acc.appendChild(child);
-        return acc;
-      }, listItem);
+      
+      appendAll(...children)(listItem);
 
-      return listItemWithChildren;
+      return listItem;
     }
 
     // returns a <section> tag with:

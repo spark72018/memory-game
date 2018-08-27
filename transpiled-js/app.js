@@ -143,16 +143,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function makeAStar() {
         var listItem = document.createElement('LI');
 
-        for (var _len2 = arguments.length, children = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          children[_key2] = arguments[_key2];
-        }
+        appendAll.apply(undefined, arguments)(listItem);
 
-        var listItemWithChildren = children.reduce(function (acc, child) {
-          acc.appendChild(child);
-          return acc;
-        }, listItem);
-
-        return listItemWithChildren;
+        return listItem;
       }
 
       // returns a <section> tag with:
@@ -678,8 +671,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function animateFailedMatch() {
-          for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-            elements[_key3] = arguments[_key3];
+          for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            elements[_key2] = arguments[_key2];
           }
 
           elements.forEach(function (element) {
@@ -705,8 +698,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function flip() {
-          for (var _len4 = arguments.length, elements = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-            elements[_key4] = arguments[_key4];
+          for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            elements[_key3] = arguments[_key3];
           }
 
           elements.forEach(function (element) {
@@ -716,8 +709,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function removeClasses() {
-          for (var _len5 = arguments.length, classesToRemove = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-            classesToRemove[_key5] = arguments[_key5];
+          for (var _len4 = arguments.length, classesToRemove = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            classesToRemove[_key4] = arguments[_key4];
           }
 
           return function (card) {
@@ -730,8 +723,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         function addClasses() {
-          for (var _len6 = arguments.length, classesToAdd = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-            classesToAdd[_key6] = arguments[_key6];
+          for (var _len5 = arguments.length, classesToAdd = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+            classesToAdd[_key5] = arguments[_key5];
           }
 
           return function (card) {
