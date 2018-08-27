@@ -147,6 +147,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return listItem;
       }
+    }, {
+      key: 'addStars',
+      value: function addStars(numOfStars, list) {
+        if (numOfStars === 0) return list;
+
+        var iconWithCssClass = this.makeIcon('fa fa-star');
+        var listItem = this.makeAStar(iconWithCssClass);
+
+        list.appendChild(listItem);
+
+        return this.addStars(numOfStars - 1, list);
+      }
 
       // returns a <section> tag with:
       // start button, restart button, star rating, moves, and timer
@@ -157,19 +169,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var startButton = this.makeStartButton();
         var restartButton = this.makeRestartButton();
         var section = document.createElement('SECTION');
-        var unorderedList = document.createElement('ul');
         var movesTag = this.makeMovesTag('0 Moves');
         var timerTag = this.makeTimerTag('0:00');
+        var listWithStars = this.addStars(3, document.createElement('ul'));
 
-        for (var i = 0; i < numberOfStars; i++) {
-          var iconWithCssClass = this.makeIcon('fa fa-star');
-          var listItem = this.makeAStar(iconWithCssClass);
-          unorderedList.appendChild(listItem);
-        }
+        // trying out recursive solution with this.addStars instead of
+        // for loop
 
-        setCssClass('stars')(unorderedList);
+        // for (let i = 0; i < numberOfStars; i++) {
+        //   const iconWithCssClass = this.makeIcon('fa fa-star');
+        //   const listItem = this.makeAStar(iconWithCssClass);
+        //   unorderedList.appendChild(listItem);
+        // }
 
-        appendAll(unorderedList, movesTag, timerTag, startButton, restartButton)(section);
+        setCssClass('stars')(listWithStars);
+
+        appendAll(listWithStars, movesTag, timerTag, startButton, restartButton)(section);
 
         setCssClass(classString)(section);
 
